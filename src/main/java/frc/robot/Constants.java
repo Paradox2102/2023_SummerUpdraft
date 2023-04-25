@@ -28,5 +28,5 @@ public final class Constants {
     public static final int k_leftDriveMotorFollower = 10;
     public static final int k_rightDriveMotor = 8;
     public static final int k_rightDriveMotorFollower = 9;
-  }
+    }
 }
