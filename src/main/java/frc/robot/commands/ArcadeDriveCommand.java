@@ -6,19 +6,23 @@
 
 package frc.robot.commands;
 
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import frc.robot.subsystems.DriveSubsystem;
 
 public class ArcadeDriveCommand extends CommandBase {
   /** Creates a new ArcadeDriveCommand. */
   DriveSubsystem m_subsystem;
-  CommandJoystick m_joystick;
+  DoubleSupplier m_drive;
+  DoubleSupplier m_turn;
+  
 
-  public ArcadeDriveCommand(DriveSubsystem driveSubsystem, CommandJoystick joystick) {
+  public ArcadeDriveCommand(DriveSubsystem driveSubsystem, DoubleSupplier drive, DoubleSupplier turn) {
     // Use addRequirements() here to declare subsystem dependencies.
-    m_subsystem = driveSubsystem;
-    m_joystick  = joystick; 
+    m_subsystem = driveSubsystem; 
+    m_drive = drive;
+    m_turn = turn;
 
     addRequirements(m_subsystem);
   }
@@ -30,13 +34,13 @@ public class ArcadeDriveCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double y = m_joystick.getY();
-    double x = m_joystick.getY();
+    double drive = m_drive.getAsDouble();
+    double turn = m_turn.getAsDouble();
 
-    y = y * y * Math.signum(y);
-    x = x * x * Math.signum(x);
+    drive = drive * drive * Math.signum(drive);
+    turn = turn * turn * Math.signum(turn);
 
-    m_subsystem.setPower(y + x, y - x);
+    m_subsystem.setPower(drive + turn, drive - turn);
   }
 
   // Called once the command ends or is interrupted.
