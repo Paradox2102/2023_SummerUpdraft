@@ -6,6 +6,7 @@
 
 package frc.robot.commands;
 
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -16,13 +17,15 @@ public class ArcadeDriveCommand extends CommandBase {
   DriveSubsystem m_subsystem;
   DoubleSupplier m_drive;
   DoubleSupplier m_turn;
+  BooleanSupplier m_direction;
   
 
-  public ArcadeDriveCommand(DriveSubsystem driveSubsystem, DoubleSupplier drive, DoubleSupplier turn) {
+  public ArcadeDriveCommand(DriveSubsystem driveSubsystem, DoubleSupplier drive, DoubleSupplier turn, BooleanSupplier direction) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_subsystem = driveSubsystem; 
     m_drive = drive;
     m_turn = turn;
+    m_direction = direction;
 
     addRequirements(m_subsystem);
   }
@@ -35,9 +38,14 @@ public class ArcadeDriveCommand extends CommandBase {
   @Override
   public void execute() {
     double drive = m_drive.getAsDouble();
+    boolean direction = m_direction.getAsBoolean();
     double turn = m_turn.getAsDouble();
 
-    drive = drive * drive * Math.signum(drive);
+    if (direction == true) {
+      drive = -drive * drive * Math.signum(drive);
+    } else {
+      drive = drive * drive * Math.signum(drive);
+    }
     turn = turn * turn * Math.signum(turn);
 
     m_subsystem.setPower(drive + turn, drive - turn);

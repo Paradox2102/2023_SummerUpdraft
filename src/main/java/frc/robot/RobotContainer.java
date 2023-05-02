@@ -31,7 +31,7 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
-    m_driveSubsystem.setDefaultCommand(new ArcadeDriveCommand(m_driveSubsystem, ()-> m_driverController.getY(), ()-> m_driverController.getX()));
+    m_driveSubsystem.setDefaultCommand(new ArcadeDriveCommand(m_driveSubsystem, ()-> m_driverController.getY(), ()-> m_driverController.getX(), ()-> m_driverController.getThrottle() > 0));
     configureBindings();
   }
 
