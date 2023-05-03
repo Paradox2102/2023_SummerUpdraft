@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
@@ -18,6 +19,7 @@ public class DriveSubsystem extends SubsystemBase {
   private final WPI_TalonFX m_leftDrive = new WPI_TalonFX(Constants.Drive.k_leftDrive);
   private final WPI_TalonFX m_leftFollower = new WPI_TalonFX(Constants.Drive.k_leftFollower);
   private final DifferentialDrive m_drive = new DifferentialDrive(m_leftDrive, m_rightDrive);
+
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
     m_rightDrive.configFactoryDefault();
@@ -32,17 +34,31 @@ public class DriveSubsystem extends SubsystemBase {
     m_leftFollower.setInverted(TalonFXInvertType.FollowMaster);
   }
 
-  public void setPower (double rightPower, double leftPower) {
+  public void setPower(double rightPower, double leftPower) {
     m_rightDrive.set(TalonFXControlMode.PercentOutput, rightPower);
     m_leftDrive.set(TalonFXControlMode.PercentOutput, leftPower);
   }
 
-  public void stop () {
+  public void stop() {
     setPower(0, 0);
   }
 
-  public void arcadeDrive (double speed, double rotation) {
+  public void arcadeDrive(double speed, double rotation) {
     m_drive.arcadeDrive(speed, rotation);
+  }
+
+  public void setBrake(boolean brake) {
+    if (brake) {
+      m_rightDrive.setNeutralMode(NeutralMode.Brake);
+      m_rightFollower.setNeutralMode(NeutralMode.Brake);
+      m_leftDrive.setNeutralMode(NeutralMode.Brake);
+      m_leftFollower.setNeutralMode(NeutralMode.Brake);
+    } else {
+      m_rightDrive.setNeutralMode(NeutralMode.Coast);
+      m_rightFollower.setNeutralMode(NeutralMode.Coast);
+      m_leftDrive.setNeutralMode(NeutralMode.Coast);
+      m_leftFollower.setNeutralMode(NeutralMode.Coast);
+    }
   }
 
   @Override
