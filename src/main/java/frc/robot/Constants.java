@@ -28,4 +28,7 @@ public final class Constants {
     public static final int k_leftFollower = 10; // CAN i
   }
 
+  public static class Wrist {
+    public static final int k_wristMotor = 1; //CAN id
+  }
 }
