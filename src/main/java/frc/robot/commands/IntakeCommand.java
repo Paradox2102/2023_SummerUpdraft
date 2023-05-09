@@ -42,7 +42,4 @@ public class IntakeCommand extends CommandBase {
   public boolean isFinished() {
     return false;
   }
-    //setpower
-    //make command ()
-    //reobot container - two buttons two direction
 }
