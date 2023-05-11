@@ -59,6 +59,8 @@ public class RobotContainer {
     m_stick.button(1).whileTrue(new MoveWristCommand(m_wristSubsystem, 0.2));
     m_stick.button(2).whileTrue(new MoveWristCommand(m_wristSubsystem, -0.2));
     m_stick.button(3).onTrue(new SetWristPositionCommand(m_wristSubsystem, 0));
+    m_stick.button(4).onTrue(new SetWristPositionCommand(m_wristSubsystem, 90));
+    m_stick.button(5).onTrue(new SetWristPositionCommand(m_wristSubsystem, -90));
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
     m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());

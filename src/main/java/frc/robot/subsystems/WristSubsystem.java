@@ -17,10 +17,13 @@ import frc.robot.Constants;
 public class WristSubsystem extends SubsystemBase {
   CANSparkMax m_wristMotor = new CANSparkMax(Constants.Wrist.k_wristMotor, MotorType.kBrushless);
   RelativeEncoder m_wristEncoder = m_wristMotor.getEncoder();
-  private static double k_p = 0.05;
+  private static final double k_p = 0.075;
+  private static final double k_i = 0;
+  private static final double kf = 0.01;
+  private double m_angle = 0;
   private double m_setPoint = 0;
   private boolean m_PIDOn = false;
-  PIDController m_wristPID = new PIDController(k_p, 0, 0);
+  PIDController m_wristPID = new PIDController(k_p, k_i, 0);
 
   /** Creates a new WristSubsystem. */
   public WristSubsystem() {
@@ -47,11 +50,17 @@ public class WristSubsystem extends SubsystemBase {
     m_PIDOn = on;
   }
 
+  private double getFTerm(double angle) {
+    m_angle = angle;
+    double fTerm = (-kf * Math.sin(Math.toRadians(m_angle)));
+    return fTerm;
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
     if (m_PIDOn) {
-      double power = m_wristPID.calculate(m_wristEncoder.getPosition(), m_setPoint);
+      double power = getFTerm(m_setPoint) + m_wristPID.calculate(getPosition(), m_setPoint);
       setPower(power, true);
       SmartDashboard.putNumber("Wrist Power", power);
     }
