@@ -33,4 +33,8 @@ public final class Constants {
   public static class Intake {
     public static final int k_intakeMotor = 7;
   }
+
+  public static class Reach {
+    public static final int k_reachMotor = 0;
+  }
 }

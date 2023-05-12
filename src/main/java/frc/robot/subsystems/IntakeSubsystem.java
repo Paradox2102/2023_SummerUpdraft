@@ -8,6 +8,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -16,8 +17,8 @@ public class IntakeSubsystem extends SubsystemBase {
   private Timer m_timer = new Timer();
   private static double k_expiredTimer = 0.1;
   private double m_savedPower;
-  private static double k_stallSpeed = 10;
-  private static double k_stallPower = 0.1;
+  private static double k_stallSpeed = 500;
+  private static double k_stallPower = 0.07;
 
   /** Creates a new IntakeSubsystem. */
   public IntakeSubsystem() {
@@ -36,6 +37,8 @@ public class IntakeSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putNumber("Intake Speed", getSpeed());
+
     double power = m_savedPower;
     if(Math.abs(getSpeed()) < k_stallSpeed && m_savedPower != 0) {
       if(m_timer.get() > k_expiredTimer) {
@@ -49,6 +52,8 @@ public class IntakeSubsystem extends SubsystemBase {
       }
     } 
     m_intakeMotor.set(ControlMode.PercentOutput, power);
+
+    SmartDashboard.putNumber("Intake Power", power);
   }
 
     //in subsystem (lowest level)
@@ -57,3 +62,4 @@ public class IntakeSubsystem extends SubsystemBase {
     //timer, then resist timer after __
     //after timer is done, set power to optimal "stall" speed
 }
+
