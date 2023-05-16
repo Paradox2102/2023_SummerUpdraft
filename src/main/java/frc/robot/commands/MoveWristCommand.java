@@ -21,7 +21,7 @@ public class MoveWristCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_subsystem.setPower(m_power, false);
+    m_subsystem.setPower(m_power);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -31,7 +31,7 @@ public class MoveWristCommand extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_subsystem.setPower(0, false);
+    m_subsystem.setPower(0);
   }
 
   // Returns true when the command should end.
