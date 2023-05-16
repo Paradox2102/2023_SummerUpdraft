@@ -39,6 +39,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   public void setBrakeMode(boolean brake) {
     NeutralMode mode = brake? NeutralMode.Brake : NeutralMode.Coast;
+    
     m_leftMotor.setNeutralMode(mode);
     m_leftFollower.setNeutralMode(mode);
     m_rightMotor.setNeutralMode(mode);
