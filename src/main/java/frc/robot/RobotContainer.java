@@ -7,12 +7,13 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.MoveArmCommand;
 import frc.robot.commands.MoveWristCommand;
 import frc.robot.commands.SetWristPositionCommand;
+import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.WristSubsystem;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
@@ -30,6 +31,7 @@ public class RobotContainer {
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   final DriveSubsystem m_driveSubsystem = new DriveSubsystem();
   final WristSubsystem m_wristSubsystem = new WristSubsystem();
+  final ArmSubsystem m_armSubsystem = new ArmSubsystem();
   private final CommandJoystick m_stick = new CommandJoystick(0);
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -61,6 +63,8 @@ public class RobotContainer {
     m_stick.button(3).onTrue(new SetWristPositionCommand(m_wristSubsystem, 0));
     m_stick.button(4).onTrue(new SetWristPositionCommand(m_wristSubsystem, 90));
     m_stick.button(5).onTrue(new SetWristPositionCommand(m_wristSubsystem, -90));
+    m_stick.button(6).whileTrue(new MoveArmCommand(m_armSubsystem, 0.2));
+    m_stick.button(7).whileTrue(new MoveArmCommand(m_armSubsystem, -0.2));
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
     m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
