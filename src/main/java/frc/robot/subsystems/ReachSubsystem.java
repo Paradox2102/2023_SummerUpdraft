@@ -4,6 +4,10 @@
 
 package frc.robot.subsystems;
 
+import java.io.FilenameFilter;
+
+import javax.swing.text.StyledEditorKit.FontFamilyAction;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
@@ -16,12 +20,22 @@ import frc.robot.Constants;
 public class ReachSubsystem extends SubsystemBase {
   private TalonFX m_reachMotor = new TalonFX(Constants.Reach.k_reachMotor);
   private Timer m_timer = new Timer();
-  private static final double k_stallSpeed = 100;
+  private static final double k_stallSpeed = 1500;
   private static final double k_stallTimer = 0.2;
   private double m_reachPower;
 
+  enum State {
+    normal,
+    stalledUp,
+    stalledDown
+  }
+
+  private static State m_state;
+  //identify state
+
   /** Creates a new ReachSubsystem. */
   public ReachSubsystem() {
+    m_state = State.normal;
     m_reachMotor.configFactoryDefault();
   }
 
@@ -44,18 +58,16 @@ public class ReachSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
 
-    SmartDashboard.putNumber("Reach Speed", getSpeed());
-    SmartDashboard.putNumber("Reach Power", m_reachPower);
-
     double power = m_reachPower;
     if (Math.abs(getSpeed()) < k_stallSpeed) {
       if (m_timer.get() > k_stallTimer) {
         power = 0;
-      } else {
-        m_timer.reset();
       }
+    } else {
+      m_timer.reset();
     }
     m_reachMotor.set(ControlMode.PercentOutput, power);
+    SmartDashboard.putNumber("Reach Speed", getSpeed());
+    SmartDashboard.putNumber("Reach Power", power);
   }
-
 }
