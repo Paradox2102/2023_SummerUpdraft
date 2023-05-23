@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -37,8 +38,9 @@ public class DriveSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
-  public setPower() {
-    
+  public void setPower(double rightPower, double leftPower) {
+    m_rightDrive.set(ControlMode.PercentOutput, rightPower);
+    m_leftDrive.set(ControlMode.PercentOutput, leftPower);
   }
 
 }
