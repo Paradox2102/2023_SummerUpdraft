@@ -31,6 +31,7 @@ public final class Constants {
   public static class Arm {
     public static final int k_armMotor = 19; // left CAN id
     public static final int k_armFollower = 4; // right CAN id
+    public static final int k_armBrake = 1; //pneumatic channel
   }
 
   public static class Wrist {
