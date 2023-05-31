@@ -4,11 +4,14 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Timer;
@@ -20,6 +23,7 @@ public class ArmSubsystem extends SubsystemBase {
   CANSparkMax m_armMotor = new CANSparkMax(Constants.Arm.k_armMotor, MotorType.kBrushless);
   CANSparkMax m_armFollower = new CANSparkMax(Constants.Arm.k_armFollower, MotorType.kBrushless);
 
+  TalonSRX m_armEncoder = new TalonSRX(Constants.Arm.k_armEncoder);
   RelativeEncoder m_armRelative = m_armMotor.getEncoder();
 
   Solenoid m_brake = new Solenoid(PneumaticsModuleType.REVPH, Constants.Arm.k_armBrake);
@@ -36,19 +40,24 @@ public class ArmSubsystem extends SubsystemBase {
     m_armFollower.follow(m_armMotor, true);
     m_armMotor.setIdleMode(IdleMode.kBrake);
     m_armFollower.setIdleMode(IdleMode.kBrake);
+    m_armEncoder.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
     m_timer.start();
-    SetArmBrake(false);
+    setArmBrake(false);
   }
 
-  public void SetPower(double power){
+  public void setPower(double power){
     //m_armMotor.set(power);
     m_recordedPower = power;
     m_timer.reset();
   }
 
-  public void SetArmBrake(boolean brake) {
+  public void setArmBrake(boolean brake) {
     m_brake.set(!brake);
     SmartDashboard.putBoolean("Arm Brake", brake);
+  }
+
+  public double getArmAngleDegrees() {
+    return m_armEncoder.getSelectedSensorPosition() * Constants.Arm.k_armTicksToDegrees - Constants.Arm.k_armZeroAngle;
   }
 
   @Override
@@ -67,5 +76,7 @@ public class ArmSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Arm Speed", m_armRelative.getVelocity());
     SmartDashboard.putNumber("Arm Power", power);
+    SmartDashboard.putNumber("Arm Angle In Degrees", getArmAngleDegrees());
+    SmartDashboard.putNumber("Arm Angle Raw", m_armEncoder.getSelectedSensorPosition());
   }
 }

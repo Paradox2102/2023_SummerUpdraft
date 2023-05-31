@@ -25,13 +25,16 @@ public final class Constants {
     public static final int k_rightDrive = 8; // CAN id
     public static final int k_rightFollower = 9; // CAN id
     public static final int k_leftDrive = 11; // CAN id
-    public static final int k_leftFollower = 10; // CAN i
+    public static final int k_leftFollower = 10; // CAN id
   }
 
   public static class Arm {
     public static final int k_armMotor = 19; // left CAN id
     public static final int k_armFollower = 4; // right CAN id
+    public static final int k_armEncoder = 3; // encoder CAN id
     public static final int k_armBrake = 1; //pneumatic channel
+    public static final double k_armTicksToDegrees = 0.0875;
+    public static final double k_armZeroAngle = 180.619;
   }
 
   public static class Wrist {
