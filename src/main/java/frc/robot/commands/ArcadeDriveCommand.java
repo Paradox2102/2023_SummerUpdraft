@@ -4,20 +4,28 @@
 
 package frc.robot.commands;
 
+import java.util.function.BooleanSupplier;
+import java.util.function.DoubleSupplier;
+
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveSubsystem;
 
 public class ArcadeDriveCommand extends CommandBase {
   private final DriveSubsystem m_subsystem;
-  private final Joystick m_joystick;
+  private final DoubleSupplier m_drive;
+  private final DoubleSupplier m_turn;
+  private final BooleanSupplier m_reverse;
 
   /** Creates a new ArcadeDrive. */
-  public ArcadeDriveCommand(DriveSubsystem subsystem, Joystick joystick) {
+  public ArcadeDriveCommand(DriveSubsystem subsystem, DoubleSupplier drive, DoubleSupplier turn, BooleanSupplier reverse) {
     // Logger.log("ArcadeDriveCommand", 3, "ArcadeDriveCommand()");
 
     m_subsystem = subsystem;
-    m_joystick = joystick;
+    m_drive = drive;
+    m_turn = turn;
+    m_reverse = reverse;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(m_subsystem);
   }
@@ -31,13 +39,20 @@ public class ArcadeDriveCommand extends CommandBase {
   @Override
   public void execute() {
 
-    double y = m_joystick.getY();
-    double x = m_joystick.getX();
+    double drive = m_drive.getAsDouble();
+    double turn = m_turn.getAsDouble();
 
-    x = Math.abs(x) * x;
-    y = Math.abs(y) * y; 
+    drive = Math.abs(drive) * drive;
+    turn = Math.abs(turn) * turn; 
 
-    m_subsystem.setPower(y + x, y - x);
+    boolean reverse = m_reverse.getAsBoolean();
+
+    if (!reverse) {
+      drive = -drive; 
+    } 
+
+    m_subsystem.setPower(drive + turn, drive - turn);
+
   }
 
   // Called once the command ends or is interrupted.
