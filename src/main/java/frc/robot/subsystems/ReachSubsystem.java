@@ -18,9 +18,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class ReachSubsystem extends SubsystemBase {
+  private static final double k_stallPower = 0.0;
   private TalonFX m_reachMotor = new TalonFX(Constants.Reach.k_reachMotor);
   private Timer m_timer = new Timer();
-  private static final double k_stallSpeed = 1500;
+  private static final double k_stallSpeed = 100;
   private static final double k_stallTimer = 0.2;
   private double m_reachPower;
 
@@ -50,7 +51,7 @@ public class ReachSubsystem extends SubsystemBase {
   }
 
   public void setBrakeMode(Boolean brake) {
-    NeutralMode mode = brake ? NeutralMode.Brake : NeutralMode.Coast;
+    NeutralMode mode = brake? NeutralMode.Brake : NeutralMode.Coast;
     m_reachMotor.setNeutralMode(mode);
   }
 
@@ -61,7 +62,8 @@ public class ReachSubsystem extends SubsystemBase {
     double power = m_reachPower;
     if (Math.abs(getSpeed()) < k_stallSpeed) {
       if (m_timer.get() > k_stallTimer) {
-        power = 0;
+        // power = Math.copySign(k_stallPower, m_reachPower);
+        power = k_stallPower;
       }
     } else {
       m_timer.reset();

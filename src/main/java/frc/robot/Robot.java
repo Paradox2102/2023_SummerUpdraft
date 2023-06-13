@@ -83,6 +83,7 @@ public class Robot extends TimedRobot {
     }
 
     m_robotContainer.m_driveSubsystem.setBrakeMode(true);
+    m_robotContainer.m_reachSubsystem.setBrakeMode(true);
   }
 
   /** This function is called periodically during operator control. */
