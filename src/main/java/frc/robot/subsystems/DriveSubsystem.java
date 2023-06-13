@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -41,6 +42,14 @@ public class DriveSubsystem extends SubsystemBase {
   public void setPower(double rightPower, double leftPower) {
     m_rightDrive.set(ControlMode.PercentOutput, rightPower);
     m_leftDrive.set(ControlMode.PercentOutput, leftPower);
+  }
+
+  public void  setBrakeMode(boolean brake) {
+    NeutralMode mode = brake ? NeutralMode.Brake : NeutralMode.Coast;
+    m_leftDrive.setNeutralMode(mode);
+    m_leftDriveFollower.setNeutralMode(mode);
+    m_rightDrive.setNeutralMode(mode);
+    m_rightDriveFollower.setNeutralMode(mode);
   }
 
 }
