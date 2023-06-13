@@ -21,4 +21,10 @@ public final class Constants {
   public static final int k_rightDriveFollower = 9;
   public static final int k_leftDrive = 11;
   public static final int k_leftDriveFollower = 10;
+
+  //arm subsystem constants
+  public static final int k_armMotor = 0;
+  public static final int k_armFollower = 0;
+  public static final int k_armBrake = 0;
+  public static final double k_armTicksToDegrees = 6;
 }
