@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.ApriltagsCamera.Logger;
 import frc.robot.subsystems.WristSubsystem;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -17,6 +18,7 @@ public class SetWristPositionCommand extends InstantCommand {
     // Use addRequirements() here to declare subsystem dependencies.
     m_subsystem = subsystem;
     m_setPoint = setPoint;
+    Logger.log("SetWristPositionCommand", 0, "SetWristPositionCommand");
   }
 
   // Called when the command is initially scheduled.

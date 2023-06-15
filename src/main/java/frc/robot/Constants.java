@@ -34,7 +34,7 @@ public final class Constants {
     public static final int k_armEncoder = 3; // encoder CAN id
     public static final int k_armBrake = 1; //pneumatic channel
     public static final double k_armTicksToDegrees = 0.0875;
-    public static final double k_armZeroAngle = 180.619;
+    public static final double k_armZeroAngle = 180.61;
   }
 
   public static class Wrist {

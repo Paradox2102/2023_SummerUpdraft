@@ -11,6 +11,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.ApriltagsCamera.Logger;
 import frc.robot.Constants;
 
 public class DriveSubsystem extends SubsystemBase {
@@ -32,15 +33,18 @@ public class DriveSubsystem extends SubsystemBase {
     m_leftDrive.setInverted(TalonFXInvertType.Clockwise);
     m_leftFollower.follow(m_leftDrive);
     m_leftFollower.setInverted(TalonFXInvertType.FollowMaster);
+    Logger.log("DriveSubsystem", 0, "DriveSubsystem");
   }
 
   public void setPower(double rightPower, double leftPower) {
     m_rightDrive.set(TalonFXControlMode.PercentOutput, rightPower);
     m_leftDrive.set(TalonFXControlMode.PercentOutput, leftPower);
+    Logger.log("DriveSubsystem", 0, String.format("%s, %f, %s, %f", "Set Power Left: ", leftPower, " Right: ", rightPower));
   }
 
   public void stop() {
     setPower(0, 0);
+    Logger.log("DriveSubsystem", 0, "Stop");
   }
 
   public void arcadeDrive(double speed, double rotation) {
@@ -53,11 +57,13 @@ public class DriveSubsystem extends SubsystemBase {
       m_rightFollower.setNeutralMode(NeutralMode.Brake);
       m_leftDrive.setNeutralMode(NeutralMode.Brake);
       m_leftFollower.setNeutralMode(NeutralMode.Brake);
+      Logger.log("DriveSubsystem", 0, "Brake Mode");
     } else {
       m_rightDrive.setNeutralMode(NeutralMode.Coast);
       m_rightFollower.setNeutralMode(NeutralMode.Coast);
       m_leftDrive.setNeutralMode(NeutralMode.Coast);
       m_leftFollower.setNeutralMode(NeutralMode.Coast);
+      Logger.log("DriveSubsystem", 0, "Coast Mode");
     }
   }
 

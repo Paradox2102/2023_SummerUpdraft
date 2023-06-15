@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.ApriltagsCamera.Logger;
 import frc.robot.subsystems.WristSubsystem;
 
 public class MoveWristCommand extends CommandBase {
@@ -16,12 +17,14 @@ public class MoveWristCommand extends CommandBase {
     m_power = power;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
+    Logger.log("MoveWristCommand", 0, "MoveWristCommand");
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     m_subsystem.setPower(m_power);
+    Logger.log("MoveWristCommand", 0, "Initialize");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -32,6 +35,7 @@ public class MoveWristCommand extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     m_subsystem.setPower(0);
+    Logger.log("MoveWristCommand", 0, "End");
   }
 
   // Returns true when the command should end.
