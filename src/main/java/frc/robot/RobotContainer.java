@@ -4,17 +4,16 @@
 
 package frc.robot;
 
-import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.Autos;
-import frc.robot.commands.ExampleCommand;
+//import frc.robot.Constants.OperatorConstants;
+//import frc.robot.commands.Autos;
 import frc.robot.commands.MoveArmCommand;
 import frc.robot.commands.MoveWristCommand;
+import frc.robot.commands.SetArmPositionCommand;
 import frc.robot.commands.SetWristPositionCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.WristSubsystem;
-import edu.wpi.first.wpilibj2.command.Command;
+//import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -28,15 +27,14 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   final DriveSubsystem m_driveSubsystem = new DriveSubsystem();
   final WristSubsystem m_wristSubsystem = new WristSubsystem();
   final ArmSubsystem m_armSubsystem = new ArmSubsystem();
   private final CommandJoystick m_stick = new CommandJoystick(0);
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController m_driverController =
-      new CommandXboxController(OperatorConstants.kDriverControllerPort);
+  // private final CommandXboxController m_driverController =
+  //     new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -55,8 +53,8 @@ public class RobotContainer {
    */
   private void configureBindings() {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    new Trigger(m_exampleSubsystem::exampleCondition)
-        .onTrue(new ExampleCommand(m_exampleSubsystem));
+    // new Trigger(m_exampleSubsystem::exampleCondition)
+    //     .onTrue(new ExampleCommand(m_exampleSubsystem));
       m_driveSubsystem.setDefaultCommand(new RunCommand(()->m_driveSubsystem.arcadeDrive(m_stick.getThrottle() > 0 ? -m_stick.getY(): m_stick.getY(), -m_stick.getX()), m_driveSubsystem));
     m_stick.button(1).whileTrue(new MoveWristCommand(m_wristSubsystem, 0.2));
     m_stick.button(2).whileTrue(new MoveWristCommand(m_wristSubsystem, -0.2));
@@ -65,9 +63,11 @@ public class RobotContainer {
     m_stick.button(5).onTrue(new SetWristPositionCommand(m_wristSubsystem, -90));
     m_stick.button(6).whileTrue(new MoveArmCommand(m_armSubsystem, 0.2));
     m_stick.button(7).whileTrue(new MoveArmCommand(m_armSubsystem, -0.2));
+    m_stick.button(8).onTrue(new SetArmPositionCommand(m_armSubsystem, 0));
+    m_stick.button(9).onTrue(new SetArmPositionCommand(m_armSubsystem, 0));
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
-    m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
+    //m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
   }
 
   /**
@@ -75,8 +75,8 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    return Autos.exampleAuto(m_exampleSubsystem);
-  }
+  // public Command getAutonomousCommand() {
+  //   // An example command will be run in autonomous
+  //   return Autos.exampleAuto(m_exampleSubsystem);
+  // }
 }
