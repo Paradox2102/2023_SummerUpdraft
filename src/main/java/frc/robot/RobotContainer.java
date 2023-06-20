@@ -10,6 +10,7 @@ import frc.robot.commands.MoveArmCommand;
 import frc.robot.commands.MoveWristCommand;
 import frc.robot.commands.SetArmPositionCommand;
 import frc.robot.commands.SetWristPositionCommand;
+import frc.robot.commands.CalibrateDriveCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.WristSubsystem;
@@ -65,6 +66,7 @@ public class RobotContainer {
     m_stick.button(7).whileTrue(new MoveArmCommand(m_armSubsystem, -0.2));
     m_stick.button(8).onTrue(new SetArmPositionCommand(m_armSubsystem, 0));
     m_stick.button(9).onTrue(new SetArmPositionCommand(m_armSubsystem, 0));
+    m_stick.button(10).toggleOnTrue(new CalibrateDriveCommand(m_driveSubsystem));
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
     //m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());

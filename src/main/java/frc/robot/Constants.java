@@ -26,6 +26,7 @@ public final class Constants {
     public static final int k_rightFollower = 9; // CAN id
     public static final int k_leftDrive = 11; // CAN id
     public static final int k_leftFollower = 10; // CAN id
+    public static final int k_maxSpeed = 15000;
   }
 
   public static class Arm {
