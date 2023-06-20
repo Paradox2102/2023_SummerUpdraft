@@ -27,4 +27,7 @@ public final class Constants {
   public static final int k_armFollower = 0;
   public static final int k_armBrake = 0;
   public static final double k_armTicksToDegrees = 6;
+
+  //reach subsystem constants
+  public static final int k_reachMotor = 0;
 }
