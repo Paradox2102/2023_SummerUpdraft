@@ -12,10 +12,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class DriveSubsystem extends SubsystemBase {
-  TalonFX m_leftMotor = new TalonFX(Constants.Drive.k_leftDriveMotor);
-  TalonFX m_leftFollower = new TalonFX(Constants.Drive.k_leftDriveMotorFollower);
-  TalonFX m_rightMotor = new TalonFX(Constants.Drive.k_rightDriveMotor);
-  TalonFX m_rightFollower = new TalonFX(Constants.Drive.k_rightDriveMotorFollower);
+  private TalonFX m_leftMotor = new TalonFX(Constants.Drive.k_leftDriveMotor);
+  private TalonFX m_leftFollower = new TalonFX(Constants.Drive.k_leftDriveMotorFollower);
+  private TalonFX m_rightMotor = new TalonFX(Constants.Drive.k_rightDriveMotor);
+  private TalonFX m_rightFollower = new TalonFX(Constants.Drive.k_rightDriveMotorFollower);
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
     m_leftMotor.configFactoryDefault();

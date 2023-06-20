@@ -4,10 +4,6 @@
 
 package frc.robot.subsystems;
 
-import java.io.FilenameFilter;
-
-import javax.swing.text.StyledEditorKit.FontFamilyAction;
-
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
@@ -18,11 +14,15 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class ReachSubsystem extends SubsystemBase {
-  private static final double k_stallPower = 0.0;
   private TalonFX m_reachMotor = new TalonFX(Constants.Reach.k_reachMotor);
   private Timer m_timer = new Timer();
   private static final double k_stallSpeed = 100;
   private static final double k_stallTimer = 0.2;
+  private static final double k_stallPower = 0.0;
+
+  private double m_zero;
+  private double k_ticsToInches = -29.5/148869;
+  private double m_position;
   private double m_reachPower;
 
   enum State {
@@ -31,19 +31,25 @@ public class ReachSubsystem extends SubsystemBase {
     stalledDown
   }
 
-  private static State m_state;
+  // private static State m_state;
   //identify state
 
   /** Creates a new ReachSubsystem. */
   public ReachSubsystem() {
-    m_state = State.normal;
+    // m_state = State.normal;
     m_reachMotor.configFactoryDefault();
+    m_zero = m_reachMotor.getSelectedSensorPosition();
   }
 
   public void setPower(double reachPower) {
     m_reachPower = reachPower;
     m_timer.reset();
     m_timer.start();
+  }
+
+  public double getDistance() {
+     m_position = (m_reachMotor.getSelectedSensorPosition() - m_zero) * k_ticsToInches;
+     return m_position;
   }
 
   public double getSpeed() {
@@ -60,6 +66,7 @@ public class ReachSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
 
     double power = m_reachPower;
+    double raw = m_reachMotor.getSelectedSensorPosition();
     if (Math.abs(getSpeed()) < k_stallSpeed) {
       if (m_timer.get() > k_stallTimer) {
         // power = Math.copySign(k_stallPower, m_reachPower);
@@ -69,6 +76,8 @@ public class ReachSubsystem extends SubsystemBase {
       m_timer.reset();
     }
     m_reachMotor.set(ControlMode.PercentOutput, power);
+    SmartDashboard.putNumber("Cooked Reach position", getDistance());
+    SmartDashboard.putNumber("Raw Reach position", raw);
     SmartDashboard.putNumber("Reach Speed", getSpeed());
     SmartDashboard.putNumber("Reach Power", power);
   }
