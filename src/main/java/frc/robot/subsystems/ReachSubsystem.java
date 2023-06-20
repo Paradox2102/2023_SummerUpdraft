@@ -20,7 +20,7 @@ public class ReachSubsystem extends SubsystemBase {
   private Encoder m_encoder;
   private double m_reachPower;
   private double m_zero;
-  private double k_ticksToInches;
+  private double k_ticksToInches = -29.5/148869;
   private double m_position = 0;
   private static final double k_stallPower = 0;
   private static final double k_stallTime = 2;
