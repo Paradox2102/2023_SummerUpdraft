@@ -208,11 +208,20 @@ public class DriveSubsystem extends SubsystemBase {
     }
   }
 
+  public boolean isFailingChargeStationClimb() {
+    // PROBLEM: We should create a getLeftVelocity method that returns FPS.
+    // It's not obvious to the reader that this test is checking against 10FPS because the TalonFX velocity reports ticks per 100ms. -Gavin
+    return m_leftDrive.getSelectedSensorVelocity() * Constants.Drive.k_ticksToFeet < .5 && m_pathFollowTimer.get() > 5;
+  }
+
   @Override
   public void periodic() {
     m_drive.feed();
     SmartDashboard.putNumber("Right Speed", m_rightDrive.getSelectedSensorVelocity());
     SmartDashboard.putNumber("Left Speed", m_leftDrive.getSelectedSensorVelocity());
+    SmartDashboard.putNumber("Gyro Yaw", m_gyro.getAngle());
+    SmartDashboard.putNumber("Gyro Roll", m_gyro.getRoll());
+    m_posTracker.update(m_frontCamera, m_backCamera);
     // This method will be called once per scheduler run
   }
 }
