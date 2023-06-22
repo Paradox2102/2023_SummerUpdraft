@@ -66,7 +66,7 @@ public class RobotContainer {
     //m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
     m_driverController.button(1).whileTrue(new ReachCommand(m_ReachSubsystem, 0.4));
     m_driverController.button(2).whileTrue(new ReachCommand(m_ReachSubsystem, -0.4));
-    m_driverController.button(3).whileTrue(new PositionReachCommand(m_ReachSubsystem, 12));
+    m_driverController.button(3).onTrue(new PositionReachCommand(m_ReachSubsystem, 12));
   }
 
   /**
