@@ -12,9 +12,10 @@ public class ReachPositionCommand extends CommandBase {
   double m_setPoint;  
   /** Creates a new ReachPositionCommand. */
   public ReachPositionCommand(ReachSubsystem subsystem, double positionInInches) {
-    // Use addRequirements() here to declare subsystem dependencies.
     m_subsystem = subsystem;
     m_setPoint = positionInInches;
+    // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(m_subsystem);
   }
 
   // Called when the command is initially scheduled.

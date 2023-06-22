@@ -65,7 +65,7 @@ public class RobotContainer {
       m_driverController.button(2).whileTrue(new IntakeCommand(m_intakeSubsystem, -0.4));
       m_driverController.button(3).whileTrue(new ReachCommand(m_reachSubsystem, 0.3));
       m_driverController.button(4).whileTrue(new ReachCommand(m_reachSubsystem, -0.3));
-      m_driverController.button(5).whileTrue(new ReachPositionCommand(m_reachSubsystem, 12));
+      m_driverController.button(5).whileTrue(new ReachPositionCommand(m_reachSubsystem, 27));
   }
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

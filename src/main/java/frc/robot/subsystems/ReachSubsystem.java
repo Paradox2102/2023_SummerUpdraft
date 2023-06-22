@@ -47,6 +47,8 @@ public class ReachSubsystem extends SubsystemBase {
     // m_state = State.normal;
     m_reachMotor.configFactoryDefault();
     m_zero = m_reachMotor.getSelectedSensorPosition();
+    m_reachMotor.setInverted(true);
+    setBrakeMode(true);
   }
   
 
