@@ -16,12 +16,19 @@ package frc.robot;
  * wherever the
  * constants are needed, to reduce verbosity.
  */
+
 public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
+  //reach subsystem constants
+  public static final int k_reachMotor = 0;
+ 
+  public static class Intake {
+    public static final int k_intakeMotor = 7;
+  }
 
-  public static class Drive {
+ public static class Drive {
     public static final int k_rightDrive = 8; // CAN id
     public static final int k_rightFollower = 9; // CAN id
     public static final int k_leftDrive = 11; // CAN id
