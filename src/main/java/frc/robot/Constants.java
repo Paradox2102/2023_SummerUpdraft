@@ -21,24 +21,46 @@ public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
-
-  // Drive Motors example: Constants.Drive.k_leftDriveMotor
-  public static class Drive {
-    public static final int k_leftDriveMotor = 11;
-    public static final int k_leftDriveMotorFollower = 10;
-    public static final int k_rightDriveMotor = 8;
-    public static final int k_rightDriveMotorFollower = 9;
-  }
-
+  //reach subsystem constants
+  public static final int k_reachMotor = 0;
+ 
   public static class Intake {
     public static final int k_intakeMotor = 7;
   }
 
-  public static class Reach {
-    public static final int k_reachMotor = 0;
+ public static class Drive {
+    public static final int k_rightDrive = 8; // CAN id
+    public static final int k_rightFollower = 9; // CAN id
+    public static final int k_leftDrive = 11; // CAN id
+    public static final int k_leftFollower = 10; // CAN id
+    public static final int k_maxSpeed = 15000;
+    public static final double k_ticksToFeet = 18.0 / 204024;
+    public static final double k_wheelBase = 2.04;
   }
+
   public static class Arm {
-    public static final int k_armMotor = 19;
-    public static final int k_armFollower = 4;
+    public static final int k_armMotor = 19; // left CAN id
+    public static final int k_armFollower = 4; // right CAN id
+    public static final int k_armEncoder = 3; // encoder CAN id
+    public static final int k_armBrake = 1; //pneumatic channel
+    public static final double k_armTicksToDegrees = 0.0875;
+    public static final double k_armZeroAngle = 180.61;
+  }
+
+  public static class Wrist {
+    public static final int k_wristMotor = 1; //CAN id
+    public static final double k_wristTicksToDegrees = 3.893;
+    public static final double k_wristStartingAngle = 124.48/k_wristTicksToDegrees;
+  }
+
+  public static class Camera {
+    public static final double k_frontCameraAngle = -3.2;
+    public static final double k_rearCameraAngle = 179;
+    public static final double k_xFrontCameraOffsetInches = 6.5;
+    public static final double k_xRearCameraOffsetInches = -7.5;
+  }
+
+  public static class Field {
+    public static final double k_startAngleDegrees = -90;
   }
 }

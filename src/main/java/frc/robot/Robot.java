@@ -5,8 +5,12 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.subsystems.DriveSubsystem;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -16,7 +20,6 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  */
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
-
   private RobotContainer m_robotContainer;
 
   /**
@@ -28,6 +31,15 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+    new Trigger(this::isEnabled)
+      .negate() //Negate the trigger, so it is active when the robot is disabled
+      .debounce(3) //Delay action until robot has been disabled for a certain time
+      .onTrue( //Finally take action
+        new InstantCommand( //Instant command will execute our "initialize" method and finish immediately
+          () -> m_robotContainer.m_driveSubsystem.setBrake(false), //Enable coast mode in drive train
+          m_robotContainer.m_driveSubsystem) //Command requires subsystem
+          .ignoringDisable(true)); //This command can run when the robot is disabled
+
   }
 
   /**
@@ -44,12 +56,20 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+    new Trigger(this::isEnabled)
+      .negate() //Negate the trigger, so it is active when the robot is disabled
+      .debounce(5) //Delay action until robot has been disabled for a certain time
+      .onTrue( //Finally take action
+        new InstantCommand( //Instant command will execute our "initialize" method and finish immediately
+          () -> m_robotContainer.m_driveSubsystem.setBrake(false), //Enable coast mode in drive train
+          m_robotContainer.m_driveSubsystem) //Command requires subsystem
+          .ignoringDisable(true)); //This command can run when the robot is disabled
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
-    m_robotContainer.m_driveSubsystem.setBrakeMode(false);
+    m_robotContainer.m_driveSubsystem.setBrake(false);
   }
 
   @Override
@@ -60,7 +80,7 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
-    m_robotContainer.m_driveSubsystem.setBrakeMode(true);
+    m_robotContainer.m_driveSubsystem.setBrake(true);
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
@@ -74,6 +94,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    m_robotContainer.m_driveSubsystem.setBrake(true);
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
@@ -81,9 +102,6 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-
-    m_robotContainer.m_driveSubsystem.setBrakeMode(true);
-    m_robotContainer.m_reachSubsystem.setBrakeMode(true);
   }
 
   /** This function is called periodically during operator control. */

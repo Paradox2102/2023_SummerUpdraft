@@ -7,13 +7,14 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ReachSubsystem;
 
-public class ReachPositionCommand extends CommandBase {
+public class PositionReachCommand extends CommandBase {
   ReachSubsystem m_subsystem;
-  double m_setPoint;  
-  /** Creates a new ReachPositionCommand. */
-  public ReachPositionCommand(ReachSubsystem subsystem, double positionInInches) {
+  double m_setPosition;
+  /** Creates a new PositionReachCommand. */
+  public PositionReachCommand(ReachSubsystem subsystem, double positionInInches ) {
     m_subsystem = subsystem;
-    m_setPoint = positionInInches;
+    m_setPosition = positionInInches;
+
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(m_subsystem);
   }
@@ -21,7 +22,7 @@ public class ReachPositionCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_subsystem.setPosition(m_setPoint);
+    m_subsystem.setPosition(m_setPosition);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

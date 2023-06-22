@@ -4,50 +4,215 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import java.util.OptionalDouble;
+import java.util.function.DoubleSupplier;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
+import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.ctre.phoenix.sensors.WPI_PigeonIMU;
+
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.ApriltagsCamera.ApriltagsCamera;
+import frc.ApriltagsCamera.Logger;
+import frc.ApriltagsCamera.PositionServer;
+import frc.pathfinder.Pathfinder.Path;
 import frc.robot.Constants;
+import frc.robot.LocationTracker;
+import frc.robot.Navigator;
+import frc.robot.PositionTracker;
+import frc.robot.PositionTrackerPose;
+import frc.robot.PurePursuit;
+import frc.robot.Sensor;
 
 public class DriveSubsystem extends SubsystemBase {
-  private TalonFX m_leftMotor = new TalonFX(Constants.Drive.k_leftDriveMotor);
-  private TalonFX m_leftFollower = new TalonFX(Constants.Drive.k_leftDriveMotorFollower);
-  private TalonFX m_rightMotor = new TalonFX(Constants.Drive.k_rightDriveMotor);
-  private TalonFX m_rightFollower = new TalonFX(Constants.Drive.k_rightDriveMotorFollower);
+  private final WPI_TalonFX m_rightDrive = new WPI_TalonFX(Constants.Drive.k_rightDrive);
+  private final WPI_TalonFX m_rightFollower = new WPI_TalonFX(Constants.Drive.k_rightFollower);
+  private final WPI_TalonFX m_leftDrive = new WPI_TalonFX(Constants.Drive.k_leftDrive);
+  private final WPI_TalonFX m_leftFollower = new WPI_TalonFX(Constants.Drive.k_leftFollower);
+  private final DifferentialDrive m_drive = new DifferentialDrive(m_leftDrive, m_rightDrive);
+  private static double k_fLeft = (0.05);
+  private static double k_fRight = (0.05);
+  private static double k_p = 0.025;
+  private static double k_i = 0.000025;
+  private static double k_d = 0;
+  Navigator m_navigator;
+  private Sensor m_sensors;
+  private PositionTracker m_posTracker;
+  ApriltagsCamera m_frontCamera;
+  ApriltagsCamera m_backCamera; 
+  WPI_PigeonIMU m_gyro = new WPI_PigeonIMU(0);
+  LocationTracker m_tracker = new LocationTracker();
+  private final Field2d m_field = new Field2d();
+  AprilTagFieldLayout m_aprilTags;
+  public PurePursuit m_pursuit;
+  Timer m_pathFollowTimer = new Timer();
+
   /** Creates a new DriveSubsystem. */
-  public DriveSubsystem() {
-    m_leftMotor.configFactoryDefault();
-    m_leftFollower.configFactoryDefault();
-    m_rightMotor.configFactoryDefault();
+  public DriveSubsystem(ApriltagsCamera frontCamera, ApriltagsCamera backCamera, AprilTagFieldLayout aprilTags) {
+    m_pathFollowTimer.reset();
+    m_frontCamera = frontCamera;
+    m_backCamera = backCamera;
+    m_aprilTags = aprilTags;
+    m_gyro.reset();
+
+    m_rightDrive.configFactoryDefault();
     m_rightFollower.configFactoryDefault();
-
-    m_leftFollower.follow(m_leftMotor);
-    m_rightFollower.follow(m_rightMotor);
-
-    m_leftMotor.setInverted(true);
-    m_leftFollower.setInverted(true);
-    m_rightMotor.setInverted(false);
-    m_rightFollower.setInverted(false);
+    m_leftDrive.configFactoryDefault();
+    m_leftFollower.configFactoryDefault();
+    m_rightDrive.setInverted(TalonFXInvertType.CounterClockwise);
+    m_rightFollower.follow(m_rightDrive);
+    m_rightFollower.setInverted(TalonFXInvertType.FollowMaster);
+    m_leftDrive.setInverted(TalonFXInvertType.Clockwise);
+    m_leftFollower.follow(m_leftDrive);
+    m_leftFollower.setInverted(TalonFXInvertType.FollowMaster);
+    m_rightDrive.setSelectedSensorPosition(0);
+    m_leftDrive.setSelectedSensorPosition(0);
+    m_rightDrive.config_kF(0, k_fRight);
+    m_rightDrive.config_kP(0, k_p);
+    m_rightDrive.config_kI(0, k_i);
+    m_rightDrive.config_kD(0, k_d);
+    m_leftDrive.config_kF(0, k_fLeft);
+    m_leftDrive.config_kP(0, k_p);
+    m_leftDrive.config_kI(0, k_i);
+    m_leftDrive.config_kD(0, k_d);
+    m_sensors = new Sensor(() -> m_leftDrive.getSelectedSensorPosition(), () -> m_rightDrive.getSelectedSensorPosition(), () -> m_leftDrive.getSelectedSensorVelocity(), () -> m_rightDrive.getSelectedSensorVelocity() , m_gyro);
+    m_posTracker = new PositionTrackerPose(0, 0, m_sensors);
+    m_navigator = new Navigator(m_posTracker);
+    m_navigator.reset(0, 0, 0);
+    m_pursuit = new PurePursuit(m_navigator, (l, r) -> setSpeedFPS(l, r), 20);
+    m_pursuit.enableLogging("/home/lvuser/logs");
+    Logger.log("DriveSubsystem", 0, "DriveSubsystem");
   }
 
-  public void setPower(double leftPower, double rightPower) {
-    m_leftMotor.set(ControlMode.PercentOutput, leftPower);
-    m_rightMotor.set(ControlMode.PercentOutput, rightPower);
+  public void setPower(double rightPower, double leftPower) {
+    m_rightDrive.set(TalonFXControlMode.PercentOutput, rightPower);
+    m_leftDrive.set(TalonFXControlMode.PercentOutput, leftPower);
+    Logger.log("DriveSubsystem", 0, String.format("%s, %f, %s, %f", "Set Power Left: ", leftPower, " Right: ", rightPower));
   }
 
-  public void setBrakeMode(boolean brake) {
-    NeutralMode mode = brake? NeutralMode.Brake : NeutralMode.Coast;
-    
-    m_leftMotor.setNeutralMode(mode);
-    m_leftFollower.setNeutralMode(mode);
-    m_rightMotor.setNeutralMode(mode);
-    m_rightFollower.setNeutralMode(mode);
+  public void setSpeed (double rightSpeed, double leftSpeed) {
+    m_rightDrive.set(TalonFXControlMode.Velocity, rightSpeed);
+    m_leftDrive.set(TalonFXControlMode.Velocity, leftSpeed);
+  }
+
+  public void setSpeedFPS (double rightSpeed, double leftSpeed) {
+    rightSpeed = rightSpeed * 1.0/10 * 1.0/Constants.Drive.k_ticksToFeet;
+    leftSpeed = leftSpeed * 1.0/10 * 1.0/Constants.Drive.k_ticksToFeet;
+    m_rightDrive.set(TalonFXControlMode.Velocity, rightSpeed);
+    m_leftDrive.set(TalonFXControlMode.Velocity, leftSpeed);
+  }
+
+  
+  public void stop() {
+    setPower(0, 0);
+    Logger.log("DriveSubsystem", 0, "Stop");
+  }
+
+  public PositionTracker getTracker() {
+    return m_posTracker;
+  }
+
+  public void resetEncoders() {
+    m_leftDrive.setSelectedSensorPosition(0);
+    m_rightDrive.setSelectedSensorPosition(0);
+  }
+
+  // Start autonomous path during Teleop
+  public void startPath(Path path, boolean isReversed, boolean setPosition, DoubleSupplier speed) {
+    m_pursuit.loadPath(path, isReversed, true, setPosition, speed);
+    m_pursuit.startPath();
+    m_pathFollowTimer.reset();
+    m_pathFollowTimer.start();
+  }
+
+  public void endPath() {
+    m_pursuit.stopFollow();
+    m_pathFollowTimer.stop();
+  }
+
+  public double getRobotY() {
+    return m_posTracker.getPose2d().getY();
+  }
+
+  public double getRobotX() {
+    return m_posTracker.getPose2d().getX();
+  }
+
+  public double getLeftPos() {
+    return m_leftDrive.getSelectedSensorPosition() * Constants.Drive.k_ticksToFeet;
+  }
+
+  public double getRightPos() {
+    return m_rightDrive.getSelectedSensorPosition() * Constants.Drive.k_ticksToFeet;
+  }
+
+  public double getPitch() {
+    return m_gyro.getRoll();
+  }
+
+  public double computeTargetDegrees(double x0, double y0) {
+    Pose2d pose = m_posTracker.getPose2d(); 
+    double y = pose.getY() - y0;
+    double x = x0 - pose.getX();
+    double m_targetAngle = -Math.atan2(y, x);
+    SmartDashboard.putNumber("Target Angle", Math.toDegrees(m_targetAngle));
+    SmartDashboard.putNumber("Robot X: ", pose.getX());
+    SmartDashboard.putNumber("Robot Y: ", pose.getY()); 
+    return Math.toDegrees(m_targetAngle);
+  }
+
+  public OptionalDouble findTargetAngleDegrees() {
+    PositionServer.Target target = m_posTracker.m_posServer.getTarget();
+    if (target == null){
+      return OptionalDouble.empty();
+    }
+    return OptionalDouble.of(computeTargetDegrees(target.m_x, target.m_y));
+  }
+
+  public boolean isPathFinished() {
+    return (m_pursuit.isFinished());
+  }
+
+  public void resetGyro(double angle) {
+    m_gyro.reset();
+  }
+
+  public Sensor getSensors(){
+    return m_sensors;
+  } 
+
+  public void arcadeDrive(double speed, double rotation) {
+    m_drive.arcadeDrive(speed, rotation);
+  }
+
+  public void setBrake(boolean brake) {
+    if (brake) {
+      m_rightDrive.setNeutralMode(NeutralMode.Brake);
+      m_rightFollower.setNeutralMode(NeutralMode.Brake);
+      m_leftDrive.setNeutralMode(NeutralMode.Brake);
+      m_leftFollower.setNeutralMode(NeutralMode.Brake);
+      Logger.log("DriveSubsystem", 0, "Brake Mode");
+    } else {
+      m_rightDrive.setNeutralMode(NeutralMode.Coast);
+      m_rightFollower.setNeutralMode(NeutralMode.Coast);
+      m_leftDrive.setNeutralMode(NeutralMode.Coast);
+      m_leftFollower.setNeutralMode(NeutralMode.Coast);
+    }
   }
 
   @Override
   public void periodic() {
+    m_drive.feed();
+    SmartDashboard.putNumber("Right Speed", m_rightDrive.getSelectedSensorVelocity());
+    SmartDashboard.putNumber("Left Speed", m_leftDrive.getSelectedSensorVelocity());
     // This method will be called once per scheduler run
   }
 }
