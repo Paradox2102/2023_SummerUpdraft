@@ -9,6 +9,7 @@ import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.ReachCommand;
+import frc.robot.commands.ReachPositionCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -64,6 +65,7 @@ public class RobotContainer {
       m_driverController.button(2).whileTrue(new IntakeCommand(m_intakeSubsystem, -0.4));
       m_driverController.button(3).whileTrue(new ReachCommand(m_reachSubsystem, 0.3));
       m_driverController.button(4).whileTrue(new ReachCommand(m_reachSubsystem, -0.3));
+      m_driverController.button(5).whileTrue(new ReachPositionCommand(m_reachSubsystem, 12));
   }
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

@@ -16,20 +16,28 @@ import frc.robot.Constants;
 public class ReachSubsystem extends SubsystemBase {
   private TalonFX m_reachMotor = new TalonFX(Constants.Reach.k_reachMotor);
   private Timer m_timer = new Timer();
+
+//for stall check
   private static final double k_stallSpeed = 100;
   private static final double k_stallTimer = 0.2;
   private static final double k_stallPower = 0.0;
 
   private double m_zero;
-  private double k_ticsToInches = -29.5/148869;
+  private double k_ticsToInches = 29.5/148869;
   private double m_position;
   private double m_reachPower;
+//for PID
+  private double m_setPoint;
+  private boolean m_manual = true;
+  private double k_p = 16/30.0;
+  private double m_difference;
+  
 
-  enum State {
-    normal,
-    stalledUp,
-    stalledDown
-  }
+  // enum State {
+  //   normal,
+  //   stalledUp,
+  //   stalledDown
+  // }
 
   // private static State m_state;
   //identify state
@@ -40,11 +48,20 @@ public class ReachSubsystem extends SubsystemBase {
     m_reachMotor.configFactoryDefault();
     m_zero = m_reachMotor.getSelectedSensorPosition();
   }
+  
 
   public void setPower(double reachPower) {
     m_reachPower = reachPower;
     m_timer.reset();
     m_timer.start();
+    m_manual = true;
+  }
+
+  public void setPosition(double positionInInches){
+    m_setPoint = positionInInches;
+    m_timer.reset();
+    m_timer.start();
+    m_manual = false;
   }
 
   public double getDistance() {
@@ -65,8 +82,18 @@ public class ReachSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
 
-    double power = m_reachPower;
-    double raw = m_reachMotor.getSelectedSensorPosition();
+    double power;
+    double raw = m_reachMotor.getSelectedSensorPosition() - m_zero;
+
+    //P part of the PID
+    if(m_manual) {
+      power = m_reachPower;
+    } else {
+      m_difference = getDistance() - m_setPoint;
+      power = -k_p * m_difference;
+    }
+
+    //stall check
     if (Math.abs(getSpeed()) < k_stallSpeed) {
       if (m_timer.get() > k_stallTimer) {
         // power = Math.copySign(k_stallPower, m_reachPower);
@@ -75,6 +102,8 @@ public class ReachSubsystem extends SubsystemBase {
     } else {
       m_timer.reset();
     }
+
+
     m_reachMotor.set(ControlMode.PercentOutput, power);
     SmartDashboard.putNumber("Cooked Reach position", getDistance());
     SmartDashboard.putNumber("Raw Reach position", raw);
@@ -82,3 +111,5 @@ public class ReachSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Reach Power", power);
   }
 }
+    //boolean - dont need true or false (can use directly)
+

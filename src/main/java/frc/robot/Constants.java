@@ -37,4 +37,8 @@ public final class Constants {
   public static class Reach {
     public static final int k_reachMotor = 0;
   }
+  public static class Arm {
+    public static final int k_armMotor = 19;
+    public static final int k_armFollower = 4;
+  }
 }
