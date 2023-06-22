@@ -8,10 +8,14 @@ import frc.robot.commands.ArcadeDriveCommand;
 //import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.PositionReachCommand;
+import frc.robot.commands.ReachCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.ReachSubsystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -26,8 +30,11 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   public final DriveSubsystem m_driveSubsystem = new DriveSubsystem();
+  public final ReachSubsystem m_ReachSubsystem = new ReachSubsystem();
   private final Joystick m_joystick = new Joystick(0);
+  private final CommandJoystick m_driverController = new CommandJoystick(0);
   private final JoystickButton m_button1 = new JoystickButton(m_joystick, 1);
+  private final JoystickButton m_button2 = new JoystickButton(m_joystick, 2);
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   //private final CommandXboxController m_driverController =
@@ -57,6 +64,9 @@ public class RobotContainer {
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
     //m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
+    m_driverController.button(1).whileTrue(new ReachCommand(m_ReachSubsystem, 0.4));
+    m_driverController.button(2).whileTrue(new ReachCommand(m_ReachSubsystem, -0.4));
+    m_driverController.button(3).whileTrue(new PositionReachCommand(m_ReachSubsystem, 12));
   }
 
   /**
