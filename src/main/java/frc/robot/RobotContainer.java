@@ -10,10 +10,12 @@ import frc.robot.commands.MoveArmCommand;
 import frc.robot.commands.MoveWristCommand;
 import frc.robot.commands.SetArmPositionCommand;
 import frc.robot.commands.SetWristPositionCommand;
+import frc.ApriltagsCamera.ApriltagsCamera;
 import frc.robot.commands.CalibrateDriveCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.WristSubsystem;
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
 //import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
@@ -27,8 +29,13 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
+  //variables for apriltag navigation
+  public AprilTagFieldLayout m_aprilTags;
+  public final ApriltagsCamera m_frontCamera = new ApriltagsCamera(Constants.Camera.k_xFrontCameraOffsetInches, 0, Constants.Camera.k_frontCameraAngle);
+  public final ApriltagsCamera m_backCamera = new ApriltagsCamera(Constants.Camera.k_xRearCameraOffsetInches, 0, Constants.Camera.k_rearCameraAngle);
+
   // The robot's subsystems and commands are defined here...
-  final DriveSubsystem m_driveSubsystem = new DriveSubsystem();
+  final DriveSubsystem m_driveSubsystem = new DriveSubsystem(m_frontCamera, m_backCamera, m_aprilTags);
   final WristSubsystem m_wristSubsystem = new WristSubsystem();
   final ArmSubsystem m_armSubsystem = new ArmSubsystem();
   private final CommandJoystick m_stick = new CommandJoystick(0);
@@ -66,7 +73,7 @@ public class RobotContainer {
     m_stick.button(7).whileTrue(new MoveArmCommand(m_armSubsystem, -0.2));
     m_stick.button(8).onTrue(new SetArmPositionCommand(m_armSubsystem, 0));
     m_stick.button(9).onTrue(new SetArmPositionCommand(m_armSubsystem, 0));
-    m_stick.button(10).toggleOnTrue(new CalibrateDriveCommand(m_driveSubsystem));
+    m_stick.button(10).whileTrue(new CalibrateDriveCommand(m_driveSubsystem));
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
     //m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
