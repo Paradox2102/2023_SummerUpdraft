@@ -58,6 +58,7 @@ public class RobotContainer {
   final WristSubsystem m_wristSubsystem = new WristSubsystem();
   final ArmSubsystem m_armSubsystem = new ArmSubsystem();
   private final CommandJoystick m_stick = new CommandJoystick(0);
+  private final CommandJoystick m_stick2 = new CommandJoystick(1);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
