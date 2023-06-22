@@ -5,16 +5,17 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.ReachSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 
-
-public class ReachCommand extends CommandBase {
-  ReachSubsystem m_subsystem;
+public class IntakeCommand extends CommandBase {
+  /** Creates a new IntakeCommand. */
+  IntakeSubsystem m_subsystem;
   double m_power;
-  /** Creates a new ReachCommand. */
-  public ReachCommand(ReachSubsystem subsystem, double power) {
+
+  public IntakeCommand(IntakeSubsystem subsystem, double power) {
     m_subsystem = subsystem;
     m_power = power;
+
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(m_subsystem);
   }
@@ -33,6 +34,7 @@ public class ReachCommand extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     m_subsystem.setPower(0);
+
   }
 
   // Returns true when the command should end.
