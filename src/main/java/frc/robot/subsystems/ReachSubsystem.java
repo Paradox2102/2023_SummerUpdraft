@@ -21,13 +21,21 @@ public class ReachSubsystem extends SubsystemBase {
   private double m_difference;
   private double m_setPosition;
   private boolean m_manual = true;
-  private double k_ticksToInches = 29.5/148869;
+  private double k_ticksToInches = 29.5 / 148869;
   private double m_position = 0;
-  private static final double k_stallPower = 0.0;
+  private static final double k_stallPower = 0.1;
   private static final double k_stallTime = 0.2;
   private static final double k_stallSpeed = 100;
-  private static final double k_p = 16/30.0;
-  private static final double k_maxPower = 0.5;
+  private static final double k_p = 16 / 30.0;
+  // private static final double k_maxPower = 0.5;
+
+  enum State {
+    stalledUp,
+    normal,
+    stalledDown
+  }
+
+  private static State m_state = State.normal;
 
   /** Creates a new ReachSubsystem. */
   public ReachSubsystem() {
@@ -49,7 +57,7 @@ public class ReachSubsystem extends SubsystemBase {
     m_timer.reset();
     m_timer.start();
     m_manual = false;
-    
+
   }
 
   public double getDistance() {
@@ -57,8 +65,8 @@ public class ReachSubsystem extends SubsystemBase {
     return m_position;
   }
 
- public double getSpeed() {
-   return m_reachMotor.getSelectedSensorVelocity();
+  public double getSpeed() {
+    return m_reachMotor.getSelectedSensorVelocity();
   }
 
   public void setBrakeMode(boolean brake) {
@@ -71,32 +79,52 @@ public class ReachSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
     double power = m_reachPower;
     double raw = m_reachMotor.getSelectedSensorPosition() - m_zero;
-
+    // move manually or move to position (speed depending on distance)
     if (m_manual) {
       power = m_reachPower;
     } else {
       m_difference = getDistance() - m_setPosition;
-      //current-set;
+      // current-set;
       power = -k_p * m_difference;
       // if (Math.abs(power) > k_maxPower) {
-      //   power = k_maxPower * Math.signum(power);
+      // power = k_maxPower * Math.signum(power);
       // }
     }
-
-    if (Math.abs(getSpeed()) < k_stallSpeed) {
-      if (m_timer.get() > k_stallTime) {
-        power = k_stallPower;
-      } else {
-        m_timer.reset();
+    // stall check
+    if (Math.abs(power) < k_stallPower) {
+      if (Math.abs(getSpeed()) < k_stallSpeed) {
+        if (m_timer.get() > k_stallTime) {
+          if (power > 0) {
+            m_state = State.stalledUp;
+          } else {
+            m_state = State.stalledDown;
+          }
+        } else {
+          m_timer.reset();
+        }
       }
     }
+    // state check
+    if (m_state == State.stalledUp && power < 0) {
+      m_state = State.normal;
+    }
+    if (m_state == State.stalledDown && power > 0) {
+      m_state = State.normal;
+    }
+    if (m_state == State.stalledUp && power > 0) {
+      power = 0;
+    }
+    if (m_state == State.stalledDown && power < 0) {
+      power = 0;
+    }
+    //
+
     m_reachMotor.set(ControlMode.PercentOutput, power);
     SmartDashboard.putNumber("Cooked Reach Position", getDistance());
     SmartDashboard.putNumber("Raw Reach Position", raw);
     SmartDashboard.putNumber("Reach Speed", getSpeed());
     SmartDashboard.putNumber("Reach Power", power);
-
+    SmartDashboard.putString("Reach State", m_state.toString());
 
   }
 }
-

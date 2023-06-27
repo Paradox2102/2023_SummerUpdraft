@@ -4,14 +4,14 @@
 
 package frc.robot;
 
-import frc.robot.commands.ArcadeDriveCommand;
+// import frc.robot.commands.ArcadeDriveCommand;
 //import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.Autos;
+// import frc.robot.commands.Autos;
 import frc.robot.commands.PositionReachCommand;
 import frc.robot.commands.ReachCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ReachSubsystem;
-import edu.wpi.first.wpilibj.Joystick;
+// import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.subsystems.IntakeSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -30,7 +30,7 @@ import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+// import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
@@ -58,7 +58,7 @@ public class RobotContainer {
   final WristSubsystem m_wristSubsystem = new WristSubsystem();
   final ArmSubsystem m_armSubsystem = new ArmSubsystem();
   private final CommandJoystick m_stick = new CommandJoystick(0);
-  private final CommandJoystick m_stick2 = new CommandJoystick(1);
+  // private final CommandJoystick m_stick2 = new CommandJoystick(1);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.

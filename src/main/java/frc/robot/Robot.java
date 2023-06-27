@@ -5,12 +5,12 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.Timer;
+// import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.subsystems.DriveSubsystem;
+// import frc.robot.subsystems.DriveSubsystem;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -56,14 +56,6 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
-    new Trigger(this::isEnabled)
-      .negate() //Negate the trigger, so it is active when the robot is disabled
-      .debounce(5) //Delay action until robot has been disabled for a certain time
-      .onTrue( //Finally take action
-        new InstantCommand( //Instant command will execute our "initialize" method and finish immediately
-          () -> m_robotContainer.m_driveSubsystem.setBrake(false), //Enable coast mode in drive train
-          m_robotContainer.m_driveSubsystem) //Command requires subsystem
-          .ignoringDisable(true)); //This command can run when the robot is disabled
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
