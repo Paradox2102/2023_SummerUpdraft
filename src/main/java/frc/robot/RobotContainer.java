@@ -6,7 +6,6 @@ package frc.robot;
 
 import frc.robot.commands.ArcadeDriveCommand;
 //import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.Autos;
 import frc.robot.commands.PositionReachCommand;
 import frc.robot.commands.ReachCommand;
 import frc.robot.subsystems.DriveSubsystem;
