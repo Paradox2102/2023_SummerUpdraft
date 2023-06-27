@@ -103,7 +103,7 @@ public class RobotContainer {
     m_stick.button(12).whileTrue(new MoveArmCommand(m_armSubsystem, -0.2));
     m_stick.button(13).onTrue(new SetArmPositionCommand(m_armSubsystem, 0));
     m_stick.button(14).onTrue(new SetArmPositionCommand(m_armSubsystem, 0));
-    m_stick.button(15).whileTrue(new CalibrateDriveCommand(m_driveSubsystem));
+    //m_stick.button(15).whileTrue(new CalibrateDriveCommand(m_driveSubsystem));
   }
   
   /**
