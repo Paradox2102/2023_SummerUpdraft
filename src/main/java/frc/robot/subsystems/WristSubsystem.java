@@ -74,9 +74,11 @@ public class WristSubsystem extends SubsystemBase {
   public void periodic() {
     double power = m_recordedPower;
     // This method will be called once per scheduler run
+    //holds the wrist at the set point
     if (m_PIDOn) {
       power = getFTerm(m_setPoint) + m_wristPID.calculate(getPosition(), m_setPoint);
     }
+    //set power to 0 if the wrist has been stalled for more than 0.2 seconds
     if (Math.abs(power) > k_stallPower) {
       if (Math.abs(m_wristEncoder.getVelocity()) < k_stallSpeed) {
         if (m_timer.get() > k_stallTime) {

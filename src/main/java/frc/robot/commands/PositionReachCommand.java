@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.ApriltagsCamera.Logger;
 import frc.robot.subsystems.ReachSubsystem;
 
 public class PositionReachCommand extends CommandBase {
@@ -16,12 +17,14 @@ public class PositionReachCommand extends CommandBase {
     m_setPosition = positionInInches;
 
     // Use addRequirements() here to declare subsystem dependencies.
+    Logger.log("PositionReachCommand", 0, "PositionReachCommand");
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     m_subsystem.setPosition(m_setPosition);
+    Logger.log("PositionReachCommand", 0, "Initialize");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -30,7 +33,9 @@ public class PositionReachCommand extends CommandBase {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    Logger.log("PositionReachCommand", 0, "End");
+  }
 
   // Returns true when the command should end.
   @Override
