@@ -5,7 +5,6 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.ApriltagsCamera.Logger;
@@ -19,8 +18,6 @@ import frc.ApriltagsCamera.Logger;
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
-  private Timer m_Timer = new Timer();
-
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -52,17 +49,11 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
-    m_Timer.reset();
-    m_Timer.start();
     Logger.log("Robot", 0, "Disable");
   }
 
   @Override
-  public void disabledPeriodic() {
-    if (m_Timer.get() > 5) {
-      m_robotContainer.m_driveSubsystem.setBrake(false);
-    }
-  }
+  public void disabledPeriodic() {}
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
