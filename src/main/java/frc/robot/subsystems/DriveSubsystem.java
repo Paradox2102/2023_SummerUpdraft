@@ -131,11 +131,13 @@ public class DriveSubsystem extends SubsystemBase {
     m_pursuit.startPath();
     m_pathFollowTimer.reset();
     m_pathFollowTimer.start();
+    Logger.log("DriveSubsystem", 0, "Start Path");
   }
 
   public void endPath() {
     m_pursuit.stopFollow();
     m_pathFollowTimer.stop();
+    Logger.log("DriveSubsystem", 0, "End Path");
   }
 
   public double getRobotY() {
