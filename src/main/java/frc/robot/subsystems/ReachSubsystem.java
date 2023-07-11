@@ -46,6 +46,7 @@ public class ReachSubsystem extends SubsystemBase {
     m_zero = m_reachMotor.getSelectedSensorPosition();
     setBrakeMode(true);
     m_reachMotor.setInverted(true);
+    Logger.log("ReachSubsystem", 0, "ReachSubsystem");
   }
 
   public void setPower(double reachPower) {
@@ -53,6 +54,7 @@ public class ReachSubsystem extends SubsystemBase {
     m_timer.reset();
     m_timer.start();
     m_manual = true;
+    Logger.log("ReachSubsystem", 0, String.format("%s, %f", "Set Power", m_reachPower));
   }
 
   public void setPosition(double positionInInches) {
@@ -60,7 +62,7 @@ public class ReachSubsystem extends SubsystemBase {
     m_timer.reset();
     m_timer.start();
     m_manual = false;
-
+    Logger.log("ReachSubsystem", 0, String.format("%s, %f", "Set Position", m_setPosition));
   }
 
   public double getDistance() {
@@ -75,6 +77,7 @@ public class ReachSubsystem extends SubsystemBase {
   public void setBrakeMode(boolean brake) {
     NeutralMode mode = brake ? NeutralMode.Brake : NeutralMode.Coast;
     m_reachMotor.setNeutralMode(mode);
+    SmartDashboard.putBoolean("Reach Brake", brake);
   }
 
   @Override
@@ -96,7 +99,6 @@ public class ReachSubsystem extends SubsystemBase {
 
     // stall check
     if (Math.abs(power) > k_stallPower) {
-      Logger.log("Reach Subsystem", 1, String.format("speed = %f", getSpeed()));
       if (Math.abs(getSpeed()) < k_stallSpeed) {
         Logger.log("Reach Subsystem", 1, String.format("SPEEEEED = %f", getSpeed()));
         if (m_timer.get() > k_stallTime) {
