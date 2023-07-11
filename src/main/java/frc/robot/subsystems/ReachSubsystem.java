@@ -17,7 +17,7 @@ import frc.robot.Constants;
 public class ReachSubsystem extends SubsystemBase {
   private TalonFX m_reachMotor = new TalonFX(Constants.k_reachMotor);
   private Timer m_timer = new Timer();
-  private double m_reachPower;
+  private double m_reachPower = 0;
   private double m_zero;
   private double m_difference;
   private double m_setPosition;
@@ -28,6 +28,7 @@ public class ReachSubsystem extends SubsystemBase {
   private static final double k_stallTime = 0.2;
   private static final double k_stallSpeed = 100;
   private static final double k_p = 16/30.0;
+  private static final double k_f = 0;
   private static final double k_maxPower = 0.5;
 
   /** Creates a new ReachSubsystem. */
@@ -82,11 +83,14 @@ public class ReachSubsystem extends SubsystemBase {
       m_difference = getDistance() - m_setPosition;
       // current-set;
       power = -k_p * m_difference;
+      //
+      
       // if (Math.abs(power) > k_maxPower) {
       // power = k_maxPower * Math.signum(power);
       // }
     }
 
+    //stall 
     if (Math.abs(getSpeed()) < k_stallSpeed) {
       if (m_timer.get() > k_stallTime) {
         power = k_stallPower;
@@ -94,6 +98,7 @@ public class ReachSubsystem extends SubsystemBase {
         m_timer.reset();
       }
     }
+    
     m_reachMotor.set(ControlMode.PercentOutput, power);
     SmartDashboard.putNumber("Cooked Reach Position", getDistance());
     SmartDashboard.putNumber("Raw Reach Position", raw);

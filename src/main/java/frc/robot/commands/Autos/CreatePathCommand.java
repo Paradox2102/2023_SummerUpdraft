@@ -3,7 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 
 //copied from normal season code
-package frc.robot.commands.autos;
+package frc.robot.commands.Autos;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
