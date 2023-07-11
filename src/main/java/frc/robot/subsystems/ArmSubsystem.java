@@ -91,7 +91,6 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   public boolean armOnTarget() {
-    Logger.log("ArmSubsystem", 0, "Arm On Target");
     return Math.abs(m_setPoint - getArmAngleDegrees()) < k_armDeadZone;
   }
 

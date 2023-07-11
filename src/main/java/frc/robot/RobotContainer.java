@@ -15,12 +15,14 @@ import frc.robot.commands.SetWristPositionCommand;
 import frc.ApriltagsCamera.ApriltagsCamera;
 import frc.robot.commands.CalibrateDriveCommand;
 import frc.robot.commands.IntakeCommand;
+import frc.robot.commands.autos.DriveForwardCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ReachSubsystem;
 import frc.robot.subsystems.WristSubsystem;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
@@ -53,6 +55,7 @@ public class RobotContainer {
   final WristSubsystem m_wristSubsystem = new WristSubsystem();
   final ArmSubsystem m_armSubsystem = new ArmSubsystem();
   private final CommandJoystick m_stick = new CommandJoystick(0);
+  SendableChooser<Command> m_chooseAuto = new SendableChooser<>();
   //private final CommandJoystick m_stick2 = new CommandJoystick(1);
 
   /**
@@ -99,6 +102,8 @@ public class RobotContainer {
     m_stick.button(13).onTrue(new SetArmPositionCommand(m_armSubsystem, 0));
     m_stick.button(14).onTrue(new SetArmPositionCommand(m_armSubsystem, 0));
     m_stick.button(15).whileTrue(new CalibrateDriveCommand(m_driveSubsystem));
+
+    m_chooseAuto.addOption("Drive Forward", new DriveForwardCommand(m_driveSubsystem));
   }
 
   /**
@@ -108,6 +113,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return null;
+    //return m_chooseAuto.getSelected();
+    return new DriveForwardCommand(m_driveSubsystem);
   }
 }
