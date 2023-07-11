@@ -26,7 +26,6 @@ import frc.robot.commands.CalibrateDriveCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.WristSubsystem;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
-//import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -105,16 +104,14 @@ public class RobotContainer {
     m_stick.button(14).onTrue(new SetArmPositionCommand(m_armSubsystem, 0));
     m_stick.button(15).whileTrue(new CalibrateDriveCommand(m_driveSubsystem));
   }
-  
-  /**
-    * Use this to pass the autonomous command to the main {@link Robot} class.
-    *
-    * @return the command to run in autonomous
-    */
 
+  /**
+   * Use this to pass the autonomous command to the main {@link Robot} class.
+   *
+   * @return the command to run in autonomous
+   */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return null; 
+    return null;
   }
-
 }

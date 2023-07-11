@@ -10,12 +10,15 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-// import frc.robot.subsystems.DriveSubsystem;
+import frc.ApriltagsCamera.Logger;
 
 /**
- * The VM is configured to automatically run this class, and to call the functions corresponding to
- * each mode, as described in the TimedRobot documentation. If you change the name of this class or
- * the package after creating this project, you must also update the build.gradle file in the
+ * The VM is configured to automatically run this class, and to call the
+ * functions corresponding to
+ * each mode, as described in the TimedRobot documentation. If you change the
+ * name of this class or
+ * the package after creating this project, you must also update the
+ * build.gradle file in the
  * project.
  */
 public class Robot extends TimedRobot {
@@ -23,37 +26,47 @@ public class Robot extends TimedRobot {
   private RobotContainer m_robotContainer;
 
   /**
-   * This function is run when the robot is first started up and should be used for any
+   * This function is run when the robot is first started up and should be used
+   * for any
    * initialization code.
    */
   @Override
   public void robotInit() {
-    // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
+    // Instantiate our RobotContainer. This will perform all our button bindings,
+    // and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-    new Trigger(this::isEnabled)
-      .negate() //Negate the trigger, so it is active when the robot is disabled
-      .debounce(3) //Delay action until robot has been disabled for a certain time
-      .onTrue( //Finally take action
-        new InstantCommand( //Instant command will execute our "initialize" method and finish immediately
-          () -> m_robotContainer.m_driveSubsystem.setBrake(false), //Enable coast mode in drive train
-          m_robotContainer.m_driveSubsystem) //Command requires subsystem
-          .ignoringDisable(true)); //This command can run when the robot is disabled
+    // Turn brake mode off shortly after the robot is disabled
 
+    new Trigger(this::isEnabled) // Create a trigger that is active when the robot is enabled
+        .negate() // Negate the trigger, so it is active when the robot is disabled
+        .debounce(3) // Delay action until robot has been disabled for a certain time
+        .onTrue( // Finally take action
+            new InstantCommand( // Instant command will execute our "initialize" method and finish immediately
+                () -> m_robotContainer.m_driveSubsystem.setBrake(false), // Enable coast mode in drive train
+                m_robotContainer.m_driveSubsystem) // command requires subsystem
+                .ignoringDisable(true)); // This command can run when the robot is disabled
+    Logger.log("Robot", 0, "Initialize");
   }
 
   /**
-   * This function is called every 20 ms, no matter the mode. Use this for items like diagnostics
+   * This function is called every 20 ms, no matter the mode. Use this for items
+   * like diagnostics
    * that you want ran during disabled, autonomous, teleoperated and test.
    *
-   * <p>This runs after the mode specific periodic functions, but before LiveWindow and
+   * <p>
+   * This runs after the mode specific periodic functions, but before LiveWindow
+   * and
    * SmartDashboard integrated updating.
    */
   @Override
   public void robotPeriodic() {
-    // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
-    // commands, running already-scheduled commands, removing finished or interrupted commands,
-    // and running subsystem periodic() methods.  This must be called from the robot's periodic
+    // Runs the Scheduler. This is responsible for polling buttons, adding
+    // newly-scheduled
+    // commands, running already-scheduled commands, removing finished or
+    // interrupted commands,
+    // and running subsystem periodic() methods. This must be called from the
+    // robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
   }
@@ -61,18 +74,21 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
-    m_robotContainer.m_driveSubsystem.setBrake(false);
+    Logger.log("Robot", 0, "Disable");
   }
 
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+  }
 
-  /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
+  /**
+   * This autonomous runs the autonomous command selected by your
+   * {@link RobotContainer} class.
+   */
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-
     m_robotContainer.m_driveSubsystem.setBrake(true);
+    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
@@ -82,10 +98,12 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during autonomous. */
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+  }
 
   @Override
   public void teleopInit() {
+    Logger.log("Robot", 0, "Teleop");
     m_robotContainer.m_driveSubsystem.setBrake(true);
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
@@ -98,7 +116,8 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+  }
 
   @Override
   public void testInit() {
@@ -108,13 +127,16 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during test mode. */
   @Override
-  public void testPeriodic() {}
+  public void testPeriodic() {
+  }
 
   /** This function is called once when the robot is first started up. */
   @Override
-  public void simulationInit() {}
+  public void simulationInit() {
+  }
 
   /** This function is called periodically whilst in simulation. */
   @Override
-  public void simulationPeriodic() {}
+  public void simulationPeriodic() {
+  }
 }

@@ -10,6 +10,7 @@ import java.util.function.DoubleSupplier;
 // import edu.wpi.first.wpilibj.DoubleSolenoid;
 // import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.ApriltagsCamera.Logger;
 import frc.robot.subsystems.DriveSubsystem;
 
 public class ArcadeDriveCommand extends CommandBase {
@@ -28,11 +29,13 @@ public class ArcadeDriveCommand extends CommandBase {
     m_reverse = reverse;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(m_subsystem);
+    Logger.log("ArcadeDriveCommand", 0, "ArcadeDriveCommand");
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    Logger.log("ArcadeDriveCommand", 0, "Initialize");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -58,6 +61,7 @@ public class ArcadeDriveCommand extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    Logger.log("ArcadeDriveCommand", 0, "End");
   }
 
   // Returns true when the command should end.
