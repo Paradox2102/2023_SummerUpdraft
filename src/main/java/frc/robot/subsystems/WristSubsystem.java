@@ -13,6 +13,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.ApriltagsCamera.Logger;
 import frc.robot.Constants;
 
 public class WristSubsystem extends SubsystemBase {
@@ -37,12 +38,14 @@ public class WristSubsystem extends SubsystemBase {
     m_wristMotor.setIdleMode(IdleMode.kBrake);
     m_wristEncoder.setPosition(Constants.Wrist.k_wristStartingAngle);
     m_timer.start();
+    Logger.log("WristSubsystem", 0, "WristSubsystem");
   }
 
   public void setPower(double power) {
     switchPID(false);
     m_recordedPower = power;
     m_timer.reset();
+    Logger.log("WristSubsystem", 0, String.format("%s, %f", "Set Power: ", m_recordedPower));
   }
 
   public double getPosition() {
@@ -53,10 +56,12 @@ public class WristSubsystem extends SubsystemBase {
     m_setPoint = setPoint;
     switchPID(true);
     m_timer.reset();
+    Logger.log("WristSubsystem", 0, String.format("%s, %f", "Move Set Point: ", m_setPoint));
   }
 
   public void switchPID(boolean on) {
     m_PIDOn = on;
+    Logger.log("WristSubsystem", 0, String.format("%s, %b", "Switch PID", m_PIDOn));
   }
 
   private double getFTerm(double angle) {
@@ -69,12 +74,15 @@ public class WristSubsystem extends SubsystemBase {
   public void periodic() {
     double power = m_recordedPower;
     // This method will be called once per scheduler run
+    //holds the wrist at the set point
     if (m_PIDOn) {
       power = getFTerm(m_setPoint) + m_wristPID.calculate(getPosition(), m_setPoint);
     }
+    //set power to 0 if the wrist has been stalled for more than 0.2 seconds
     if (Math.abs(power) > k_stallPower) {
       if (Math.abs(m_wristEncoder.getVelocity()) < k_stallSpeed) {
         if (m_timer.get() > k_stallTime) {
+          Logger.log("WristSubsystem", 0, "Stalled");
           power = 0;
         }
       } else {

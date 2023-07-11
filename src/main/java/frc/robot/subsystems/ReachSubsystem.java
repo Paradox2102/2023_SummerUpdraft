@@ -11,6 +11,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.ApriltagsCamera.Logger;
 import frc.robot.Constants;
 
 public class ReachSubsystem extends SubsystemBase {
@@ -27,7 +28,7 @@ public class ReachSubsystem extends SubsystemBase {
   private static final double k_stallTime = 0.2;
   private static final double k_stallSpeed = 100;
   private static final double k_p = 16/30.0;
-  private static final double k_maxPower = 0.5;
+  //private static final double k_maxPower = 0.5;
 
   /** Creates a new ReachSubsystem. */
   public ReachSubsystem() {
@@ -35,6 +36,7 @@ public class ReachSubsystem extends SubsystemBase {
     m_zero = m_reachMotor.getSelectedSensorPosition();
     setBrakeMode(true);
     m_reachMotor.setInverted(true);
+    Logger.log("ReachSubsystem", 0, "ReachSubsystem");
   }
 
   public void setPower(double reachPower) {
@@ -42,6 +44,7 @@ public class ReachSubsystem extends SubsystemBase {
     m_timer.reset();
     m_timer.start();
     m_manual = true;
+    Logger.log("ReachSubsystem", 0, String.format("%s, %f", "Set Power", m_reachPower));
   }
 
   public void setPosition(double positionInInches) {
@@ -49,7 +52,7 @@ public class ReachSubsystem extends SubsystemBase {
     m_timer.reset();
     m_timer.start();
     m_manual = false;
-    
+    Logger.log("ReachSubsystem", 0, String.format("%s, %f", "Set Position", m_setPosition));
   }
 
   public double getDistance() {
@@ -64,6 +67,7 @@ public class ReachSubsystem extends SubsystemBase {
   public void setBrakeMode(boolean brake) {
     NeutralMode mode = brake ? NeutralMode.Brake : NeutralMode.Coast;
     m_reachMotor.setNeutralMode(mode);
+    SmartDashboard.putBoolean("Reach Brake", brake);
   }
 
   @Override
@@ -85,6 +89,7 @@ public class ReachSubsystem extends SubsystemBase {
 
     if (Math.abs(getSpeed()) < k_stallSpeed) {
       if (m_timer.get() > k_stallTime) {
+        Logger.log("ReachSubsystem", 0, "Stalled");
         power = k_stallPower;
       } else {
         m_timer.reset();
@@ -95,8 +100,6 @@ public class ReachSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Raw Reach Position", raw);
     SmartDashboard.putNumber("Reach Speed", getSpeed());
     SmartDashboard.putNumber("Reach Power", power);
-
-
   }
 }
 

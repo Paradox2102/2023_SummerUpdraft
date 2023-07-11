@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.ApriltagsCamera.Logger;
 import frc.robot.Constants;
 
 public class ArmSubsystem extends SubsystemBase {
@@ -53,6 +54,7 @@ public class ArmSubsystem extends SubsystemBase {
     m_armEncoder.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
     m_timer.start();
     setArmBrake(true);
+    Logger.log("ArmSubsystem", 0, "ArmSubsystem");
   }
 
   public void setPower(double power){
@@ -60,6 +62,7 @@ public class ArmSubsystem extends SubsystemBase {
     m_recordedPower = power;
     m_PIDOn = false;
     m_timer.reset();
+    Logger.log("ArmSubsystem", 0, String.format("%s, %f", "Set Power: ", m_recordedPower));
   }
 
   public void setPosition(double setPoint){
@@ -69,11 +72,13 @@ public class ArmSubsystem extends SubsystemBase {
     if (!armOnTarget()){
       setArmBrake(false);
     }
+    Logger.log("ArmSubsystem", 0, String.format("%s, %f", "Set Position: ", m_setPoint));
   }
 
   public void setArmBrake(boolean brake) {
     m_brake.set(!brake);
     SmartDashboard.putBoolean("Arm Brake", brake);
+    Logger.log("ArmSubsystem", 0, String.format("%s, %b", "Set Brake ", brake));
   }
 
   public double getArmAngleDegrees() {
@@ -86,18 +91,22 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   public boolean armOnTarget() {
+    Logger.log("ArmSubsystem", 0, "Arm On Target");
     return Math.abs(m_setPoint - getArmAngleDegrees()) < k_armDeadZone;
   }
 
   @Override
   public void periodic() {
     double power = m_recordedPower;
+    //holds the arm at the set point
     if (m_PIDOn) {
       power = getFTerm(m_setPoint) + m_armPID.calculate(getArmAngleDegrees(), m_setPoint);
     } 
+    //set power to 0 if the arm has been stalled for over 0.2 seconds
     if (power > k_stallPower){
       if(Math.abs(m_armRelative.getVelocity()) < k_stallSpeed){
         if(m_timer.get() > k_stallTime){
+          Logger.log("ArmSubsystem", 0, "Stalled");
           power = 0;
         }
       } else {
