@@ -14,6 +14,7 @@ public class ReachCommand extends CommandBase {
   double m_power;
   /** Creates a new ReachCommand. */
   public ReachCommand(ReachSubsystem subsystem, double power) {
+    Logger.log("Reach Command", 1, "reach command");
     m_subsystem = subsystem;
     m_power = power;
     // Use addRequirements() here to declare subsystem dependencies.
@@ -24,6 +25,8 @@ public class ReachCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    Logger.log("Reach Command", 1, "initialize");
+
     m_subsystem.setPower(m_power);
     Logger.log("ReachCommand", 0, "Initialize");
   }
@@ -35,6 +38,7 @@ public class ReachCommand extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    Logger.log("Reach Command", 1, "end");
     m_subsystem.setPower(0);
     Logger.log("ReachCommand", 0, "End");
   }
