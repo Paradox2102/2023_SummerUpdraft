@@ -17,7 +17,7 @@ import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+//import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.ApriltagsCamera.ApriltagsCamera;
@@ -51,7 +51,7 @@ public class DriveSubsystem extends SubsystemBase {
   WPI_PigeonIMU m_gyro = new WPI_PigeonIMU(0);
   //measures inertia
   LocationTracker m_tracker = new LocationTracker();
-  private final Field2d m_field = new Field2d();
+  //private final Field2d m_field = new Field2d();
   AprilTagFieldLayout m_aprilTags;
   public PurePursuit m_pursuit;
   Timer m_pathFollowTimer = new Timer();
@@ -132,11 +132,13 @@ public class DriveSubsystem extends SubsystemBase {
     m_pursuit.startPath();
     m_pathFollowTimer.reset();
     m_pathFollowTimer.start();
+    Logger.log("DriveSubsystem", 0, "Start Path");
   }
 
   public void endPath() {
     m_pursuit.stopFollow();
     m_pathFollowTimer.stop();
+    Logger.log("DriveSubsystem", 0, "End Path");
   }
 
   public double getRobotY() {
@@ -209,11 +211,20 @@ public class DriveSubsystem extends SubsystemBase {
     }
   }
 
+  public boolean isFailingChargeStationClimb() {
+    // PROBLEM: We should create a getLeftVelocity method that returns FPS.
+    // It's not obvious to the reader that this test is checking against 10FPS because the TalonFX velocity reports ticks per 100ms. -Gavin
+    return m_leftDrive.getSelectedSensorVelocity() * Constants.Drive.k_ticksToFeet < .5 && m_pathFollowTimer.get() > 5;
+  }
+
   @Override
   public void periodic() {
     m_drive.feed();
     SmartDashboard.putNumber("Right Speed", m_rightDrive.getSelectedSensorVelocity());
     SmartDashboard.putNumber("Left Speed", m_leftDrive.getSelectedSensorVelocity());
+    SmartDashboard.putNumber("Gyro Yaw", m_gyro.getAngle());
+    SmartDashboard.putNumber("Gyro Roll", m_gyro.getRoll());
+    m_posTracker.update(m_frontCamera, m_backCamera);
     // This method will be called once per scheduler run
   }
 }

@@ -10,6 +10,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.ApriltagsCamera.Logger;
 import frc.robot.Constants;
 
 public class IntakeSubsystem extends SubsystemBase {
@@ -23,13 +24,14 @@ public class IntakeSubsystem extends SubsystemBase {
   /** Creates a new IntakeSubsystem. */
   public IntakeSubsystem() {
     m_intakeMotor.configFactoryDefault();
-    
+    Logger.log("IntakeSubsystem", 0, "IntakeSubsystem");
   }
 
   public void setPower(double intakePower){
     m_savedPower = intakePower;
     m_timer.reset();
     m_timer.start();
+    Logger.log("IntakeSubsystem", 0, String.format("%s, %f", "Set Power: ", m_savedPower));
   }
   public double getSpeed(){
     return m_intakeMotor.getSelectedSensorVelocity();   
@@ -42,6 +44,7 @@ public class IntakeSubsystem extends SubsystemBase {
     double power = m_savedPower;
     if(Math.abs(getSpeed()) < k_stallSpeed && m_savedPower != 0) {
       if(m_timer.get() > k_expiredTimer) {
+        Logger.log("IntakeSubsystem", 0, "Stalled");
         if(m_savedPower < 0) {
           power = -k_stallPower;
         }  else {
