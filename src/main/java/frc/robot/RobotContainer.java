@@ -50,10 +50,10 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   // The robot's subsystems and commands are defined here...
   final DriveSubsystem m_driveSubsystem = new DriveSubsystem(m_frontCamera, m_backCamera, m_aprilTags);
+  final ArmSubsystem m_armSubsystem = new ArmSubsystem();
   public final ReachSubsystem m_reachSubsystem = new ReachSubsystem();
   final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
-  final WristSubsystem m_wristSubsystem = new WristSubsystem();
-  final ArmSubsystem m_armSubsystem = new ArmSubsystem();
+  final WristSubsystem m_wristSubsystem = new WristSubsystem(() -> m_armSubsystem.getArmAngleDegrees());
   private final CommandJoystick m_stick = new CommandJoystick(0);
   SendableChooser<Command> m_chooseAuto = new SendableChooser<>();
   //private final CommandJoystick m_stick2 = new CommandJoystick(1);
@@ -64,6 +64,7 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
+    m_armSubsystem.setExtent(() -> m_reachSubsystem.getDistance());
   }
 
   /**
@@ -86,9 +87,9 @@ public class RobotContainer {
     // TODO: Too many buttons
     m_stick.button(1).whileTrue(new ReachCommand(m_reachSubsystem, 0.4));
     m_stick.button(2).whileTrue(new ReachCommand(m_reachSubsystem, -0.4));
-    m_stick.button(3).whileTrue(new PositionReachCommand(m_reachSubsystem, 12));
-    m_stick.button(4).whileTrue(new IntakeCommand(m_intakeSubsystem, 0.3));
-    m_stick.button(5).whileTrue(new IntakeCommand(m_intakeSubsystem, -0.4));
+    m_stick.button(14).whileTrue(new PositionReachCommand(m_reachSubsystem, 12));
+    m_stick.button(12).whileTrue(new IntakeCommand(m_intakeSubsystem, 0.3));
+    m_stick.button(11).whileTrue(new IntakeCommand(m_intakeSubsystem, -0.4));
     m_driveSubsystem.setDefaultCommand(new RunCommand(() -> m_driveSubsystem
         .arcadeDrive(m_stick.getThrottle() > 0 ? -m_stick.getY() : m_stick.getY(), -m_stick.getX()), m_driveSubsystem));
 
@@ -97,10 +98,10 @@ public class RobotContainer {
     m_stick.button(8).onTrue(new SetWristPositionCommand(m_wristSubsystem, 0));
     m_stick.button(9).onTrue(new SetWristPositionCommand(m_wristSubsystem, 90));
     m_stick.button(10).onTrue(new SetWristPositionCommand(m_wristSubsystem, -90));
-    m_stick.button(11).whileTrue(new MoveArmCommand(m_armSubsystem, 0.2));
-    m_stick.button(12).whileTrue(new MoveArmCommand(m_armSubsystem, -0.2));
+    m_stick.button(4).whileTrue(new MoveArmCommand(m_armSubsystem, 0.2));
+    m_stick.button(5).whileTrue(new MoveArmCommand(m_armSubsystem, -0.2));
     m_stick.button(13).onTrue(new SetArmPositionCommand(m_armSubsystem, 0));
-    m_stick.button(14).onTrue(new SetArmPositionCommand(m_armSubsystem, 0));
+    m_stick.button(3).onTrue(new SetArmPositionCommand(m_armSubsystem, 90));
     m_stick.button(15).whileTrue(new CalibrateDriveCommand(m_driveSubsystem));
 
     m_chooseAuto.addOption("Drive Forward", new DriveForwardCommand(m_driveSubsystem));

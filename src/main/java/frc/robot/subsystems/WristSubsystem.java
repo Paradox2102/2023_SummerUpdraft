@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import java.util.function.DoubleSupplier;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -19,13 +21,14 @@ import frc.robot.Constants;
 public class WristSubsystem extends SubsystemBase {
   CANSparkMax m_wristMotor = new CANSparkMax(Constants.Wrist.k_wristMotor, MotorType.kBrushless);
   RelativeEncoder m_wristEncoder = m_wristMotor.getEncoder();
-  private static final double k_p = 0.075;
+  private static final double k_p = 0; //0.075
   private static final double k_i = 0;
-  private static final double k_f = 0.01;
+  private static final double k_f = 0.02;
   private double m_angle = 0;
   private double m_setPoint = 0;
   private boolean m_PIDOn = false;
   private double m_recordedPower = 0;
+  private DoubleSupplier m_armAngle;
   private static double k_stallPower = 0.05;
   private static double k_stallSpeed = 0.1;
   private static double k_stallTime = 0.2;
@@ -33,11 +36,12 @@ public class WristSubsystem extends SubsystemBase {
   PIDController m_wristPID = new PIDController(k_p, k_i, 0);
 
   /** Creates a new WristSubsystem. */
-  public WristSubsystem() {
+  public WristSubsystem(DoubleSupplier armAngle) {
     m_wristMotor.restoreFactoryDefaults();
     m_wristMotor.setIdleMode(IdleMode.kBrake);
     m_wristEncoder.setPosition(Constants.Wrist.k_wristStartingAngle);
     m_timer.start();
+    m_armAngle = armAngle;
     Logger.log("WristSubsystem", 0, "WristSubsystem");
   }
 
@@ -65,7 +69,7 @@ public class WristSubsystem extends SubsystemBase {
   }
 
   private double getFTerm(double angle) {
-    m_angle = angle;
+    m_angle = angle + m_armAngle.getAsDouble();
     double fTerm = (-k_f * Math.sin(Math.toRadians(m_angle)));
     return fTerm;
   }
