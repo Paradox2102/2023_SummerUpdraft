@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import java.util.function.DoubleSupplier;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
@@ -29,6 +31,8 @@ public class ReachSubsystem extends SubsystemBase {
   private static final double k_stallSpeed = 250;
   private static final double k_p = 16 / 30.0;
   private static final double k_maxPower = 0.5;
+  private static final double k_f = 0.06;
+  private DoubleSupplier m_getArmAngleInDegrees;
 
   enum State {
     normal,
@@ -40,12 +44,13 @@ public class ReachSubsystem extends SubsystemBase {
   // identify state
 
   /** Creates a new ReachSubsystem. */
-  public ReachSubsystem() {
+  public ReachSubsystem(DoubleSupplier armAngleInDegrees) {
     m_state = State.normal;
     m_reachMotor.configFactoryDefault();
     m_zero = m_reachMotor.getSelectedSensorPosition();
     setBrakeMode(true);
     m_reachMotor.setInverted(true);
+    m_getArmAngleInDegrees = armAngleInDegrees;
   }
 
   public void setPower(double reachPower) {
@@ -88,7 +93,7 @@ public class ReachSubsystem extends SubsystemBase {
     } else {
       m_difference = getDistance() - m_setPosition;
       // current-set;
-      power = -k_p * m_difference;
+      power = -k_p * m_difference + k_f*Math.cos(Math.toRadians(m_getArmAngleInDegrees.getAsDouble()));
       // if (Math.abs(power) > k_maxPower) {
       // power = k_maxPower * Math.signum(power);
       // }
