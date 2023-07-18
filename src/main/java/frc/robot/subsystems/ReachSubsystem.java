@@ -30,7 +30,6 @@ public class ReachSubsystem extends SubsystemBase {
   private static final double k_stallTime = 0.2;
   private static final double k_stallSpeed = 250;
   private static final double k_p = 16 / 30.0;
-  private static final double k_maxPower = 0.5;
   private static final double k_f = 0.06;
   private DoubleSupplier m_getArmAngleInDegrees;
 
@@ -105,14 +104,14 @@ public class ReachSubsystem extends SubsystemBase {
     // stall check
     if (Math.abs(power) > k_stallPower) {
       if (Math.abs(getSpeed()) < k_stallSpeed) {
-        Logger.log("Reach Subsystem", 1, String.format("SPEEEEED = %f", getSpeed()));
+        // Logger.log("Reach Subsystem", 1, String.format("SPEEEEED = %f", getSpeed()));
         if (m_timer.get() > k_stallTime) {
-          Logger.log("Reach Subsystem", 1, String.format("power = %f", power));
+          // Logger.log("Reach Subsystem", 1, String.format("power = %f", power));
           if (power > 0) {
             m_state = State.stalledUp;
           } else {
             m_state = State.stalledDown;
-            Logger.log("Reach Subsystem", 1, String.format("state = %s", m_state.toString()));
+            // Logger.log("Reach Subsystem", 1, String.format("state = %s", m_state.toString()));
           }
         } else {
           m_timer.reset();

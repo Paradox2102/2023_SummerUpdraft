@@ -13,7 +13,7 @@ import frc.robot.commands.ReachCommand;
 import frc.robot.commands.SetArmPositionCommand;
 import frc.robot.commands.SetWristPositionCommand;
 import frc.ApriltagsCamera.ApriltagsCamera;
-import frc.robot.commands.CalibrateDriveCommand;
+import frc.robot.commands.HandPosition;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
@@ -53,6 +53,7 @@ public class RobotContainer {
   final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
   final WristSubsystem m_wristSubsystem = new WristSubsystem();
   private final CommandJoystick m_stick = new CommandJoystick(0);
+  private final CommandJoystick m_BMRJoystick = new CommandJoystick(1);
   //private final CommandJoystick m_stick2 = new CommandJoystick(1);
 
   /**
@@ -102,7 +103,22 @@ public class RobotContainer {
     m_stick.button(12).whileTrue(new MoveArmCommand(m_armSubsystem, -0.2));
     m_stick.button(13).onTrue(new SetArmPositionCommand(m_armSubsystem, 0));
     m_stick.button(14).onTrue(new SetArmPositionCommand(m_armSubsystem, 0));
+
+
+
+    //Briselda's test joystick
+    m_BMRJoystick.button(1).onTrue(new HandPosition(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 0, 0, 0));
+    m_BMRJoystick.button(2).whileTrue(new MoveArmCommand(m_armSubsystem, 0.2));
+    m_BMRJoystick.button(3).whileTrue(new MoveArmCommand(m_armSubsystem, -0.2));
+
+    m_BMRJoystick.button(4).whileTrue(new ReachCommand(m_reachSubsystem, 0.4));
+    m_BMRJoystick.button(5).whileTrue(new ReachCommand(m_reachSubsystem, -0.4));
+    
+    m_BMRJoystick.button(6).whileTrue(new MoveWristCommand(m_wristSubsystem, 0.2));
+    m_BMRJoystick.button(7).whileTrue(new MoveWristCommand(m_wristSubsystem, -0.2));
     // m_stick.button(15).whileTrue(new CalibrateDriveCommand(m_driveSubsystem));
+
+
   }
 
   /**
