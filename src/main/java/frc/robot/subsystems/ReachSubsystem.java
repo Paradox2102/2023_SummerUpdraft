@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import java.util.function.DoubleSupplier;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
@@ -28,7 +30,8 @@ public class ReachSubsystem extends SubsystemBase {
   private static final double k_stallTime = 0.2;
   private static final double k_stallSpeed = 250;
   private static final double k_p = 16 / 30.0;
-  private static final double k_maxPower = 0.5;
+  private static final double k_f = 0.06;
+  private DoubleSupplier m_getArmAngleInDegrees;
 
   enum State {
     normal,
@@ -40,12 +43,13 @@ public class ReachSubsystem extends SubsystemBase {
   // identify state
 
   /** Creates a new ReachSubsystem. */
-  public ReachSubsystem() {
+  public ReachSubsystem(DoubleSupplier armAngleInDegrees) {
     m_state = State.normal;
     m_reachMotor.configFactoryDefault();
     m_zero = m_reachMotor.getSelectedSensorPosition();
     setBrakeMode(true);
     m_reachMotor.setInverted(true);
+    m_getArmAngleInDegrees = armAngleInDegrees;
     Logger.log("ReachSubsystem", 0, "ReachSubsystem");
   }
 
@@ -91,7 +95,7 @@ public class ReachSubsystem extends SubsystemBase {
     } else {
       m_difference = getDistance() - m_setPosition;
       // current-set;
-      power = -k_p * m_difference;
+      power = -k_p * m_difference + k_f*Math.cos(Math.toRadians(m_getArmAngleInDegrees.getAsDouble()));
       // if (Math.abs(power) > k_maxPower) {
       // power = k_maxPower * Math.signum(power);
       // }
@@ -100,14 +104,14 @@ public class ReachSubsystem extends SubsystemBase {
     // stall check
     if (Math.abs(power) > k_stallPower) {
       if (Math.abs(getSpeed()) < k_stallSpeed) {
-        Logger.log("Reach Subsystem", 1, String.format("SPEEEEED = %f", getSpeed()));
+        // Logger.log("Reach Subsystem", 1, String.format("SPEEEEED = %f", getSpeed()));
         if (m_timer.get() > k_stallTime) {
-          Logger.log("Reach Subsystem", 1, String.format("power = %f", power));
+          // Logger.log("Reach Subsystem", 1, String.format("power = %f", power));
           if (power > 0) {
             m_state = State.stalledUp;
           } else {
             m_state = State.stalledDown;
-            Logger.log("Reach Subsystem", 1, String.format("state = %s", m_state.toString()));
+            // Logger.log("Reach Subsystem", 1, String.format("state = %s", m_state.toString()));
           }
         } else {
           m_timer.reset();

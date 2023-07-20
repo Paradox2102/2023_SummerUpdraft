@@ -13,7 +13,7 @@ import frc.robot.commands.ReachCommand;
 import frc.robot.commands.SetArmPositionCommand;
 import frc.robot.commands.SetWristPositionCommand;
 import frc.ApriltagsCamera.ApriltagsCamera;
-import frc.robot.commands.CalibrateDriveCommand;
+import frc.robot.commands.HandPosition;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
@@ -48,11 +48,12 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   // The robot's subsystems and commands are defined here...
   final DriveSubsystem m_driveSubsystem = new DriveSubsystem(m_frontCamera, m_backCamera, m_aprilTags);
-  public final ReachSubsystem m_reachSubsystem = new ReachSubsystem();
+  final ArmSubsystem m_armSubsystem = new ArmSubsystem();
+  public final ReachSubsystem m_reachSubsystem = new ReachSubsystem(() -> m_armSubsystem.getArmAngleDegrees());
   final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
   final WristSubsystem m_wristSubsystem = new WristSubsystem();
-  final ArmSubsystem m_armSubsystem = new ArmSubsystem();
   private final CommandJoystick m_stick = new CommandJoystick(0);
+  private final CommandJoystick m_BMRJoystick = new CommandJoystick(1);
   //private final CommandJoystick m_stick2 = new CommandJoystick(1);
 
   /**
@@ -86,8 +87,12 @@ public class RobotContainer {
     m_stick.button(3).whileTrue(new PositionReachCommand(m_reachSubsystem, 12));
     m_stick.button(4).whileTrue(new IntakeCommand(m_intakeSubsystem, 0.3));
     m_stick.button(5).whileTrue(new IntakeCommand(m_intakeSubsystem, -0.4));
-    m_driveSubsystem.setDefaultCommand(new RunCommand(() -> m_driveSubsystem
+    m_driveSubsystem.setDefaultCommand(new RunCommand(()// runnable
+    -> m_driveSubsystem
         .arcadeDrive(m_stick.getThrottle() > 0 ? -m_stick.getY() : m_stick.getY(), -m_stick.getX()), m_driveSubsystem));
+    // runnable : anonymous function takes no argument and returns nothing -> does
+    // something called a side effect
+    //-> if then statement -> get throttle is the question, ? is the if, : is the else
 
     m_stick.button(6).whileTrue(new MoveWristCommand(m_wristSubsystem, 0.2));
     m_stick.button(7).whileTrue(new MoveWristCommand(m_wristSubsystem, -0.2));
@@ -98,8 +103,29 @@ public class RobotContainer {
     m_stick.button(12).whileTrue(new MoveArmCommand(m_armSubsystem, -0.2));
     m_stick.button(13).onTrue(new SetArmPositionCommand(m_armSubsystem, 0));
     m_stick.button(14).onTrue(new SetArmPositionCommand(m_armSubsystem, 0));
-    //m_stick.button(15).whileTrue(new CalibrateDriveCommand(m_driveSubsystem));
+
+
+
+    //Briselda's test joystick
+    m_BMRJoystick.button(1).onTrue(new HandPosition(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 0, 0, 0));
+    m_BMRJoystick.button(2).whileTrue(new MoveArmCommand(m_armSubsystem, 0.2));
+    m_BMRJoystick.button(3).whileTrue(new MoveArmCommand(m_armSubsystem, -0.2));
+
+    m_BMRJoystick.button(4).whileTrue(new ReachCommand(m_reachSubsystem, 0.4));
+    m_BMRJoystick.button(5).whileTrue(new ReachCommand(m_reachSubsystem, -0.4));
+    
+    m_BMRJoystick.button(6).whileTrue(new MoveWristCommand(m_wristSubsystem, 0.2));
+    m_BMRJoystick.button(7).whileTrue(new MoveWristCommand(m_wristSubsystem, -0.2));
+    // m_stick.button(15).whileTrue(new CalibrateDriveCommand(m_driveSubsystem));
+
+
   }
+
+  /**
+   * Use this to pass the autonomous command to the main {@link Robot} class.
+   *
+   * @return the command to run in autonomous
+   */
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
