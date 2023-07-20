@@ -49,6 +49,7 @@ public class DriveSubsystem extends SubsystemBase {
   ApriltagsCamera m_frontCamera;
   ApriltagsCamera m_backCamera; 
   WPI_PigeonIMU m_gyro = new WPI_PigeonIMU(0);
+  //measures inertia
   LocationTracker m_tracker = new LocationTracker();
   // private final Field2d m_field = new Field2d();
   AprilTagFieldLayout m_aprilTags;
@@ -227,3 +228,11 @@ public class DriveSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 }
+
+//arcade drive controls turn by controlling speeds
+//tank drive controls with two controllers (one for each side of the robot)
+//curviture drive controls doesn't control turn by speeds of wheels, turns with perticular curvature
+//radius not dependent on speed
+//curvitature can not spin in a circle
+//raidus and curvature are inverses of each other
+//cheesy drive??? 
