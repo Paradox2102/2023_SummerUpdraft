@@ -14,8 +14,9 @@ import frc.robot.commands.SetArmPositionCommand;
 import frc.robot.commands.SetWristPositionCommand;
 import frc.ApriltagsCamera.ApriltagsCamera;
 import frc.robot.commands.CalibrateDriveCommand;
+import frc.robot.commands.HandPosition;
 import frc.robot.commands.IntakeCommand;
-import frc.robot.commands.autos.DriveForwardCommand;
+import frc.robot.commands.Autos.DriveForwardCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -51,10 +52,11 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   final DriveSubsystem m_driveSubsystem = new DriveSubsystem(m_frontCamera, m_backCamera, m_aprilTags);
   final ArmSubsystem m_armSubsystem = new ArmSubsystem();
-  public final ReachSubsystem m_reachSubsystem = new ReachSubsystem();
+  public final ReachSubsystem m_reachSubsystem = new ReachSubsystem(() -> m_armSubsystem.getArmAngleDegrees());
   final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
   final WristSubsystem m_wristSubsystem = new WristSubsystem(() -> m_armSubsystem.getArmAngleDegrees());
   private final CommandJoystick m_stick = new CommandJoystick(0);
+  private final CommandJoystick m_BMRJoystick = new CommandJoystick(1);
   SendableChooser<Command> m_chooseAuto = new SendableChooser<>();
   //private final CommandJoystick m_stick2 = new CommandJoystick(1);
 
@@ -92,6 +94,9 @@ public class RobotContainer {
     m_stick.button(11).whileTrue(new IntakeCommand(m_intakeSubsystem, -0.4));
     m_driveSubsystem.setDefaultCommand(new RunCommand(() -> m_driveSubsystem
         .arcadeDrive(m_stick.getThrottle() > 0 ? -m_stick.getY() : m_stick.getY(), -m_stick.getX()), m_driveSubsystem));
+    // runnable : anonymous function takes no argument and returns nothing -> does
+    // something called a side effect
+    //-> if then statement -> get throttle is the question, ? is the if, : is the else
 
     m_stick.button(6).whileTrue(new MoveWristCommand(m_wristSubsystem, 0.2));
     m_stick.button(7).whileTrue(new MoveWristCommand(m_wristSubsystem, -0.2));
@@ -106,6 +111,12 @@ public class RobotContainer {
 
     m_chooseAuto.addOption("Drive Forward", new DriveForwardCommand(m_driveSubsystem));
   }
+
+  /**
+   * Use this to pass the autonomous command to the main {@link Robot} class.
+   *
+   * @return the command to run in autonomous
+   */
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

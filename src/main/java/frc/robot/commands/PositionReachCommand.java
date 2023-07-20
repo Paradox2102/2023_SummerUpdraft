@@ -17,6 +17,7 @@ public class PositionReachCommand extends CommandBase {
     m_setPosition = positionInInches;
 
     // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(m_subsystem);
     Logger.log("PositionReachCommand", 0, "PositionReachCommand");
   }
 

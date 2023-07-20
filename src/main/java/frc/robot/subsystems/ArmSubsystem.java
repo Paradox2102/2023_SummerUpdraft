@@ -85,7 +85,7 @@ public class ArmSubsystem extends SubsystemBase {
   public void setArmBrake(boolean brake) {
     m_brake.set(!brake);
     SmartDashboard.putBoolean("Arm Brake", brake);
-    Logger.log("ArmSubsystem", 0, String.format("%s, %b", "Set Brake ", brake));
+    // Logger.log("ArmSubsystem", 0, String.format("%s, %b", "Set Brake ", brake));
   }
 
   public double getArmAngleDegrees() {
@@ -98,6 +98,7 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   public boolean armOnTarget() {
+    // Logger.log("ArmSubsystem", 0, "Arm On Target");
     return Math.abs(m_setPoint - getArmAngleDegrees()) < k_armDeadZone;
   }
 
