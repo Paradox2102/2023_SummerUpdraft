@@ -15,6 +15,8 @@ import frc.robot.commands.SetWristPositionCommand;
 import frc.ApriltagsCamera.ApriltagsCamera;
 import frc.robot.commands.CalibrateDriveCommand;
 import frc.robot.commands.HandPosition;
+import frc.robot.commands.HandPosition;
+import frc.robot.commands.HandPosition2;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.Autos.DriveForwardCommand;
 import frc.robot.subsystems.ArmSubsystem;
@@ -55,9 +57,13 @@ public class RobotContainer {
   public final ReachSubsystem m_reachSubsystem = new ReachSubsystem(() -> m_armSubsystem.getArmAngleDegrees());
   final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
   final WristSubsystem m_wristSubsystem = new WristSubsystem(() -> m_armSubsystem.getArmAngleDegrees());
-  private final CommandJoystick m_stick = new CommandJoystick(0);
-  private final CommandJoystick m_BMRJoystick = new CommandJoystick(1);
   SendableChooser<Command> m_chooseAuto = new SendableChooser<>();
+  // We have multiple developers working on different parts of the system, so we set up multiple joysticks
+  // All joysticks are available for button use, but only one has control of arcade drive.
+  private final CommandJoystick m_PRJoystick = new CommandJoystick(0);
+  private final CommandJoystick m_BMRJoystick = new CommandJoystick(1);
+  private final CommandJoystick m_IAEJoystick = new CommandJoystick(2);
+  private final CommandJoystick m_driveStick = m_IAEJoystick;
   //private final CommandJoystick m_stick2 = new CommandJoystick(1);
 
   /**
@@ -86,30 +92,63 @@ public class RobotContainer {
   private void configureBindings() {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
 
-    // TODO: Too many buttons
-    m_stick.button(1).whileTrue(new ReachCommand(m_reachSubsystem, 0.4));
-    m_stick.button(2).whileTrue(new ReachCommand(m_reachSubsystem, -0.4));
-    m_stick.button(14).whileTrue(new PositionReachCommand(m_reachSubsystem, 12));
-    m_stick.button(12).whileTrue(new IntakeCommand(m_intakeSubsystem, 0.3));
-    m_stick.button(11).whileTrue(new IntakeCommand(m_intakeSubsystem, -0.4));
-    m_driveSubsystem.setDefaultCommand(new RunCommand(() -> m_driveSubsystem
-        .arcadeDrive(m_stick.getThrottle() > 0 ? -m_stick.getY() : m_stick.getY(), -m_stick.getX()), m_driveSubsystem));
+    // TODO: Consider instead passing in the sum of the Y and X for all three joysticks here.
+
+    m_driveSubsystem.setDefaultCommand(new RunCommand(()// runnable
+    -> m_driveSubsystem
+        .arcadeDrive(m_driveStick.getThrottle() > 0 ? -m_driveStick.getY() : m_driveStick.getY(), -m_driveStick.getX()), m_driveSubsystem));
     // runnable : anonymous function takes no argument and returns nothing -> does
     // something called a side effect
     //-> if then statement -> get throttle is the question, ? is the if, : is the else
 
-    m_stick.button(6).whileTrue(new MoveWristCommand(m_wristSubsystem, 0.2));
-    m_stick.button(7).whileTrue(new MoveWristCommand(m_wristSubsystem, -0.2));
-    m_stick.button(8).onTrue(new SetWristPositionCommand(m_wristSubsystem, 0));
-    m_stick.button(9).onTrue(new SetWristPositionCommand(m_wristSubsystem, 90));
-    m_stick.button(10).onTrue(new SetWristPositionCommand(m_wristSubsystem, -90));
-    m_stick.button(4).whileTrue(new MoveArmCommand(m_armSubsystem, 0.2));
-    m_stick.button(5).whileTrue(new MoveArmCommand(m_armSubsystem, -0.2));
-    m_stick.button(13).onTrue(new SetArmPositionCommand(m_armSubsystem, 0));
-    m_stick.button(3).onTrue(new SetArmPositionCommand(m_armSubsystem, 90));
-    m_stick.button(15).whileTrue(new CalibrateDriveCommand(m_driveSubsystem));
+    m_PRJoystick.button(1).whileTrue(new ReachCommand(m_reachSubsystem, 0.4));
+    m_PRJoystick.button(2).whileTrue(new ReachCommand(m_reachSubsystem, -0.4));
+    m_PRJoystick.button(3).whileTrue(new PositionReachCommand(m_reachSubsystem, 12));
+    m_PRJoystick.button(4).whileTrue(new IntakeCommand(m_intakeSubsystem, 0.3));
+    m_PRJoystick.button(5).whileTrue(new IntakeCommand(m_intakeSubsystem, -0.4));
+    m_PRJoystick.button(6).whileTrue(new MoveWristCommand(m_wristSubsystem, 0.2));
+    m_PRJoystick.button(7).whileTrue(new MoveWristCommand(m_wristSubsystem, -0.2));
+    m_PRJoystick.button(8).onTrue(new SetWristPositionCommand(m_wristSubsystem, 0));
+    m_PRJoystick.button(9).onTrue(new SetWristPositionCommand(m_wristSubsystem, 90));
+    m_PRJoystick.button(10).onTrue(new SetWristPositionCommand(m_wristSubsystem, -90));
+    m_PRJoystick.button(11).whileTrue(new MoveArmCommand(m_armSubsystem, 0.2));
+    m_PRJoystick.button(12).whileTrue(new MoveArmCommand(m_armSubsystem, -0.2));
+    m_PRJoystick.button(13).onTrue(new SetArmPositionCommand(m_armSubsystem, 0));
+    m_PRJoystick.button(14).onTrue(new SetArmPositionCommand(m_armSubsystem, 0));
 
-    m_chooseAuto.addOption("Drive Forward", new DriveForwardCommand(m_driveSubsystem));
+    //Briselda's test joystick
+    m_BMRJoystick.button(1).onTrue(new HandPosition(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 0, 0, 0));
+    m_BMRJoystick.button(2).whileTrue(new MoveArmCommand(m_armSubsystem, 0.2));
+    m_BMRJoystick.button(3).whileTrue(new MoveArmCommand(m_armSubsystem, -0.2));
+
+    m_BMRJoystick.button(4).whileTrue(new ReachCommand(m_reachSubsystem, 0.4));
+    m_BMRJoystick.button(5).whileTrue(new ReachCommand(m_reachSubsystem, -0.4));
+    
+    m_BMRJoystick.button(6).whileTrue(new MoveWristCommand(m_wristSubsystem, 0.2));
+    m_BMRJoystick.button(7).whileTrue(new MoveWristCommand(m_wristSubsystem, -0.2));
+    // m_stick.button(15).whileTrue(new CalibrateDriveCommand(m_driveSubsystem));
+
+    //Isa's test joystick
+    m_IAEJoystick.button(1).onTrue(new HandPosition(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 0, 0, 126));
+
+    m_IAEJoystick.button(5).whileTrue(new MoveArmCommand(m_armSubsystem, 0.2));
+    m_IAEJoystick.button(3).whileTrue(new MoveArmCommand(m_armSubsystem, -0.2));
+
+    m_IAEJoystick.button(6).whileTrue(new ReachCommand(m_reachSubsystem, 0.4));
+    m_IAEJoystick.button(4).whileTrue(new ReachCommand(m_reachSubsystem, -0.4));
+    
+    m_IAEJoystick.button(11).whileTrue(new MoveWristCommand(m_wristSubsystem, 0.2));
+    m_IAEJoystick.button(12).whileTrue(new MoveWristCommand(m_wristSubsystem, -0.2));
+
+    m_IAEJoystick.button(9).whileTrue(new IntakeCommand(m_intakeSubsystem, 0.3));
+    m_IAEJoystick.button(10).toggleOnTrue(new IntakeCommand(m_intakeSubsystem, -0.4));
+
+    //middle cone position
+    m_IAEJoystick.button(2).onTrue(new HandPosition(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 35, 1, -50));
+
+    //top cone position
+    m_IAEJoystick.button(7).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 42, 24, -52));
+
   }
 
   /**
