@@ -86,6 +86,8 @@ public class RobotContainer {
   private void configureBindings() {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
 
+    // TODO: Consider instead passing in the sum of the Y and X for all three joysticks here.
+
     m_driveSubsystem.setDefaultCommand(new RunCommand(()// runnable
     -> m_driveSubsystem
         .arcadeDrive(m_driveStick.getThrottle() > 0 ? -m_driveStick.getY() : m_driveStick.getY(), -m_driveStick.getX()), m_driveSubsystem));
