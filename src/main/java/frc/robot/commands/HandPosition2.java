@@ -4,6 +4,8 @@
 
 package frc.robot.commands;
 
+import java.util.function.BooleanSupplier;
+
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.ApriltagsCamera.Logger;
 import frc.robot.subsystems.ArmSubsystem;
@@ -21,14 +23,21 @@ public class HandPosition2 extends InstantCommand {
   private final double m_armExtent;
   private final double m_wristAngle;
   private boolean m_exit = false;
+  private final BooleanSupplier m_reverse; 
 
-  public HandPosition2(ArmSubsystem armSubsystem, ReachSubsystem reachSubsystem, WristSubsystem wristSubsystem, double armAngle, double armExtent, double wristAngle) {
+  public HandPosition2(ArmSubsystem armSubsystem, ReachSubsystem reachSubsystem, WristSubsystem wristSubsystem, double armAngle, double armExtent, double wristAngle, BooleanSupplier reverse) {
     m_armSubsystem = armSubsystem;
     m_reachSubsystem = reachSubsystem;
     m_wristSubsystem = wristSubsystem;
-    m_armAngle = armAngle;
     m_armExtent = armExtent;
-    m_wristAngle = wristAngle;
+    m_reverse = reverse;
+    if(m_reverse.getAsBoolean()) {
+      m_armAngle = -armAngle;
+      m_wristAngle = -wristAngle;
+    } else {
+      m_armAngle = armAngle;
+      m_wristAngle = wristAngle;
+    }
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(m_armSubsystem, m_reachSubsystem, m_wristSubsystem);
   Logger.log("HandPosition2", 1, "HandPosition2"); 
@@ -42,7 +51,8 @@ public class HandPosition2 extends InstantCommand {
     //m_reachSubsystem.setPosition(m_armExtent);
     m_wristSubsystem.moveSetPoint(m_wristAngle);
     m_exit = false;
-  }
+    }
+  
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -51,6 +61,7 @@ public class HandPosition2 extends InstantCommand {
       m_reachSubsystem.setPosition(m_armExtent);
       m_exit = true;
     }
+   
   }
 
   @Override
