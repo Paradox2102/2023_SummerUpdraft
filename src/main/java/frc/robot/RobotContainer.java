@@ -24,6 +24,7 @@ import frc.robot.commands.SetWristPositionCommand;
 import frc.ApriltagsCamera.ApriltagsCamera;
 import frc.robot.commands.HandPosition;
 import frc.robot.commands.HandPosition2;
+import frc.robot.commands.IntakeCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.WristSubsystem;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
@@ -96,7 +97,6 @@ public class RobotContainer {
     -> m_driveSubsystem
         .arcadeDrive(m_driveStick.getThrottle() > 0 ? -m_driveStick.getY() : m_driveStick.getY(), -m_driveStick.getX()), m_driveSubsystem));
    
-
     // runnable : anonymous function takes no argument and returns nothing -> does
     // something called a side effect
     //-> if then statement -> get throttle is the question, ? is the if, : is the else

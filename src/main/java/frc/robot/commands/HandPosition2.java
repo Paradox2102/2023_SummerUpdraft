@@ -23,15 +23,16 @@ public class HandPosition2 extends InstantCommand {
   private final double m_armExtent;
   private final double m_wristAngle;
   private boolean m_exit = false;
-  private final BooleanSupplier m_reverse; 
+  private final BooleanSupplier m_reverse;
 
-  public HandPosition2(ArmSubsystem armSubsystem, ReachSubsystem reachSubsystem, WristSubsystem wristSubsystem, double armAngle, double armExtent, double wristAngle, BooleanSupplier reverse) {
+  public HandPosition2(ArmSubsystem armSubsystem, ReachSubsystem reachSubsystem, WristSubsystem wristSubsystem,
+      double armAngle, double armExtent, double wristAngle, BooleanSupplier reverse) {
     m_armSubsystem = armSubsystem;
     m_reachSubsystem = reachSubsystem;
     m_wristSubsystem = wristSubsystem;
     m_armExtent = armExtent;
     m_reverse = reverse;
-    if(m_reverse.getAsBoolean()) {
+    if (m_reverse.getAsBoolean()) {
       m_armAngle = -armAngle;
       m_wristAngle = -wristAngle;
     } else {
@@ -40,19 +41,18 @@ public class HandPosition2 extends InstantCommand {
     }
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(m_armSubsystem, m_reachSubsystem, m_wristSubsystem);
-  Logger.log("HandPosition2", 1, "HandPosition2"); 
-}
+    Logger.log("HandPosition2", 1, "HandPosition2");
+  }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     Logger.log("HandPosition2", 1, "Initialize");
     m_armSubsystem.setPosition(m_armAngle);
-    //m_reachSubsystem.setPosition(m_armExtent);
+    // m_reachSubsystem.setPosition(m_armExtent);
     m_wristSubsystem.moveSetPoint(m_wristAngle);
     m_exit = false;
-    }
-  
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -61,7 +61,6 @@ public class HandPosition2 extends InstantCommand {
       m_reachSubsystem.setPosition(m_armExtent);
       m_exit = true;
     }
-   
   }
 
   @Override
