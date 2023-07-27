@@ -19,7 +19,7 @@ import frc.robot.Constants;
 public class ReachSubsystem extends SubsystemBase {
   private TalonFX m_reachMotor = new TalonFX(Constants.k_reachMotor);
   private Timer m_timer = new Timer();
-  private double m_reachPower;
+  private double m_reachPower = 0;
   private double m_zero;
   private double m_difference;
   private double m_setPosition;
@@ -66,7 +66,7 @@ public class ReachSubsystem extends SubsystemBase {
     m_timer.reset();
     m_timer.start();
     m_manual = false;
-    Logger.log("ReachSubsystem", 0, String.format("%s, %f", "Set Position", m_setPosition));
+    
   }
 
   public double getDistance() {
@@ -89,7 +89,7 @@ public class ReachSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
     double power = m_reachPower;
     double raw = m_reachMotor.getSelectedSensorPosition() - m_zero;
-
+    // move manually or move to position (speed depending on distance)
     if (m_manual) {
       power = m_reachPower;
     } else {

@@ -4,12 +4,21 @@
 
 package frc.robot;
 
+// import frc.robot.commands.ArcadeDriveCommand;
+//import frc.robot.Constants.OperatorConstants;
+// import frc.robot.commands.Autos;
+import frc.robot.commands.PositionReachCommand;
+import frc.robot.commands.ReachCommand;
+import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.ReachSubsystem;
+// import edu.wpi.first.wpilibj.Joystick;
+import frc.robot.commands.IntakeCommand;
+import frc.robot.subsystems.IntakeSubsystem;
+import edu.wpi.first.wpilibj2.command.Command;
 //import frc.robot.Constants.OperatorConstants;
 //import frc.robot.commands.Autos;
 import frc.robot.commands.MoveArmCommand;
 import frc.robot.commands.MoveWristCommand;
-import frc.robot.commands.PositionReachCommand;
-import frc.robot.commands.ReachCommand;
 import frc.robot.commands.SetArmPositionCommand;
 import frc.robot.commands.SetWristPositionCommand;
 import frc.ApriltagsCamera.ApriltagsCamera;
@@ -17,16 +26,12 @@ import frc.robot.commands.HandPosition;
 import frc.robot.commands.HandPosition2;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.subsystems.ArmSubsystem;
-import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.ReachSubsystem;
 import frc.robot.subsystems.WristSubsystem;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-//import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+// import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
@@ -91,6 +96,7 @@ public class RobotContainer {
     m_driveSubsystem.setDefaultCommand(new RunCommand(()// runnable
     -> m_driveSubsystem
         .arcadeDrive(m_driveStick.getThrottle() > 0 ? -m_driveStick.getY() : m_driveStick.getY(), -m_driveStick.getX()), m_driveSubsystem));
+   
     // runnable : anonymous function takes no argument and returns nothing -> does
     // something called a side effect
     //-> if then statement -> get throttle is the question, ? is the if, : is the else
@@ -111,7 +117,13 @@ public class RobotContainer {
     m_PRJoystick.button(14).onTrue(new SetArmPositionCommand(m_armSubsystem, 0));
 
     //Briselda's test joystick
-    m_BMRJoystick.button(1).onTrue(new HandPosition(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 0, 0, 0));
+//lowest reach, straight up
+    m_BMRJoystick.button(1).onTrue(new HandPosition(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 0, 0, 122));
+ //middle cone position
+    m_BMRJoystick.button(10).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 35, 1, -50,  ()-> m_driveStick.getThrottle() < 0));
+//top cone position
+    m_BMRJoystick.button(11).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 42, 24, -52,  ()-> m_driveStick.getThrottle() < 0));
+
     m_BMRJoystick.button(2).whileTrue(new MoveArmCommand(m_armSubsystem, 0.2));
     m_BMRJoystick.button(3).whileTrue(new MoveArmCommand(m_armSubsystem, -0.2));
 
@@ -120,6 +132,11 @@ public class RobotContainer {
     
     m_BMRJoystick.button(6).whileTrue(new MoveWristCommand(m_wristSubsystem, 0.2));
     m_BMRJoystick.button(7).whileTrue(new MoveWristCommand(m_wristSubsystem, -0.2));
+//outtake
+    m_BMRJoystick.button(8).whileTrue(new IntakeCommand(m_intakeSubsystem, 0.3));
+//intake
+    m_BMRJoystick.button(9).toggleOnTrue(new IntakeCommand(m_intakeSubsystem, -0.4));
+
     // m_stick.button(15).whileTrue(new CalibrateDriveCommand(m_driveSubsystem));
 
     //Isa's test joystick
@@ -138,10 +155,10 @@ public class RobotContainer {
     m_IAEJoystick.button(10).toggleOnTrue(new IntakeCommand(m_intakeSubsystem, -0.4));
 
     //middle cone position
-    m_IAEJoystick.button(2).onTrue(new HandPosition(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 35, 1, -50));
+    m_IAEJoystick.button(2).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 35, 1, -50,  ()-> m_driveStick.getThrottle() < 0));
 
     //top cone position
-    m_IAEJoystick.button(7).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 42, 24, -52));
+    m_IAEJoystick.button(7).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 42, 24, -52, ()-> m_driveStick.getThrottle() < 0));
 
   }
 
