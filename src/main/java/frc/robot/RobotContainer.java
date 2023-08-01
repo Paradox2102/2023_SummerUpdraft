@@ -27,7 +27,7 @@ import frc.robot.commands.HandPosition;
 import frc.robot.commands.HandPosition;
 import frc.robot.commands.HandPosition2;
 import frc.robot.commands.IntakeCommand;
-import frc.robot.commands.Autos.DriveForwardCommand;
+import frc.robot.commands.autos.DriveForwardCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.WristSubsystem;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
