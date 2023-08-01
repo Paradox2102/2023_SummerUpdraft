@@ -4,10 +4,10 @@
 
 package frc.robot.commands.autos;
 
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.pathfinder.Pathfinder.Waypoint;
+import frc.robot.commands.PurePursuitData;
 import frc.robot.commands.autos.CreatePathCommand;
+import frc.pathfinder.Pathfinder.Waypoint;
 import frc.robot.subsystems.DriveSubsystem;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -16,7 +16,7 @@ import frc.robot.subsystems.DriveSubsystem;
 public class DriveForwardCommand extends SequentialCommandGroup {
   private static Waypoint[] k_forward = {
     new Waypoint(0, 0, Math.toRadians(90)),
-    new Waypoint(0, 24, Math.toRadians(90))
+    new Waypoint(0, 10, Math.toRadians(90))
   };
   /** Creates a new DriveForwardCommand. */
   public DriveForwardCommand(DriveSubsystem subsystem) {
