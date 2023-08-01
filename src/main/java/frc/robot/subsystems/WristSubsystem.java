@@ -86,7 +86,7 @@ public class WristSubsystem extends SubsystemBase {
     if (Math.abs(power) > k_stallPower) {
       if (Math.abs(m_wristEncoder.getVelocity()) < k_stallSpeed) {
         if (m_timer.get() > k_stallTime) {
-          Logger.log("WristSubsystem", 0, "Stalled");
+          //Logger.log("WristSubsystem", 0, "Stalled");
           power = 0;
         }
       } else {

@@ -47,6 +47,7 @@ public class ArmSubsystem extends SubsystemBase {
   private static double k_d = 0.001;
   private static double k_f = 0.0025;
   private static double k_l = 18;
+  private static double k_maxPower = 0.8;
   /** Creates a new ArmSubsystem. */
   public ArmSubsystem() {
     m_armMotor.restoreFactoryDefaults();
@@ -98,6 +99,7 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   public boolean armOnTarget() {
+    // Logger.log("ArmSubsystem", 0, "Arm On Target");
     return Math.abs(m_setPoint - getArmAngleDegrees()) < k_armDeadZone;
   }
 
@@ -108,6 +110,9 @@ public class ArmSubsystem extends SubsystemBase {
     if (m_PIDOn) {
       power = getFTerm(m_setPoint) + m_armPID.calculate(getArmAngleDegrees(), m_setPoint);
     } 
+    if (Math.abs(power) > k_maxPower) {
+      power = k_maxPower * Math.signum(power);
+    }
     //set power to 0 if the arm has been stalled for over 0.2 seconds
     if (power > k_stallPower){
       if(Math.abs(m_armRelative.getVelocity()) < k_stallSpeed){
