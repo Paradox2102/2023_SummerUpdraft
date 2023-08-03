@@ -21,18 +21,14 @@ import frc.robot.commands.MoveArmCommand;
 import frc.robot.commands.MoveWristCommand;
 import frc.robot.commands.SetArmPositionCommand;
 import frc.robot.commands.SetWristPositionCommand;
+import frc.robot.commands.autos.DriveForwardCommand;
 import frc.ApriltagsCamera.ApriltagsCamera;
-import frc.robot.commands.CalibrateDriveCommand;
-import frc.robot.commands.HandPosition;
 import frc.robot.commands.HandPosition;
 import frc.robot.commands.HandPosition2;
-import frc.robot.commands.IntakeCommand;
-import frc.robot.commands.autos.DriveForwardCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.WristSubsystem;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -69,7 +65,7 @@ public class RobotContainer {
   private final CommandJoystick m_PRJoystick = new CommandJoystick(0);
   private final CommandJoystick m_BMRJoystick = new CommandJoystick(1);
   private final CommandJoystick m_IAEJoystick = new CommandJoystick(2);
-  public final CommandJoystick m_driveStick = m_BMRJoystick;
+  public final CommandJoystick m_driveStick = m_PRJoystick;
   //private final CommandJoystick m_stick2 = new CommandJoystick(1);
 
   /**
@@ -126,10 +122,19 @@ public class RobotContainer {
     //Briselda's test joystick
 //lowest reach, straight up
     m_BMRJoystick.button(1).onTrue(new HandPosition(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 0, 0, 122));
+ //low cone position
+    m_BMRJoystick.button(9).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 0, 2, -126, ()-> m_driveStick.getThrottle() < 0));
  //middle cone position
     m_BMRJoystick.button(10).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 35, 1, -50,  ()-> m_driveStick.getThrottle() < 0));
 //top cone position
-    m_BMRJoystick.button(11).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 42, 24, -52,  ()-> m_driveStick.getThrottle() < 0));
+   m_BMRJoystick.button(11).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 42, 24, -52,  ()-> m_driveStick.getThrottle() < 0));
+//low cube position
+  //  m_BMRJoystick.button(3).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 0, 0, 0, ()-> m_driveStick.getThrottle() < 0));
+//middle cube position
+    // m_BMRJoystick.button(3).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 0, 0, 0, ()-> m_driveStick.getThrottle() < 0));
+//top cube position
+  // m_BMRJoystick.button(3).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 0, 0, 0, ()-> m_driveStick.getThrottle() < 0));
+
 
     m_BMRJoystick.button(2).whileTrue(new MoveArmCommand(m_armSubsystem, 0.2));
     m_BMRJoystick.button(3).whileTrue(new MoveArmCommand(m_armSubsystem, -0.2));
@@ -160,6 +165,9 @@ public class RobotContainer {
 
     m_IAEJoystick.button(9).whileTrue(new IntakeCommand(m_intakeSubsystem, 0.3));
     m_IAEJoystick.button(10).toggleOnTrue(new IntakeCommand(m_intakeSubsystem, -0.4));
+
+    //bottom cone position
+    m_IAEJoystick.button(2).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 0, 2, -126,  ()-> m_driveStick.getThrottle() < 0));
 
     //middle cone position
     m_IAEJoystick.button(2).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 35, 1, -50,  ()-> m_driveStick.getThrottle() < 0));
