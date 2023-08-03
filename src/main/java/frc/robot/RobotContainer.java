@@ -21,12 +21,14 @@ import frc.robot.commands.MoveArmCommand;
 import frc.robot.commands.MoveWristCommand;
 import frc.robot.commands.SetArmPositionCommand;
 import frc.robot.commands.SetWristPositionCommand;
+import frc.robot.commands.autos.DriveForwardCommand;
 import frc.ApriltagsCamera.ApriltagsCamera;
 import frc.robot.commands.HandPosition;
 import frc.robot.commands.HandPosition2;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.WristSubsystem;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -56,7 +58,8 @@ public class RobotContainer {
   final ArmSubsystem m_armSubsystem = new ArmSubsystem();
   public final ReachSubsystem m_reachSubsystem = new ReachSubsystem(() -> m_armSubsystem.getArmAngleDegrees());
   final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
-  final WristSubsystem m_wristSubsystem = new WristSubsystem();
+  final WristSubsystem m_wristSubsystem = new WristSubsystem(() -> m_armSubsystem.getArmAngleDegrees());
+  SendableChooser<Command> m_chooseAuto = new SendableChooser<>();
   // We have multiple developers working on different parts of the system, so we set up multiple joysticks
   // All joysticks are available for button use, but only one has control of arcade drive.
   private final CommandJoystick m_PRJoystick = new CommandJoystick(0);
@@ -71,6 +74,7 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
+    m_armSubsystem.setExtent(() -> m_reachSubsystem.getDistance());
   }
 
   /**
@@ -162,6 +166,9 @@ public class RobotContainer {
     m_IAEJoystick.button(9).whileTrue(new IntakeCommand(m_intakeSubsystem, 0.3));
     m_IAEJoystick.button(10).toggleOnTrue(new IntakeCommand(m_intakeSubsystem, -0.4));
 
+    //bottom cone position
+    m_IAEJoystick.button(2).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 0, 2, -126,  ()-> m_driveStick.getThrottle() < 0));
+
     //middle cone position
     m_IAEJoystick.button(2).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 35, 1, -50,  ()-> m_driveStick.getThrottle() < 0));
 
@@ -183,6 +190,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return null;
+    //return m_chooseAuto.getSelected();
+    return new DriveForwardCommand(m_driveSubsystem);
   }
 }

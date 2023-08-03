@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import java.util.function.DoubleSupplier;
+
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.revrobotics.CANSparkMax;
@@ -32,6 +34,7 @@ public class ArmSubsystem extends SubsystemBase {
   PIDController m_armPID = new PIDController(k_p, k_i, k_d);
   private Boolean m_PIDOn = false;
   private Double m_setPoint = 0.0;
+  private DoubleSupplier m_extent;
 
   private double m_recordedPower;
   private Timer m_timer = new Timer();
@@ -39,10 +42,10 @@ public class ArmSubsystem extends SubsystemBase {
   private static double k_stallSpeed = 100;
   private static double k_stallTime = 0.2;
   private static double k_armDeadZone = 2;
-  private static double k_p = 0.02;
+  private static double k_p = 0; //0.02
   private static double k_i = 0;
   private static double k_d = 0.001;
-  private static double k_f = 0.005;
+  private static double k_f = 0.0025;
   private static double k_l = 18;
   private static double k_maxPower = 0.8;
   /** Creates a new ArmSubsystem. */
@@ -56,6 +59,10 @@ public class ArmSubsystem extends SubsystemBase {
     m_timer.start();
     setArmBrake(true);
     Logger.log("ArmSubsystem", 0, "ArmSubsystem");
+  }
+
+  public void setExtent(DoubleSupplier extent) {
+    m_extent = extent;
   }
 
   public void setPower(double power){
@@ -87,7 +94,7 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   public double getFTerm(double angleInDegrees) {
-    double fTerm = ((-k_f * k_l) * Math.sin(Math.toRadians(angleInDegrees)));
+    double fTerm = ((-k_f * (k_l + m_extent.getAsDouble())) * Math.sin(Math.toRadians(angleInDegrees)));
     return fTerm;
   }
 
