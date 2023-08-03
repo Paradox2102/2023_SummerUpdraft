@@ -111,6 +111,9 @@ public class DriveSubsystem extends SubsystemBase {
     m_leftDrive.set(TalonFXControlMode.Velocity, leftSpeed);
   }
 
+  public double getAverageSpeed(){
+    return (m_rightDrive.getSelectedSensorVelocity() + m_leftDrive.getSelectedSensorVelocity())/2;
+  }
   
   public void stop() {
     setPower(0, 0);
@@ -222,6 +225,10 @@ public class DriveSubsystem extends SubsystemBase {
     m_drive.feed();
     SmartDashboard.putNumber("Right Speed", m_rightDrive.getSelectedSensorVelocity());
     SmartDashboard.putNumber("Left Speed", m_leftDrive.getSelectedSensorVelocity());
+    SmartDashboard.putNumber("Right Position", m_rightDrive.getSelectedSensorPosition());
+    SmartDashboard.putNumber("Left Position", m_leftDrive.getSelectedSensorPosition());
+    SmartDashboard.putNumber("Right Position Feet", m_rightDrive.getSelectedSensorPosition()/Constants.Drive.k_ticksToFeet);
+    SmartDashboard.putNumber("Left Position Feet", m_leftDrive.getSelectedSensorPosition()/Constants.Drive.k_ticksToFeet);
     SmartDashboard.putNumber("Gyro Yaw", m_gyro.getAngle());
     SmartDashboard.putNumber("Gyro Roll", m_gyro.getRoll());
     m_posTracker.update(m_frontCamera, m_backCamera);
