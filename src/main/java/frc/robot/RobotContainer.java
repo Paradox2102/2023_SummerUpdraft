@@ -7,7 +7,6 @@ package frc.robot;
 // import frc.robot.commands.ArcadeDriveCommand;
 //import frc.robot.Constants.OperatorConstants;
 // import frc.robot.commands.Autos;
-import frc.robot.commands.PositionReachCommand;
 import frc.robot.commands.ReachCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ReachSubsystem;
@@ -19,10 +18,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 //import frc.robot.commands.Autos;
 import frc.robot.commands.MoveArmCommand;
 import frc.robot.commands.MoveWristCommand;
-import frc.robot.commands.SetArmPositionCommand;
-import frc.robot.commands.SetWristPositionCommand;
 import frc.robot.commands.autos.DriveForwardCommand;
 import frc.ApriltagsCamera.ApriltagsCamera;
+import frc.robot.commands.CalibrateDriveCommand;
 import frc.robot.commands.HandPosition;
 import frc.robot.commands.HandPosition2;
 import frc.robot.subsystems.ArmSubsystem;
@@ -104,20 +102,9 @@ public class RobotContainer {
     // something called a side effect
     //-> if then statement -> get throttle is the question, ? is the if, : is the else
 
-    m_PRJoystick.button(1).whileTrue(new ReachCommand(m_reachSubsystem, 0.4));
-    m_PRJoystick.button(2).whileTrue(new ReachCommand(m_reachSubsystem, -0.4));
-    m_PRJoystick.button(3).whileTrue(new PositionReachCommand(m_reachSubsystem, 12));
-    m_PRJoystick.button(4).whileTrue(new IntakeCommand(m_intakeSubsystem, 0.3));
-    m_PRJoystick.button(5).whileTrue(new IntakeCommand(m_intakeSubsystem, -0.4));
-    m_PRJoystick.button(6).whileTrue(new MoveWristCommand(m_wristSubsystem, 0.2));
-    m_PRJoystick.button(7).whileTrue(new MoveWristCommand(m_wristSubsystem, -0.2));
-    m_PRJoystick.button(8).onTrue(new SetWristPositionCommand(m_wristSubsystem, 0));
-    m_PRJoystick.button(9).onTrue(new SetWristPositionCommand(m_wristSubsystem, 90));
-    m_PRJoystick.button(10).onTrue(new SetWristPositionCommand(m_wristSubsystem, -90));
-    m_PRJoystick.button(11).whileTrue(new MoveArmCommand(m_armSubsystem, 0.2));
-    m_PRJoystick.button(12).whileTrue(new MoveArmCommand(m_armSubsystem, -0.2));
-    m_PRJoystick.button(13).onTrue(new SetArmPositionCommand(m_armSubsystem, 0));
-    m_PRJoystick.button(14).onTrue(new SetArmPositionCommand(m_armSubsystem, 0));
+    //Paul's test joystick
+//calibrate ticks to feet conversion
+    m_PRJoystick.button(1).onTrue(new CalibrateDriveCommand(m_driveSubsystem));
 
     //Briselda's test joystick
 //lowest reach, straight up

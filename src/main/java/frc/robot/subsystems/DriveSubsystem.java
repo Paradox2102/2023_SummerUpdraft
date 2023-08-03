@@ -47,9 +47,9 @@ public class DriveSubsystem extends SubsystemBase {
   private Sensor m_sensors;
   private PositionTracker m_posTracker;
   ApriltagsCamera m_frontCamera;
-  ApriltagsCamera m_backCamera; 
+  ApriltagsCamera m_backCamera;
   WPI_PigeonIMU m_gyro = new WPI_PigeonIMU(0);
-  //measures inertia
+  // measures inertia
   LocationTracker m_tracker = new LocationTracker();
   // private final Field2d m_field = new Field2d();
   AprilTagFieldLayout m_aprilTags;
@@ -84,7 +84,9 @@ public class DriveSubsystem extends SubsystemBase {
     m_leftDrive.config_kP(0, k_p);
     m_leftDrive.config_kI(0, k_i);
     m_leftDrive.config_kD(0, k_d);
-    m_sensors = new Sensor(() -> m_leftDrive.getSelectedSensorPosition(), () -> m_rightDrive.getSelectedSensorPosition(), () -> m_leftDrive.getSelectedSensorVelocity(), () -> m_rightDrive.getSelectedSensorVelocity() , m_gyro);
+    m_sensors = new Sensor(() -> getLeftPosInFeet(),
+        () -> getRightPosInFeet(), () -> getLeftSpeedInFPS(),
+        () -> getRightSpeedInFPS(), m_gyro);
     m_posTracker = new PositionTrackerPose(0, 0, m_sensors);
     m_navigator = new Navigator(m_posTracker);
     m_navigator.reset(0, 0, 0);
@@ -93,28 +95,26 @@ public class DriveSubsystem extends SubsystemBase {
     Logger.log("DriveSubsystem", 0, "DriveSubsystem");
   }
 
-  public void setPower(double rightPower, double leftPower) {
+  public void setPower(double leftPower, double rightPower) {
     m_rightDrive.set(TalonFXControlMode.PercentOutput, rightPower);
     m_leftDrive.set(TalonFXControlMode.PercentOutput, leftPower);
-    Logger.log("DriveSubsystem", 0, String.format("%s, %f, %s, %f", "Set Power Left: ", leftPower, " Right: ", rightPower));
+    Logger.log("DriveSubsystem", 0,
+        String.format("%s, %f, %s, %f", "Set Power Left: ", leftPower, " Right: ", rightPower));
   }
 
-  public void setSpeed (double rightSpeed, double leftSpeed) {
+  public void setSpeed(double leftSpeed, double rightSpeed) {
     m_rightDrive.set(TalonFXControlMode.Velocity, rightSpeed);
     m_leftDrive.set(TalonFXControlMode.Velocity, leftSpeed);
   }
 
-  public void setSpeedFPS (double rightSpeed, double leftSpeed) {
-    rightSpeed = rightSpeed * 1.0/10 * 1.0/Constants.Drive.k_ticksToFeet;
-    leftSpeed = leftSpeed * 1.0/10 * 1.0/Constants.Drive.k_ticksToFeet;
+  public void setSpeedFPS(double leftSpeed, double rightSpeed) {
+    rightSpeed = rightSpeed * Constants.Drive.k_FPSToTPS;
+    leftSpeed = leftSpeed * Constants.Drive.k_FPSToTPS;
+    //Logger.log("DriveSubsystem", 0, String.format("left speed =%f, right speed =%f", leftSpeed, rightSpeed));
     m_rightDrive.set(TalonFXControlMode.Velocity, rightSpeed);
     m_leftDrive.set(TalonFXControlMode.Velocity, leftSpeed);
   }
 
-  public double getAverageSpeed(){
-    return (m_rightDrive.getSelectedSensorVelocity() + m_leftDrive.getSelectedSensorVelocity())/2;
-  }
-  
   public void stop() {
     setPower(0, 0);
     Logger.log("DriveSubsystem", 0, "Stop");
@@ -152,12 +152,36 @@ public class DriveSubsystem extends SubsystemBase {
     return m_posTracker.getPose2d().getX();
   }
 
-  public double getLeftPos() {
-    return m_leftDrive.getSelectedSensorPosition() * Constants.Drive.k_ticksToFeet;
+  public double getLeftPosInFeet() {
+    return m_leftDrive.getSelectedSensorPosition()/Constants.Drive.k_ticksPerFeet;
   }
 
-  public double getRightPos() {
-    return m_rightDrive.getSelectedSensorPosition() * Constants.Drive.k_ticksToFeet;
+  public double getRightPosInFeet() {
+    return m_rightDrive.getSelectedSensorPosition()/Constants.Drive.k_ticksPerFeet;
+  }
+
+  public double getLeftPosInTicks() {
+    return m_leftDrive.getSelectedSensorPosition();
+  }
+
+  public double getRightPosInTicks() {
+    return m_rightDrive.getSelectedSensorPosition();
+  }
+
+  public double getLeftSpeedInFPS() {
+    return m_leftDrive.getSelectedSensorVelocity()/Constants.Drive.k_FPSToTPS;
+  }
+
+  public double getRightSpeedInFPS() {
+    return m_rightDrive.getSelectedSensorVelocity()/Constants.Drive.k_FPSToTPS;
+  }
+
+  public double getLeftSpeedInTicks() {
+    return m_leftDrive.getSelectedSensorVelocity();
+  }
+
+  public double getRightSpeedInTicks() {
+    return m_rightDrive.getSelectedSensorVelocity();
   }
 
   public double getPitch() {
@@ -165,19 +189,19 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public double computeTargetDegrees(double x0, double y0) {
-    Pose2d pose = m_posTracker.getPose2d(); 
+    Pose2d pose = m_posTracker.getPose2d();
     double y = pose.getY() - y0;
     double x = x0 - pose.getX();
     double m_targetAngle = -Math.atan2(y, x);
     SmartDashboard.putNumber("Target Angle", Math.toDegrees(m_targetAngle));
     SmartDashboard.putNumber("Robot X: ", pose.getX());
-    SmartDashboard.putNumber("Robot Y: ", pose.getY()); 
+    SmartDashboard.putNumber("Robot Y: ", pose.getY());
     return Math.toDegrees(m_targetAngle);
   }
 
   public OptionalDouble findTargetAngleDegrees() {
     PositionServer.Target target = m_posTracker.m_posServer.getTarget();
-    if (target == null){
+    if (target == null) {
       return OptionalDouble.empty();
     }
     return OptionalDouble.of(computeTargetDegrees(target.m_x, target.m_y));
@@ -191,9 +215,9 @@ public class DriveSubsystem extends SubsystemBase {
     m_gyro.reset();
   }
 
-  public Sensor getSensors(){
+  public Sensor getSensors() {
     return m_sensors;
-  } 
+  }
 
   public void arcadeDrive(double speed, double rotation) {
     m_drive.arcadeDrive(speed, rotation);
@@ -216,8 +240,9 @@ public class DriveSubsystem extends SubsystemBase {
 
   public boolean isFailingChargeStationClimb() {
     // PROBLEM: We should create a getLeftVelocity method that returns FPS.
-    // It's not obvious to the reader that this test is checking against 10FPS because the TalonFX velocity reports ticks per 100ms. -Gavin
-    return m_leftDrive.getSelectedSensorVelocity() * Constants.Drive.k_ticksToFeet < .5 && m_pathFollowTimer.get() > 5;
+    // It's not obvious to the reader that this test is checking against 10FPS
+    // because the TalonFX velocity reports ticks per 100ms. -Gavin
+    return getLeftPosInFeet() < .5 && m_pathFollowTimer.get() > 5;
   }
 
   @Override
@@ -227,8 +252,8 @@ public class DriveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Left Speed", m_leftDrive.getSelectedSensorVelocity());
     SmartDashboard.putNumber("Right Position", m_rightDrive.getSelectedSensorPosition());
     SmartDashboard.putNumber("Left Position", m_leftDrive.getSelectedSensorPosition());
-    SmartDashboard.putNumber("Right Position Feet", m_rightDrive.getSelectedSensorPosition()/Constants.Drive.k_ticksToFeet);
-    SmartDashboard.putNumber("Left Position Feet", m_leftDrive.getSelectedSensorPosition()/Constants.Drive.k_ticksToFeet);
+    SmartDashboard.putNumber("Right Position Feet", getRightPosInFeet());
+    SmartDashboard.putNumber("Left Position Feet", getLeftPosInFeet());
     SmartDashboard.putNumber("Gyro Yaw", m_gyro.getAngle());
     SmartDashboard.putNumber("Gyro Roll", m_gyro.getRoll());
     m_posTracker.update(m_frontCamera, m_backCamera);
@@ -236,10 +261,11 @@ public class DriveSubsystem extends SubsystemBase {
   }
 }
 
-//arcade drive controls turn by controlling speeds
-//tank drive controls with two controllers (one for each side of the robot)
-//curviture drive controls doesn't control turn by speeds of wheels, turns with perticular curvature
-//radius not dependent on speed
-//curvitature can not spin in a circle
-//raidus and curvature are inverses of each other
-//cheesy drive??? 
+// arcade drive controls turn by controlling speeds
+// tank drive controls with two controllers (one for each side of the robot)
+// curviture drive controls doesn't control turn by speeds of wheels, turns with
+// perticular curvature
+// radius not dependent on speed
+// curvitature can not spin in a circle
+// raidus and curvature are inverses of each other
+// cheesy drive???
