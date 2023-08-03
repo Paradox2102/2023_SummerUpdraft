@@ -119,10 +119,19 @@ public class RobotContainer {
     //Briselda's test joystick
 //lowest reach, straight up
     m_BMRJoystick.button(1).onTrue(new HandPosition(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 0, 0, 122));
+ //low cone position
+    m_BMRJoystick.button(9).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 0, 2, -126, ()-> m_driveStick.getThrottle() < 0));
  //middle cone position
     m_BMRJoystick.button(10).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 35, 1, -50,  ()-> m_driveStick.getThrottle() < 0));
 //top cone position
-    m_BMRJoystick.button(11).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 42, 24, -52,  ()-> m_driveStick.getThrottle() < 0));
+   m_BMRJoystick.button(11).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 42, 24, -52,  ()-> m_driveStick.getThrottle() < 0));
+//low cube position
+  //  m_BMRJoystick.button(3).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 0, 0, 0, ()-> m_driveStick.getThrottle() < 0));
+//middle cube position
+    // m_BMRJoystick.button(3).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 0, 0, 0, ()-> m_driveStick.getThrottle() < 0));
+//top cube position
+  // m_BMRJoystick.button(3).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 0, 0, 0, ()-> m_driveStick.getThrottle() < 0));
+
 
     m_BMRJoystick.button(2).whileTrue(new MoveArmCommand(m_armSubsystem, 0.2));
     m_BMRJoystick.button(3).whileTrue(new MoveArmCommand(m_armSubsystem, -0.2));
