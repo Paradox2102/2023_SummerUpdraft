@@ -4,16 +4,15 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.ApriltagsCamera.Logger;
-import frc.robot.Constants;
 import frc.robot.subsystems.DriveSubsystem;
 
 public class CalibrateDriveCommand extends CommandBase {
-  /** Creates a new TestSpeedCommand. */
-  //private static double k_power = 0.5;
-  //private static double k_speed = 5;
-  private static double k_maxSpeed = Constants.Drive.k_maxSpeed;
+  private static double k_power = 0.2;
+  private Timer m_timer = new Timer();
   DriveSubsystem m_subsystem;
   public CalibrateDriveCommand(DriveSubsystem subsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -26,14 +25,21 @@ public class CalibrateDriveCommand extends CommandBase {
   @Override
   public void initialize() {
     Logger.log("CalibrateDriveCommand", 0, "Initialize");
+    m_timer.reset();
+    m_timer.start();
+    m_subsystem.resetEncoders();
+    //m_subsystem.setPower(k_power, k_power);
+    m_subsystem.setSpeedFPS(2, 2);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_subsystem.setSpeed((k_maxSpeed/2), (k_maxSpeed/2));
-    //m_subsystem.setPower(k_power, k_power);
-    //m_subsystem.setSpeedFPS(k_speed, k_speed);
+    SmartDashboard.putNumber("Raw Left Motor Pos", m_subsystem.getLeftPosInTicks());
+    SmartDashboard.putNumber("Raw Left Motor Speed", m_subsystem.getLeftSpeedInTicks());
+    SmartDashboard.putNumber("Raw Right Motor Pos", m_subsystem.getRightPosInTicks());
+    SmartDashboard.putNumber("Raw Right Motor Speed", m_subsystem.getRightSpeedInTicks());
+    SmartDashboard.putNumber("Time", m_timer.get());
   }
 
   // Called once the command ends or is interrupted.
@@ -46,6 +52,6 @@ public class CalibrateDriveCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return m_subsystem.getLeftPosInTicks() >= 100000;
   }
 }

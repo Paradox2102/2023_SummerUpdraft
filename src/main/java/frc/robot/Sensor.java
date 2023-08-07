@@ -22,19 +22,19 @@ public class Sensor implements SensorData{
 	}
 	
 	public double getLeftEncoderPos() {
-		return m_leftPos.getAsDouble()*Constants.Drive.k_ticksToFeet;
+		return m_leftPos.getAsDouble();
 	}
 	
 	public double getRightEncoderPos() {
-		return m_rightPos.getAsDouble()*Constants.Drive.k_ticksToFeet;
+		return m_rightPos.getAsDouble();
 	}
 	
 	public double getLeftEncoderVel() {
-		return m_leftVel.getAsDouble()*10*Constants.Drive.k_ticksToFeet;
+		return m_leftVel.getAsDouble();
 	}
 	
 	public double getRightEncoderVel() {
-		return m_rightVel.getAsDouble()*10*Constants.Drive.k_ticksToFeet;
+		return m_rightVel.getAsDouble();
 	}
 
 	public PigeonIMU getGyro() {

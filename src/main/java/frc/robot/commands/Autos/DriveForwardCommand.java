@@ -16,7 +16,7 @@ import frc.robot.subsystems.DriveSubsystem;
 public class DriveForwardCommand extends SequentialCommandGroup {
   private static Waypoint[] k_forward = {
     new Waypoint(0, 0, Math.toRadians(90)),
-    new Waypoint(0, 10, Math.toRadians(90))
+    new Waypoint(5, 5, Math.toRadians(0))
   };
   /** Creates a new DriveForwardCommand. */
   public DriveForwardCommand(DriveSubsystem subsystem) {
