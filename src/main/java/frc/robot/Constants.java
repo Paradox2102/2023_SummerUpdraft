@@ -34,7 +34,8 @@ public final class Constants {
     public static final int k_leftDrive = 11; // CAN id
     public static final int k_leftFollower = 10; // CAN id
     public static final int k_maxSpeed = 15000;
-    public static final double k_ticksToFeet = 967;
+    public static final double k_ticksPerFeet = 101469.5/9;
+    public static final double k_FPSToTPS = 3041/2.7;
     public static final double k_wheelBase = 2.04;
   }
 
