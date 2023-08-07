@@ -51,7 +51,7 @@ public class PurePursuit {
 	private double k_minLookAheadDist = 0.6;	// Minimum allowed look ahead distance (overrides look ahead time if necessary)
 	private double k_maxSearchTime = 1;		// Max time along the path to search for the closest point to the current position
 	private double k_minSpeed = 1;			// Minimum allowed speed
-	private double k_curvatureAdjust = 1.1;		// Adjusts the curvature to make the path following more or less aggressive
+	private double k_curvatureAdjust = 1.0;		// Adjusts the curvature to make the path following more or less aggressive
 												//   A value of 1 is normal, a value greater than 1 makes the 
 												//   path following more aggressive, less than 1 makes it less aggressive
 	private double k_extendedLookAhead = .75;	// Distance to extend path if m_isExtended is true
