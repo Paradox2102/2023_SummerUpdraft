@@ -5,6 +5,8 @@
 package frc.robot.commands.autos;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.commands.PurePursuitData;
+import frc.robot.commands.autos.CreatePathCommand;
 import frc.pathfinder.Pathfinder.Waypoint;
 import frc.robot.subsystems.DriveSubsystem;
 
