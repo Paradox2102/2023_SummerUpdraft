@@ -42,10 +42,18 @@ public class ArmSubsystem extends SubsystemBase {
   private static double k_stallSpeed = 100;
   private static double k_stallTime = 0.2;
   private static double k_armDeadZone = 2;
-  private static double k_p = 0; //0.02
+  //pid (too low, fall/ too high, wiggly)
+  /* Good values aug 8, 23
+   * p = 0.02
+   * i = 0
+   * d = 0.001
+   * f = 0.005
+   * l = 18
+   */
+  private static double k_p = 0.02;
   private static double k_i = 0;
   private static double k_d = 0.001;
-  private static double k_f = 0.0025;
+  private static double k_f = 0.005;
   private static double k_l = 18;
   private static double k_maxPower = 0.8;
   /** Creates a new ArmSubsystem. */
@@ -117,7 +125,7 @@ public class ArmSubsystem extends SubsystemBase {
     if (power > k_stallPower){
       if(Math.abs(m_armRelative.getVelocity()) < k_stallSpeed){
         if(m_timer.get() > k_stallTime){
-          Logger.log("ArmSubsystem", 0, "Stalled");
+          // Logger.log("ArmSubsystem", 0, "Stalled");
           power = 0;
         }
       } else {
