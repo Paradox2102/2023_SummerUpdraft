@@ -31,7 +31,7 @@ public class Pathfinder
 	/*
 	 * These are the default values used by the PurePursuit code
 	 */
-	private static double k_lookAheadTime = 0.75;		// Time along the path of the next target point	
+	private static double k_lookAheadTime = 0.25;		// Time along the path of the next target point	
 	private static double k_minLookAheadDist = 0.6;		// Minimum allowed look ahead distance (overrides look ahead time if necessary)
 	private static double k_maxSearchTime = 1;			// Max time along the path to search for the closest point to the current position
 	private static double k_minSpeed = 0.50;			// Minimum allowed speed

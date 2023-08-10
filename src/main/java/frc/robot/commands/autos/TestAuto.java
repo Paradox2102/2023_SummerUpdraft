@@ -5,23 +5,25 @@
 package frc.robot.commands.autos;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.PurePursuitData;
-import frc.robot.commands.autos.CreatePathCommand;
 import frc.pathfinder.Pathfinder.Waypoint;
 import frc.robot.subsystems.DriveSubsystem;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class DriveForwardCommand extends SequentialCommandGroup {
-  private static Waypoint[] k_forward = {
-    new Waypoint(0, 0, Math.toRadians(90)),
-    new Waypoint(5, 5, Math.toRadians(0))
+public class TestAuto extends SequentialCommandGroup {
+  private static Waypoint[] k_out = {
+    new Waypoint(1.329, 5.525, 90),
+    new Waypoint(1.828, 21.808, 90)
   };
-  /** Creates a new DriveForwardCommand. */
-  public DriveForwardCommand(DriveSubsystem subsystem) {
+  private static Waypoint[] k_back = {
+    new Waypoint(1.828, 21.808, -90),
+    new Waypoint (1.329, 5.525, -90)
+  };
+  /** Creates a new TestAuto. */
+  public TestAuto(DriveSubsystem subsystem) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new CreatePathCommand(subsystem, k_forward, true, false, "forward"));
+    addCommands(new CreatePathCommand(subsystem, k_out, true, false, "out"), new CreatePathCommand(subsystem, k_back, false, true, "back"));
   }
 }
