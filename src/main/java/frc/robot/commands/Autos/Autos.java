@@ -11,13 +11,13 @@ import frc.robot.subsystems.DriveSubsystem;
 //import edu.wpi.first.wpilibj2.command.CommandBase;
 //import edu.wpi.first.wpilibj2.command.Commands;
 
-public final class Autos {
+public final class autos {
   /** Example static factory for an autonomous command. */
   // static CommandBase exampleAuto(ExampleSubsystem subsystem) {
 //return Commands.sequence(subsystem.exampleMethodCommand(), new ExampleCommand(subsystem));
   //}
 
-  private Autos() {
+  private autos() {
     throw new UnsupportedOperationException("This is a utility class!");
   }
 
