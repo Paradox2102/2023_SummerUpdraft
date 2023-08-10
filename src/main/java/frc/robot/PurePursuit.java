@@ -47,7 +47,7 @@ public class PurePursuit {
 	}
 
 	// Configurable parameters
-	private double k_lookAheadTime = 0.75;		// Time along the path of the next target point	
+	private double k_lookAheadTime = 0.25;		// Time along the path of the next target point	
 	private double k_minLookAheadDist = 0.6;	// Minimum allowed look ahead distance (overrides look ahead time if necessary)
 	private double k_maxSearchTime = 1;		// Max time along the path to search for the closest point to the current position
 	private double k_minSpeed = 1;			// Minimum allowed speed
@@ -95,7 +95,7 @@ public class PurePursuit {
 			new Field("Ideal x", 'f'), new Field("Ideal y", 'f'), new Field("Next Pos x", 'f'),
 			new Field("Next Pos y", 'f'), new Field("L", 'f'), new Field("dX", 'f'), new Field("Theta", 'f'),
 			new Field("Curvature", 'f'), new Field("velDif", 'f'),
-			new Field("Closest idx", 'd'), new Field("left pos", 'f'), new Field("right pos", 'f') }; 
+			new Field("Closest idx", 'd'), new Field("left pos", 'f'), new Field("right pos", 'f'), new Field("Distance", 'f') }; 
 			// new Field("Update Count", 'd'), new Field("Errors", 'd') };
 
 	private CSVWriter m_writer;		// Used for logging
@@ -140,7 +140,8 @@ public class PurePursuit {
 			k_extendedLookAhead = path.m_extendedLookAheadDistance;
 
 			k_lookAheadIdx = (int) (k_lookAheadTime / m_dt);	// Index increment to reach specified time							
-			k_maxLookAhead = (int) (k_maxSearchTime / m_dt);	// Max index count to look ahead for closest point to current position		
+			k_maxLookAhead = (int) (k_maxSearchTime / m_dt);	// Max index count to look ahead for closest point to current position	
+			Logger.log("PurePursuit", 1, String.format("Look Ahead Time = %f, Look Ahead Index = %d", k_lookAheadTime, k_lookAheadIdx));	
 		}
 	}
 
@@ -391,18 +392,20 @@ public class PurePursuit {
 
 		if (distance < k_minLookAheadDist) {
 			int nextPosIdx = getLookAheadPoint(pos, k_minLookAheadDist, closestPoint);
-			
 			if (nextPosIdx < 0 && m_isExtended) {
+				double extendDistance = k_minLookAheadDist - distance;
 				/*
 				 * The next point is at the end of the path and extended is enabled.
 				 *   Compute a new point that is k_extendedLookAhead beyond the end of
 				 *   the path, tangent to the end of the path
 				 */
 				Segment newPos = m_path.m_centerPath[m_path.m_centerPath.length - 1];
-				double newX = newPos.x + k_extendedLookAhead * Math.cos(m_path.m_centerPath[m_path.m_centerPath.length - 1].heading);
-				double newY = newPos.y + k_extendedLookAhead * Math.sin(m_path.m_centerPath[m_path.m_centerPath.length - 1].heading);
+				double newX = newPos.x + extendDistance * Math.cos(m_path.m_centerPath[m_path.m_centerPath.length - 1].heading);
+				double newY = newPos.y + extendDistance * Math.sin(m_path.m_centerPath[m_path.m_centerPath.length - 1].heading);
 				
-				nextPos = new Segment(0, newX, newY, 0, 0, 0, 0);	// dummy segment for this new position
+				nextPos = new Segment(0, newX, newY, 0, 0, 0, 0);
+				distance = calcDistance(pos.x, pos.y, nextPos);	 
+
 			} else if (nextPosIdx < 0) {
 				/*
 				 * The next point is beyond the end of the path and the path is not extended 
@@ -431,7 +434,7 @@ public class PurePursuit {
 
 		logData(pos.yaw, velocity, (leftSpeed), (rightSpeed), pos.leftVel, pos.rightVel, pos.x,
 				pos.y, closestPos.x, closestPos.y, nextPos.x, nextPos.y, distance, dX, theta, curvature, speedDiff,
-				closestPoint, pos.leftPos, pos.rightPos);	//, pos.updateCount, pos.errorCount);
+				closestPoint, pos.leftPos, pos.rightPos, distance);	//, pos.updateCount, pos.errorCount);
 
 		// System.out.println(String.format("right = %f, left = %f", rightSpeed, leftSpeed));
 		return new SpeedContainer(leftSpeed, rightSpeed);

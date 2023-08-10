@@ -28,6 +28,7 @@ public class CreatePathCommand extends CommandBase {
   private boolean m_isClimbingChargeStation = false;
   // private PurePursuitData m_data;
   private Path m_path;
+  private static final double k_lookAheadTime = 0.45;
   private static final int k_nPoints = 1000;
   private static final double k_dt = 0.02;
   private static final double k_wheelbase = Constants.Drive.k_wheelBase;
@@ -78,12 +79,12 @@ public class CreatePathCommand extends CommandBase {
 
   public CreatePathCommand(DriveSubsystem driveSubsystem, Waypoint[] waypoints, boolean setPosition, boolean reversed,
       String name, PurePursuitData data) {
-    init(driveSubsystem, waypoints, setPosition, reversed, name, data, 1);
+    init(driveSubsystem, waypoints, setPosition, reversed, name, data, k_lookAheadTime);
   }
 
   public CreatePathCommand(DriveSubsystem driveSubsystem, Waypoint[] waypoints, boolean setPosition, boolean reversed,
       String name) {
-    init(driveSubsystem, waypoints, setPosition, reversed, name, new PurePursuitData(), 1);
+    init(driveSubsystem, waypoints, setPosition, reversed, name, new PurePursuitData(), k_lookAheadTime);
   }
 
   // Called when the command is initially scheduled.
