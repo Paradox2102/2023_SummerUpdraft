@@ -40,7 +40,7 @@ public class DriveSubsystem extends SubsystemBase {
   private final DifferentialDrive m_drive = new DifferentialDrive(m_leftDrive, m_rightDrive);
   private static double k_fLeft = (0.05);
   private static double k_fRight = (0.05);
-  private static double k_p = 0.025;
+  private static double k_p = 0.1; //0.025
   private static double k_i = 0.000025;
   private static double k_d = 0;
   Navigator m_navigator;
