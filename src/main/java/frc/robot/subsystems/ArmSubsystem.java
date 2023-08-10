@@ -53,7 +53,7 @@ public class ArmSubsystem extends SubsystemBase {
   private static double k_p = 0.02;
   private static double k_i = 0;
   private static double k_d = 0.001;
-  private static double k_f = 0.005;
+  private static double k_f = 0.0025;
   private static double k_l = 18;
   private static double k_maxPower = 0.8;
   /** Creates a new ArmSubsystem. */
