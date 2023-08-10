@@ -111,33 +111,33 @@ public class RobotContainer {
 
     //Briselda's test joystick
 //lowest reach, straight up
-    m_BMRJoystick.button(1).onTrue(new HandPosition(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 0, 0, 122));
- //low cone position
-    m_BMRJoystick.button(9).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 0, 2, -126, ()-> m_driveStick.getThrottle() < 0));
- //middle cone position
-    m_BMRJoystick.button(10).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 35, 1, -50,  ()-> m_driveStick.getThrottle() < 0));
-//top cone position
-   m_BMRJoystick.button(11).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 42, 24, -52,  ()-> m_driveStick.getThrottle() < 0));
-//low cube position
-  //  m_BMRJoystick.button(3).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 0, 0, 0, ()-> m_driveStick.getThrottle() < 0));
-//middle cube position
-    // m_BMRJoystick.button(3).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 0, 0, 0, ()-> m_driveStick.getThrottle() < 0));
-//top cube position
-  // m_BMRJoystick.button(3).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 0, 0, 0, ()-> m_driveStick.getThrottle() < 0));
+    m_BMRJoystick.button(3).onTrue(new HandPosition(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 0,  0, 122));
+ //CONE low position
+    // m_BMRJoystick.button(4).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 0, 2, -126, ()-> m_driveStick.getThrottle() < 0));
+ //CONE middle position
+    // m_BMRJoystick.button(5).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 35, 1, -50,  ()-> m_driveStick.getThrottle() < 0));
+//CONE top position
+  //  m_BMRJoystick.button(6).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 42, 24, -52,  ()-> m_driveStick.getThrottle() < 0));
+//CUBE low position
+   m_BMRJoystick.button(4).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, -55, 0, 20, ()-> m_driveStick.getThrottle() < 0));
+//CUBE middle position
+    m_BMRJoystick.button(5).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, -60, 0, 0, ()-> m_driveStick.getThrottle() < 0));
+//CUBE top position
+  m_BMRJoystick.button(6).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, -50, 16, 0, ()-> m_driveStick.getThrottle() < 0));
 
 
-    m_BMRJoystick.button(2).whileTrue(new MoveArmCommand(m_armSubsystem, 0.2));
-    m_BMRJoystick.button(3).whileTrue(new MoveArmCommand(m_armSubsystem, -0.2));
+    m_BMRJoystick.button(7).whileTrue(new MoveArmCommand(m_armSubsystem, 0.2));
+    m_BMRJoystick.button(8).whileTrue(new MoveArmCommand(m_armSubsystem, -0.2));
 
-    m_BMRJoystick.button(4).whileTrue(new ReachCommand(m_reachSubsystem, 0.4));
-    m_BMRJoystick.button(5).whileTrue(new ReachCommand(m_reachSubsystem, -0.4));
+    m_BMRJoystick.button(9).whileTrue(new ReachCommand(m_reachSubsystem, 0.4));
+    m_BMRJoystick.button(10).whileTrue(new ReachCommand(m_reachSubsystem, -0.4));
     
-    m_BMRJoystick.button(6).whileTrue(new MoveWristCommand(m_wristSubsystem, 0.2));
-    m_BMRJoystick.button(7).whileTrue(new MoveWristCommand(m_wristSubsystem, -0.2));
+    m_BMRJoystick.button(11).whileTrue(new MoveWristCommand(m_wristSubsystem, 0.2));
+    m_BMRJoystick.button(12).whileTrue(new MoveWristCommand(m_wristSubsystem, -0.2));
 //outtake
-    m_BMRJoystick.button(8).whileTrue(new IntakeCommand(m_intakeSubsystem, 0.3));
+    m_BMRJoystick.button(1).whileTrue(new IntakeCommand(m_intakeSubsystem, 0.3));
 //intake
-    m_BMRJoystick.button(9).toggleOnTrue(new IntakeCommand(m_intakeSubsystem, -0.4));
+    m_BMRJoystick.button(2).toggleOnTrue(new IntakeCommand(m_intakeSubsystem, -0.4));
 
     // m_stick.button(15).whileTrue(new CalibrateDriveCommand(m_driveSubsystem));
 
