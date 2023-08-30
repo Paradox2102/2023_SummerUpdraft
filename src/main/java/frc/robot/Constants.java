@@ -50,8 +50,8 @@ public final class Constants {
 
   public static class Wrist {
     public static final int k_wristMotor = 1; //CAN id
-    public static final double k_wristTicksToDegrees = 7.65; //3.893;
-    public static final double k_wristStartingAngle = 124.48/k_wristTicksToDegrees;
+    public static final double k_wristTicksToDegrees = 8.77; //3.893;
+    public static final double k_wristStartingAngle = 144.7/k_wristTicksToDegrees; //124.48/k_wristTicksToDegrees;
   }
 
   public static class Camera {
