@@ -22,56 +22,56 @@ public class PositionServer implements NetworkReceiver {
 
     public void start() {
         // m_gyro = gyro;
-        m_network.listen(this, 5802);
+        // m_network.listen(this, 5802);
 
-        m_watchdogTimer.scheduleAtFixedRate(new TimerTask() {
+        // m_watchdogTimer.scheduleAtFixedRate(new TimerTask() {
 
-			@Override
-			public void run() {
-                // Logger.log("PositionServer", 1, "connected=" + m_connected);
-				if (m_connected) {
-					Logger.log("PositionServer",-1, "Send position");
+		// 	@Override
+		// 	public void run() {
+        //         // Logger.log("PositionServer", 1, "connected=" + m_connected);
+		// 		if (m_connected) {
+		// 			Logger.log("PositionServer",-1, "Send position");
 
-                    {
+        //             {
 
-                        // m_network.sendMessage(String.format("+%.2f %.2f %.2f\n", m_angle, m_testX, m_testY));
+        //                 // m_network.sendMessage(String.format("+%.2f %.2f %.2f\n", m_angle, m_testX, m_testY));
 
-                        // m_testX += 1;
-                        // m_testY += 0.5;
-                        // m_angle += 1.0/5;
-                    }
+        //                 // m_testX += 1;
+        //                 // m_testY += 0.5;
+        //                 // m_angle += 1.0/5;
+        //             }
 
-                    double xPos;
-                    double yPos;
-                    double angle;
-                    boolean newPos;
+        //             double xPos;
+        //             double yPos;
+        //             double angle;
+        //             boolean newPos;
 
-                    synchronized (m_lock)
-                    {
-                        xPos = m_xPos;
-                        yPos = m_yPos;
-                        angle = m_angle;
-                        newPos = m_newPos;
+        //             synchronized (m_lock)
+        //             {
+        //                 xPos = m_xPos;
+        //                 yPos = m_yPos;
+        //                 angle = m_angle;
+        //                 newPos = m_newPos;
 
-                        m_newPos = false;
-                    }
+        //                 m_newPos = false;
+        //             }
 
-                    if (newPos)
-                    {
-					    m_network.sendMessage(String.format("+%.2f %.2f %.2f\n", angle, xPos, yPos));
-                    }
-                    else
-                    {
-                        m_network.sendMessage("-\n");       // keep alive
-                    }
+        //             if (newPos)
+        //             {
+		// 			    m_network.sendMessage(String.format("+%.2f %.2f %.2f\n", angle, xPos, yPos));
+        //             }
+        //             else
+        //             {
+        //                 m_network.sendMessage("-\n");       // keep alive
+        //             }
 
-					// if (m_lastMessage + k_timeout < System.currentTimeMillis()) {
-					// 	Logger.log("ApriltagsCamera", 3, "Network timeout");
-					// 	m_network.closeConnection();
-					// }
-				}
-			}
-		}, 200, 200);   // Send current position 5 times a second
+		// 			// if (m_lastMessage + k_timeout < System.currentTimeMillis()) {
+		// 			// 	Logger.log("ApriltagsCamera", 3, "Network timeout");
+		// 			// 	m_network.closeConnection();
+		// 			// }
+		// 		}
+		// 	}
+		// }, 200, 200);   // Send current position 5 times a second
     }
 
     public void setPosition(double x, double y, double angle) {
