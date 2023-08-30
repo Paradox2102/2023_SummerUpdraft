@@ -145,6 +145,8 @@ public class RobotContainer {
     //Isa's test joystick
     m_IAEJoystick.button(1).onTrue(new HandPosition(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 0, 0, 126));
 
+    m_IAEJoystick.button(8).onTrue(new SetWristPositionCommand(m_wristSubsystem, -90));
+
     m_IAEJoystick.button(5).whileTrue(new MoveArmCommand(m_armSubsystem, 0.2));
     m_IAEJoystick.button(3).whileTrue(new MoveArmCommand(m_armSubsystem, -0.2));
 

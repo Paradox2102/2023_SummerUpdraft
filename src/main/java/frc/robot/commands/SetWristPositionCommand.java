@@ -25,5 +25,6 @@ public class SetWristPositionCommand extends InstantCommand {
   @Override
   public void initialize() {
     m_subsystem.moveSetPoint(m_setPoint);
+    Logger.log("SetWristPositionCommand", 1, "initialize");
   }
 }
