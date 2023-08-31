@@ -21,9 +21,10 @@ import frc.robot.Constants;
 public class WristSubsystem extends SubsystemBase {
   CANSparkMax m_wristMotor = new CANSparkMax(Constants.Wrist.k_wristMotor, MotorType.kBrushless);
   RelativeEncoder m_wristEncoder = m_wristMotor.getEncoder();
-  private static final double k_p = 0; //0.075
-  private static final double k_i = 0;
-  private static final double k_f = 0.02;
+  private static final double k_p = 0.0001; //0.075
+  private static final double k_i = 0.01;
+  private static final double k_f = 0.05;
+  private static final double k_maxPower = 0.5;
   private double m_angle = 0;
   private double m_setPoint = 0;
   private boolean m_PIDOn = false;
@@ -54,6 +55,10 @@ public class WristSubsystem extends SubsystemBase {
 
   public double getPosition() {
     return m_wristEncoder.getPosition() * Constants.Wrist.k_wristTicksToDegrees;
+  }
+
+  public double getPositionForTicks() {
+    return m_wristEncoder.getPosition();
   }
 
   public void moveSetPoint(double setPoint) {
@@ -92,10 +97,14 @@ public class WristSubsystem extends SubsystemBase {
       } else {
         m_timer.reset();
       }
+    } 
+    if (Math.abs(power) > k_maxPower) {
+      power = k_maxPower * Math.signum(power);
     }
     m_wristMotor.set(power);
     SmartDashboard.putNumber("Wrist Power", power);
     SmartDashboard.putNumber("Wrist Speed", m_wristEncoder.getVelocity());
     SmartDashboard.putNumber("Wrist Position In Degrees", getPosition());
+    SmartDashboard.putNumber("Wrist Position in Ticks", getPositionForTicks());
   }
 }
