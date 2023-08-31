@@ -91,7 +91,7 @@ public class CreatePathCommand extends CommandBase {
   @Override
   public void initialize() {
     boolean blue = DriverStation.getAlliance() == Alliance.Blue;
-    if (blue!=m_blue) {
+    if (blue != m_blue) {
       m_blue = blue;
       Logger.log(m_name, 3, m_blue ? "Setting Blue side" : "Setting Red side");
       for (Waypoint waypoint : m_waypoints) {

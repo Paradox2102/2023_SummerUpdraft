@@ -8,10 +8,10 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.ApriltagsCamera.Logger;
 import frc.robot.subsystems.ReachSubsystem;
 
-
 public class ReachCommand extends CommandBase {
   ReachSubsystem m_subsystem;
   double m_power;
+
   /** Creates a new ReachCommand. */
   public ReachCommand(ReachSubsystem subsystem, double power) {
     Logger.log("Reach Command", 1, "reach command");
@@ -33,7 +33,8 @@ public class ReachCommand extends CommandBase {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+  }
 
   // Called once the command ends or is interrupted.
   @Override

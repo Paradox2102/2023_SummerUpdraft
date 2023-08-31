@@ -40,7 +40,7 @@ public class DriveSubsystem extends SubsystemBase {
   private final DifferentialDrive m_drive = new DifferentialDrive(m_leftDrive, m_rightDrive);
   private static double k_fLeft = (0.05);
   private static double k_fRight = (0.05);
-  private static double k_p = 0.1; //0.025
+  private static double k_p = 0.1; // 0.025
   private static double k_i = 0.000025;
   private static double k_d = 0;
   Navigator m_navigator;
@@ -110,7 +110,8 @@ public class DriveSubsystem extends SubsystemBase {
   public void setSpeedFPS(double leftSpeed, double rightSpeed) {
     rightSpeed = rightSpeed * Constants.Drive.k_FPSToTPS;
     leftSpeed = leftSpeed * Constants.Drive.k_FPSToTPS;
-    //Logger.log("DriveSubsystem", 0, String.format("left speed =%f, right speed =%f", leftSpeed, rightSpeed));
+    // Logger.log("DriveSubsystem", 0, String.format("left speed =%f, right speed
+    // =%f", leftSpeed, rightSpeed));
     m_rightDrive.set(TalonFXControlMode.Velocity, rightSpeed);
     m_leftDrive.set(TalonFXControlMode.Velocity, leftSpeed);
   }
@@ -153,11 +154,11 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public double getLeftPosInFeet() {
-    return m_leftDrive.getSelectedSensorPosition()/Constants.Drive.k_ticksPerFeet;
+    return m_leftDrive.getSelectedSensorPosition() / Constants.Drive.k_ticksPerFeet;
   }
 
   public double getRightPosInFeet() {
-    return m_rightDrive.getSelectedSensorPosition()/Constants.Drive.k_ticksPerFeet;
+    return m_rightDrive.getSelectedSensorPosition() / Constants.Drive.k_ticksPerFeet;
   }
 
   public double getLeftPosInTicks() {
@@ -169,11 +170,11 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public double getLeftSpeedInFPS() {
-    return m_leftDrive.getSelectedSensorVelocity()/Constants.Drive.k_FPSToTPS;
+    return m_leftDrive.getSelectedSensorVelocity() / Constants.Drive.k_FPSToTPS;
   }
 
   public double getRightSpeedInFPS() {
-    return m_rightDrive.getSelectedSensorVelocity()/Constants.Drive.k_FPSToTPS;
+    return m_rightDrive.getSelectedSensorVelocity() / Constants.Drive.k_FPSToTPS;
   }
 
   public double getLeftSpeedInTicks() {

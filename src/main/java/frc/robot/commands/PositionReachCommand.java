@@ -11,8 +11,9 @@ import frc.robot.subsystems.ReachSubsystem;
 public class PositionReachCommand extends CommandBase {
   ReachSubsystem m_subsystem;
   double m_setPosition;
+
   /** Creates a new PositionReachCommand. */
-  public PositionReachCommand(ReachSubsystem subsystem, double positionInInches ) {
+  public PositionReachCommand(ReachSubsystem subsystem, double positionInInches) {
     m_subsystem = subsystem;
     m_setPosition = positionInInches;
 
@@ -30,7 +31,8 @@ public class PositionReachCommand extends CommandBase {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+  }
 
   // Called once the command ends or is interrupted.
   @Override
