@@ -30,6 +30,7 @@ import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.WristSubsystem;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -144,6 +145,8 @@ public class RobotContainer {
     //Isa's test joystick
     m_IAEJoystick.button(1).onTrue(new HandPosition(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 0, 0, 126));
 
+    m_IAEJoystick.button(8).onTrue(new SetWristPositionCommand(m_wristSubsystem, -90));
+
     m_IAEJoystick.button(5).whileTrue(new MoveArmCommand(m_armSubsystem, 0.2));
     m_IAEJoystick.button(3).whileTrue(new MoveArmCommand(m_armSubsystem, -0.2));
 
@@ -157,7 +160,7 @@ public class RobotContainer {
     m_IAEJoystick.button(10).toggleOnTrue(new IntakeCommand(m_intakeSubsystem, -0.4));
 
     //bottom cone position
-    m_IAEJoystick.button(2).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 0, 2, -126,  ()-> m_driveStick.getThrottle() < 0));
+    //m_IAEJoystick.button(2).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 0, 2, -126,  ()-> m_driveStick.getThrottle() < 0));
 
     //middle cone position
     m_IAEJoystick.button(2).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 35, 1, -50,  ()-> m_driveStick.getThrottle() < 0));
@@ -165,7 +168,7 @@ public class RobotContainer {
     //top cone position
     m_IAEJoystick.button(7).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 42, 24, -52, ()-> m_driveStick.getThrottle() < 0));
 
-  }
+   }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -178,7 +181,7 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  public Command getAutonomousCommand() {
+  //public Command getAutonomousCommand() {
     // An example command will be run in autonomous
     //return m_chooseAuto.getSelected();
     return new DriveForwardCommand(m_driveSubsystem);
