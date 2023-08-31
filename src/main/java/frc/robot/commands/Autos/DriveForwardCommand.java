@@ -15,9 +15,10 @@ import frc.robot.subsystems.DriveSubsystem;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class DriveForwardCommand extends SequentialCommandGroup {
   private static Waypoint[] k_forward = {
-    new Waypoint(0, 0, Math.toRadians(90)),
-    new Waypoint(5, 5, Math.toRadians(0))
+      new Waypoint(0, 0, Math.toRadians(90)),
+      new Waypoint(5, 5, Math.toRadians(0))
   };
+
   /** Creates a new DriveForwardCommand. */
   public DriveForwardCommand(DriveSubsystem subsystem) {
     // Add your commands in the addCommands() call, e.g.

@@ -66,7 +66,7 @@ public class ReachSubsystem extends SubsystemBase {
     m_timer.reset();
     m_timer.start();
     m_manual = false;
-    
+
   }
 
   public double getDistance() {
@@ -95,7 +95,7 @@ public class ReachSubsystem extends SubsystemBase {
     } else {
       m_difference = getDistance() - m_setPosition;
       // current-set;
-      power = -k_p * m_difference + k_f*Math.cos(Math.toRadians(m_getArmAngleInDegrees.getAsDouble()));
+      power = -k_p * m_difference + k_f * Math.cos(Math.toRadians(m_getArmAngleInDegrees.getAsDouble()));
       // if (Math.abs(power) > k_maxPower) {
       // power = k_maxPower * Math.signum(power);
       // }
@@ -111,14 +111,14 @@ public class ReachSubsystem extends SubsystemBase {
             m_state = State.stalledUp;
           } else {
             m_state = State.stalledDown;
-            // Logger.log("Reach Subsystem", 1, String.format("state = %s", m_state.toString()));
+            // Logger.log("Reach Subsystem", 1, String.format("state = %s",
+            // m_state.toString()));
           }
         } else {
           m_timer.reset();
         }
       }
     }
-    
 
     // state change
     if (m_state == State.stalledUp && power < 0) {

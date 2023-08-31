@@ -62,13 +62,15 @@ public class RobotContainer {
   final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
   final WristSubsystem m_wristSubsystem = new WristSubsystem(() -> m_armSubsystem.getArmAngleDegrees());
   SendableChooser<Command> m_chooseAuto = new SendableChooser<>();
-  // We have multiple developers working on different parts of the system, so we set up multiple joysticks
-  // All joysticks are available for button use, but only one has control of arcade drive.
+  // We have multiple developers working on different parts of the system, so we
+  // set up multiple joysticks
+  // All joysticks are available for button use, but only one has control of
+  // arcade drive.
   private final CommandJoystick m_PRJoystick = new CommandJoystick(0);
   private final CommandJoystick m_BMRJoystick = new CommandJoystick(1);
   private final CommandJoystick m_IAEJoystick = new CommandJoystick(2);
-  private final CommandJoystick m_driveStick = m_IAEJoystick;
-  //private final CommandJoystick m_stick2 = new CommandJoystick(1);
+  public final CommandJoystick m_driveStick = m_PRJoystick;
+  // private final CommandJoystick m_stick2 = new CommandJoystick(1);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -96,15 +98,18 @@ public class RobotContainer {
   private void configureBindings() {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
 
-    // TODO: Consider instead passing in the sum of the Y and X for all three joysticks here.
+    // TODO: Consider instead passing in the sum of the Y and X for all three
+    // joysticks here.
 
     m_driveSubsystem.setDefaultCommand(new RunCommand(()// runnable
     -> m_driveSubsystem
-        .arcadeDrive(m_driveStick.getThrottle() > 0 ? -m_driveStick.getY() : m_driveStick.getY(), -m_driveStick.getX()), m_driveSubsystem));
-   
+        .arcadeDrive(m_driveStick.getThrottle() > 0 ? -m_driveStick.getY() : m_driveStick.getY(), -m_driveStick.getX()),
+        m_driveSubsystem));
+
     // runnable : anonymous function takes no argument and returns nothing -> does
     // something called a side effect
-    //-> if then statement -> get throttle is the question, ? is the if, : is the else
+    // -> if then statement -> get throttle is the question, ? is the if, : is the
+    // else
 
     configureBindingsPR();
     configureBindingsBMR();
@@ -113,41 +118,49 @@ public class RobotContainer {
 
   private void configureBindingsPR() {
 
-    //Paul's test joystick
-    //calibrate ticks to feet conversion
+    // Paul's test joystick
+    // calibrate ticks to feet conversion
     m_PRJoystick.button(1).onTrue(new CalibrateDriveCommand(m_driveSubsystem));
 
   }
 
-   private void configureBindingsBMR() {
-    //Briselda's test joystick
-//lowest reach, straight up
-    m_BMRJoystick.button(3).onTrue(new HandPosition(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 0,  0, 122));
- //CONE low position
-    // m_BMRJoystick.button(4).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 0, 2, -126, ()-> m_driveStick.getThrottle() < 0));
- //CONE middle position
-    // m_BMRJoystick.button(5).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 35, 1, -50,  ()-> m_driveStick.getThrottle() < 0));
-//CONE top position
-  //  m_BMRJoystick.button(6).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 42, 24, -52,  ()-> m_driveStick.getThrottle() < 0));
-//CUBE low position
-   m_BMRJoystick.button(4).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, -55, 0, 20, ()-> m_driveStick.getThrottle() < 0));
-//CUBE middle position
-    m_BMRJoystick.button(5).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, -60, 0, 0, ()-> m_driveStick.getThrottle() < 0));
-//CUBE top position
-  m_BMRJoystick.button(6).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, -50, 16, 0, ()-> m_driveStick.getThrottle() < 0));
-
+  private void configureBindingsBMR() {
+    // Briselda's test joystick
+    // lowest reach, straight up
+    m_BMRJoystick.button(3).onTrue(new HandPosition(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 0, 0, 122));
+    // CONE low position
+    // m_BMRJoystick.button(4).onTrue(new HandPosition2(m_armSubsystem,
+    // m_reachSubsystem, m_wristSubsystem, 0, 2, -126, ()->
+    // m_driveStick.getThrottle() < 0));
+    // CONE middle position
+    // m_BMRJoystick.button(5).onTrue(new HandPosition2(m_armSubsystem,
+    // m_reachSubsystem, m_wristSubsystem, 35, 1, -50, ()->
+    // m_driveStick.getThrottle() < 0));
+    // CONE top position
+    // m_BMRJoystick.button(6).onTrue(new HandPosition2(m_armSubsystem,
+    // m_reachSubsystem, m_wristSubsystem, 42, 24, -52, ()->
+    // m_driveStick.getThrottle() < 0));
+    // CUBE low position
+    m_BMRJoystick.button(4).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, -55, 0, 20,
+        () -> m_driveStick.getThrottle() < 0));
+    // CUBE middle position
+    m_BMRJoystick.button(5).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, -60, 0, 0,
+        () -> m_driveStick.getThrottle() < 0));
+    // CUBE top position
+    m_BMRJoystick.button(6).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, -50, 16, 0,
+        () -> m_driveStick.getThrottle() < 0));
 
     m_BMRJoystick.button(7).whileTrue(new MoveArmCommand(m_armSubsystem, 0.2));
     m_BMRJoystick.button(8).whileTrue(new MoveArmCommand(m_armSubsystem, -0.2));
 
     m_BMRJoystick.button(9).whileTrue(new ReachCommand(m_reachSubsystem, 0.4));
     m_BMRJoystick.button(10).whileTrue(new ReachCommand(m_reachSubsystem, -0.4));
-    
+
     m_BMRJoystick.button(11).whileTrue(new MoveWristCommand(m_wristSubsystem, 0.2));
     m_BMRJoystick.button(12).whileTrue(new MoveWristCommand(m_wristSubsystem, -0.2));
-//outtake
+    // outtake
     m_BMRJoystick.button(1).whileTrue(new IntakeCommand(m_intakeSubsystem, 0.3));
-//intake
+    // intake
     m_BMRJoystick.button(2).toggleOnTrue(new IntakeCommand(m_intakeSubsystem, -0.4));
 
     // m_stick.button(15).whileTrue(new CalibrateDriveCommand(m_driveSubsystem));
@@ -156,7 +169,7 @@ public class RobotContainer {
 
   private void configureBindingsIAE() {
 
-    //Isa's test joystick
+    // Isa's test joystick
     m_IAEJoystick.button(1).onTrue(new HandPosition(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 0, 0, 126));
 
     m_IAEJoystick.button(8).onTrue(new SetWristPositionCommand(m_wristSubsystem, -90));
@@ -166,21 +179,25 @@ public class RobotContainer {
 
     m_IAEJoystick.button(6).whileTrue(new ReachCommand(m_reachSubsystem, 0.4));
     m_IAEJoystick.button(4).whileTrue(new ReachCommand(m_reachSubsystem, -0.4));
-    
+
     m_IAEJoystick.button(11).whileTrue(new MoveWristCommand(m_wristSubsystem, 0.2));
     m_IAEJoystick.button(12).whileTrue(new MoveWristCommand(m_wristSubsystem, -0.2));
 
     m_IAEJoystick.button(9).whileTrue(new IntakeCommand(m_intakeSubsystem, 0.3));
     m_IAEJoystick.button(10).toggleOnTrue(new IntakeCommand(m_intakeSubsystem, -0.4));
 
-    //bottom cone position
-    //m_IAEJoystick.button(2).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 0, 2, -126,  ()-> m_driveStick.getThrottle() < 0));
+    // bottom cone position
+    // m_IAEJoystick.button(2).onTrue(new HandPosition2(m_armSubsystem,
+    // m_reachSubsystem, m_wristSubsystem, 0, 2, -126, ()->
+    // m_driveStick.getThrottle() < 0));
 
-    //middle cone position
-    m_IAEJoystick.button(2).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 35, 1, -50,  ()-> m_driveStick.getThrottle() < 0));
+    // middle cone position
+    m_IAEJoystick.button(2).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 35, 1, -50,
+        () -> m_driveStick.getThrottle() < 0));
 
-    //top cone position
-    m_IAEJoystick.button(7).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 42, 24, -52, ()-> m_driveStick.getThrottle() < 0));
+    // top cone position
+    m_IAEJoystick.button(7).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 42, 24, -52,
+        () -> m_driveStick.getThrottle() < 0));
 
    }
 
@@ -197,8 +214,8 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    //return m_chooseAuto.getSelected();
+    // return m_chooseAuto.getSelected();
     return null;
-    //return new DriveForwardCommand(m_driveSubsystem);
+    // return new DriveForwardCommand(m_driveSubsystem);
   }
 }
