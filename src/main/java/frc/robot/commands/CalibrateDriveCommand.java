@@ -14,6 +14,7 @@ public class CalibrateDriveCommand extends CommandBase {
   private static double k_power = 0.2;
   private Timer m_timer = new Timer();
   DriveSubsystem m_subsystem;
+
   public CalibrateDriveCommand(DriveSubsystem subsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_subsystem = subsystem;
@@ -28,7 +29,7 @@ public class CalibrateDriveCommand extends CommandBase {
     m_timer.reset();
     m_timer.start();
     m_subsystem.resetEncoders();
-    //m_subsystem.setPower(k_power, k_power);
+    // m_subsystem.setPower(k_power, k_power);
     m_subsystem.setSpeedFPS(2, 2);
   }
 

@@ -20,7 +20,8 @@ public class ArcadeDriveCommand extends CommandBase {
   private final BooleanSupplier m_reverse;
 
   /** Creates a new ArcadeDrive. */
-  public ArcadeDriveCommand(DriveSubsystem subsystem, DoubleSupplier drive, DoubleSupplier turn, BooleanSupplier reverse) {
+  public ArcadeDriveCommand(DriveSubsystem subsystem, DoubleSupplier drive, DoubleSupplier turn,
+      BooleanSupplier reverse) {
     // Logger.log("ArcadeDriveCommand", 3, "ArcadeDriveCommand()");
 
     m_subsystem = subsystem;
@@ -46,13 +47,13 @@ public class ArcadeDriveCommand extends CommandBase {
     double turn = m_turn.getAsDouble();
 
     drive = Math.abs(drive) * drive;
-    turn = Math.abs(turn) * turn; 
+    turn = Math.abs(turn) * turn;
 
     boolean reverse = m_reverse.getAsBoolean();
 
     if (!reverse) {
-      drive = -drive; 
-    } 
+      drive = -drive;
+    }
 
     m_subsystem.setPower(drive + turn, drive - turn);
 
