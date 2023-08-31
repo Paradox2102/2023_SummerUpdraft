@@ -106,10 +106,20 @@ public class RobotContainer {
     // something called a side effect
     //-> if then statement -> get throttle is the question, ? is the if, : is the else
 
+    configureBindingsPR();
+    configureBindingsBMR();
+    configureBindingsIAE();
+  }
+
+  private void configureBindingsPR() {
+
     //Paul's test joystick
 //calibrate ticks to feet conversion
     m_PRJoystick.button(1).onTrue(new CalibrateDriveCommand(m_driveSubsystem));
 
+  }
+
+   private void configureBindingsBMR() {
     //Briselda's test joystick
 //lowest reach, straight up
     m_BMRJoystick.button(3).onTrue(new HandPosition(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 0,  0, 122));
@@ -141,6 +151,10 @@ public class RobotContainer {
     m_BMRJoystick.button(2).toggleOnTrue(new IntakeCommand(m_intakeSubsystem, -0.4));
 
     // m_stick.button(15).whileTrue(new CalibrateDriveCommand(m_driveSubsystem));
+
+  }
+
+  private void configureBindingsIAE() {
 
     //Isa's test joystick
     m_IAEJoystick.button(1).onTrue(new HandPosition(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 0, 0, 126));
