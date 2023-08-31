@@ -21,7 +21,7 @@ import frc.robot.commands.MoveArmCommand;
 import frc.robot.commands.MoveWristCommand;
 import frc.robot.commands.SetArmPositionCommand;
 import frc.robot.commands.SetWristPositionCommand;
-//import frc.robot.commands.autos.DriveForwardCommand;
+import frc.robot.commands.autos.DriveForwardCommand;
 import frc.ApriltagsCamera.ApriltagsCamera;
 import frc.robot.commands.CalibrateDriveCommand;
 import frc.robot.commands.HandPosition;
@@ -114,7 +114,7 @@ public class RobotContainer {
   private void configureBindingsPR() {
 
     //Paul's test joystick
-//calibrate ticks to feet conversion
+    //calibrate ticks to feet conversion
     m_PRJoystick.button(1).onTrue(new CalibrateDriveCommand(m_driveSubsystem));
 
   }
@@ -195,9 +195,10 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  //public Command getAutonomousCommand() {
+  public Command getAutonomousCommand() {
     // An example command will be run in autonomous
     //return m_chooseAuto.getSelected();
+    return null;
     //return new DriveForwardCommand(m_driveSubsystem);
-  //}
+  }
 }
