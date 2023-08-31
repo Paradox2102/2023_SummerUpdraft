@@ -14,6 +14,7 @@ public class DriveForTimeCommand extends CommandBase {
   private Timer m_timer;
   private double m_time;
   private static double k_speed = 4500;
+
   public DriveForTimeCommand(DriveSubsystem subsystem, Double time) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_time = time;
@@ -31,7 +32,8 @@ public class DriveForTimeCommand extends CommandBase {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+  }
 
   // Called once the command ends or is interrupted.
   @Override

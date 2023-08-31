@@ -42,8 +42,9 @@ public class ArmSubsystem extends SubsystemBase {
   private static double k_stallSpeed = 100;
   private static double k_stallTime = 0.2;
   private static double k_armDeadZone = 2;
-  //pid (too low, fall/ too high, wiggly)
-  /* Good values aug 8, 23
+  // pid (too low, fall/ too high, wiggly)
+  /*
+   * Good values aug 8, 23
    * p = 0.02
    * i = 0
    * d = 0.001
@@ -56,6 +57,7 @@ public class ArmSubsystem extends SubsystemBase {
   private static double k_f = 0.0025;
   private static double k_l = 18;
   private static double k_maxPower = 0.8;
+  
   /** Creates a new ArmSubsystem. */
   public ArmSubsystem() {
     m_armMotor.restoreFactoryDefaults();
@@ -73,19 +75,19 @@ public class ArmSubsystem extends SubsystemBase {
     m_extent = extent;
   }
 
-  public void setPower(double power){
-    //m_armMotor.set(power);
+  public void setPower(double power) {
+    // m_armMotor.set(power);
     m_recordedPower = power;
     m_PIDOn = false;
     m_timer.reset();
     Logger.log("ArmSubsystem", 0, String.format("%s, %f", "Set Power: ", m_recordedPower));
   }
 
-  public void setPosition(double setPoint){
+  public void setPosition(double setPoint) {
     m_setPoint = setPoint;
     m_PIDOn = true;
     m_timer.reset();
-    if (!armOnTarget()){
+    if (!armOnTarget()) {
       setArmBrake(false);
     }
     Logger.log("ArmSubsystem", 0, String.format("%s, %f", "Set Position: ", m_setPoint));
@@ -94,7 +96,7 @@ public class ArmSubsystem extends SubsystemBase {
   public void setArmBrake(boolean brake) {
     m_brake.set(!brake);
     SmartDashboard.putBoolean("Arm Brake", brake);
-    //Logger.log("ArmSubsystem", 0, String.format("%s, %b", "Set Brake ", brake));
+    // Logger.log("ArmSubsystem", 0, String.format("%s, %b", "Set Brake ", brake));
   }
 
   public double getArmAngleDegrees() {
@@ -114,17 +116,17 @@ public class ArmSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     double power = m_recordedPower;
-    //holds the arm at the set point
+    // holds the arm at the set point
     if (m_PIDOn) {
       power = getFTerm(m_setPoint) + m_armPID.calculate(getArmAngleDegrees(), m_setPoint);
-    } 
+    }
     if (Math.abs(power) > k_maxPower) {
       power = k_maxPower * Math.signum(power);
     }
-    //set power to 0 if the arm has been stalled for over 0.2 seconds
-    if (power > k_stallPower){
-      if(Math.abs(m_armRelative.getVelocity()) < k_stallSpeed){
-        if(m_timer.get() > k_stallTime){
+    // set power to 0 if the arm has been stalled for over 0.2 seconds
+    if (power > k_stallPower) {
+      if (Math.abs(m_armRelative.getVelocity()) < k_stallSpeed) {
+        if (m_timer.get() > k_stallTime) {
           // Logger.log("ArmSubsystem", 0, "Stalled");
           power = 0;
         }
@@ -133,7 +135,7 @@ public class ArmSubsystem extends SubsystemBase {
       }
     }
     m_armMotor.set(power);
-    if (armOnTarget()){
+    if (armOnTarget()) {
       setArmBrake(true);
     }
     // This method will be called once per scheduler run
