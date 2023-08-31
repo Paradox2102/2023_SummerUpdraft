@@ -114,7 +114,7 @@ public class RobotContainer {
   private void configureBindingsPR() {
 
     //Paul's test joystick
-//calibrate ticks to feet conversion
+    //calibrate ticks to feet conversion
     m_PRJoystick.button(1).onTrue(new CalibrateDriveCommand(m_driveSubsystem));
 
   }
