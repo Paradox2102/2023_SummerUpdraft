@@ -31,14 +31,9 @@ public class HandPosition2 extends InstantCommand {
     m_reachSubsystem = reachSubsystem;
     m_wristSubsystem = wristSubsystem;
     m_armExtent = armExtent;
+    m_armAngle = armAngle;
+    m_wristAngle = wristAngle;
     m_reverse = reverse;
-    if (m_reverse.getAsBoolean()) {
-      m_armAngle = -armAngle;
-      m_wristAngle = -wristAngle;
-    } else {
-      m_armAngle = armAngle;
-      m_wristAngle = wristAngle;
-    }
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(m_armSubsystem, m_reachSubsystem, m_wristSubsystem);
     Logger.log("HandPosition2", 1, "HandPosition2");
@@ -48,9 +43,9 @@ public class HandPosition2 extends InstantCommand {
   @Override
   public void initialize() {
     Logger.log("HandPosition2", 1, "Initialize");
-    m_armSubsystem.setPosition(m_armAngle);
+    m_armSubsystem.setPosition(m_reverse.getAsBoolean()?m_armAngle:-m_armAngle);
     // m_reachSubsystem.setPosition(m_armExtent);
-    m_wristSubsystem.moveSetPoint(m_wristAngle);
+    m_wristSubsystem.moveSetPoint(m_reverse.getAsBoolean()?m_wristAngle:-m_wristAngle);
     m_exit = false;
   }
 

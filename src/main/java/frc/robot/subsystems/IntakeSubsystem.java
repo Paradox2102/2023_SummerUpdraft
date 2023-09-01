@@ -44,7 +44,7 @@ public class IntakeSubsystem extends SubsystemBase {
     double power = m_savedPower;
     if(Math.abs(getSpeed()) < k_stallSpeed && m_savedPower != 0) {
       if(m_timer.get() > k_expiredTimer) {
-        Logger.log("IntakeSubsystem", 0, "Stalled");
+        //Logger.log("IntakeSubsystem", 0, "Stalled");
         if(m_savedPower < 0) {
           power = -k_stallPower;
         }  else {
