@@ -110,8 +110,7 @@ public class DriveSubsystem extends SubsystemBase {
   public void setSpeedFPS(double leftSpeed, double rightSpeed) {
     rightSpeed = rightSpeed * Constants.Drive.k_FPSToTPS;
     leftSpeed = leftSpeed * Constants.Drive.k_FPSToTPS;
-    // Logger.log("DriveSubsystem", 0, String.format("left speed =%f, right speed
-    // =%f", leftSpeed, rightSpeed));
+    // Logger.log("DriveSubsystem", 0, String.format("left speed =%f, right speed =%f", leftSpeed, rightSpeed));
     m_rightDrive.set(TalonFXControlMode.Velocity, rightSpeed);
     m_leftDrive.set(TalonFXControlMode.Velocity, leftSpeed);
   }

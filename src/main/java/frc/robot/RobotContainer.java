@@ -199,7 +199,7 @@ public class RobotContainer {
     m_IAEJoystick.button(7).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 42, 24, -52,
         () -> m_driveStick.getThrottle() < 0));
 
-  }
+   }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

@@ -66,7 +66,6 @@ public class ReachSubsystem extends SubsystemBase {
     m_timer.reset();
     m_timer.start();
     m_manual = false;
-
   }
 
   public double getDistance() {
@@ -111,8 +110,7 @@ public class ReachSubsystem extends SubsystemBase {
             m_state = State.stalledUp;
           } else {
             m_state = State.stalledDown;
-            // Logger.log("Reach Subsystem", 1, String.format("state = %s",
-            //     m_state.toString()));
+            // Logger.log("Reach Subsystem", 1, String.format("state = %s", m_state.toString()));
           }
         } else {
           m_timer.reset();
