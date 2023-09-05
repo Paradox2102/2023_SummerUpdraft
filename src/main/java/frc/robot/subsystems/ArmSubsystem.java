@@ -57,7 +57,6 @@ public class ArmSubsystem extends SubsystemBase {
   private static double k_f = 0.0025;
   private static double k_l = 18;
   private static double k_maxPower = 0.8;
-  
   /** Creates a new ArmSubsystem. */
   public ArmSubsystem() {
     m_armMotor.restoreFactoryDefaults();
@@ -96,7 +95,7 @@ public class ArmSubsystem extends SubsystemBase {
   public void setArmBrake(boolean brake) {
     m_brake.set(!brake);
     SmartDashboard.putBoolean("Arm Brake", brake);
-    // Logger.log("ArmSubsystem", 0, String.format("%s, %b", "Set Brake ", brake));
+    //Logger.log("ArmSubsystem", 0, String.format("%s, %b", "Set Brake ", brake));
   }
 
   public double getArmAngleDegrees() {

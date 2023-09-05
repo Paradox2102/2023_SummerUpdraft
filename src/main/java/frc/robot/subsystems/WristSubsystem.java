@@ -21,9 +21,10 @@ import frc.robot.Constants;
 public class WristSubsystem extends SubsystemBase {
   CANSparkMax m_wristMotor = new CANSparkMax(Constants.Wrist.k_wristMotor, MotorType.kBrushless);
   RelativeEncoder m_wristEncoder = m_wristMotor.getEncoder();
-  private static final double k_p = 0.0001; //0.075
-  private static final double k_i = 0.01;
+  private static final double k_p = 0.02; //0.075
+  private static final double k_i = 0; //0.01;
   private static final double k_f = 0.05;
+  private static final double k_d = 0.001;
   private static final double k_maxPower = 0.5;
   private double m_angle = 0;
   private double m_setPoint = 0;
@@ -34,7 +35,7 @@ public class WristSubsystem extends SubsystemBase {
   private static double k_stallSpeed = 0.1;
   private static double k_stallTime = 0.2;
   private Timer m_timer = new Timer();
-  PIDController m_wristPID = new PIDController(k_p, k_i, 0);
+  PIDController m_wristPID = new PIDController(k_p, k_i, k_d);
 
   /** Creates a new WristSubsystem. */
   public WristSubsystem(DoubleSupplier armAngle) {

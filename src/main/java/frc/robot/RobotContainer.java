@@ -170,7 +170,9 @@ public class RobotContainer {
   private void configureBindingsIAE() {
 
     // Isa's test joystick
-    m_IAEJoystick.button(1).onTrue(new HandPosition(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 0, 0, 126));
+    m_IAEJoystick.button(1).onTrue(new HandPosition(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 0, 0, Constants.Wrist.k_wristHomeAngle));
+
+    m_IAEJoystick.button(8).onTrue(new SetWristPositionCommand(m_wristSubsystem, -90));
 
     m_IAEJoystick.button(8).onTrue(new SetWristPositionCommand(m_wristSubsystem, -90));
 
@@ -191,12 +193,13 @@ public class RobotContainer {
     // m_driveStick.getThrottle() < 0));
 
     // middle cone position
-    m_IAEJoystick.button(2).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 35, 1, -50,
+    m_IAEJoystick.button(2).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 35, 1, -65,
         () -> m_driveStick.getThrottle() < 0));
 
     // top cone position
     m_IAEJoystick.button(7).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 42, 24, -52,
         () -> m_driveStick.getThrottle() < 0));
+
    }
 
   /**
