@@ -179,7 +179,6 @@ public class RobotContainer {
 
     m_IAEJoystick.button(6).whileTrue(new ReachCommand(m_reachSubsystem, 0.4));
     m_IAEJoystick.button(4).whileTrue(new ReachCommand(m_reachSubsystem, -0.4));
-
     m_IAEJoystick.button(11).whileTrue(new MoveWristCommand(m_wristSubsystem, 0.2));
     m_IAEJoystick.button(12).whileTrue(new MoveWristCommand(m_wristSubsystem, -0.2));
 
@@ -198,14 +197,7 @@ public class RobotContainer {
     // top cone position
     m_IAEJoystick.button(7).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 42, 24, -52,
         () -> m_driveStick.getThrottle() < 0));
-
    }
-
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
