@@ -19,20 +19,24 @@ public class HandPosition2 extends InstantCommand {
   private final ArmSubsystem m_armSubsystem;
   private final ReachSubsystem m_reachSubsystem;
   private final WristSubsystem m_wristSubsystem;
-  private final double m_armAngle;
+  private final double m_armFrontAngle;
+  private final double m_armBackAngle;
   private final double m_armExtent;
-  private final double m_wristAngle;
+  private final double m_wristFrontAngle;
+  private final double m_wristBackAngle;
   private boolean m_exit = false;
   private final BooleanSupplier m_reverse;
 
   public HandPosition2(ArmSubsystem armSubsystem, ReachSubsystem reachSubsystem, WristSubsystem wristSubsystem,
-      double armAngle, double armExtent, double wristAngle, BooleanSupplier reverse) {
+      double armFrontAngle, double armBackAngle, double armExtent, double wristFrontAngle, double wristBackAngle, BooleanSupplier reverse) {
     m_armSubsystem = armSubsystem;
     m_reachSubsystem = reachSubsystem;
     m_wristSubsystem = wristSubsystem;
     m_armExtent = armExtent;
-    m_armAngle = armAngle;
-    m_wristAngle = wristAngle;
+    m_armFrontAngle = armFrontAngle;
+    m_armBackAngle = armBackAngle;
+    m_wristFrontAngle = wristFrontAngle;
+    m_wristBackAngle = wristBackAngle;
     m_reverse = reverse;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(m_armSubsystem, m_reachSubsystem, m_wristSubsystem);
@@ -43,9 +47,9 @@ public class HandPosition2 extends InstantCommand {
   @Override
   public void initialize() {
     Logger.log("HandPosition2", 1, "Initialize");
-    m_armSubsystem.setPosition(m_reverse.getAsBoolean()?m_armAngle:-m_armAngle);
+    m_armSubsystem.setPosition(m_reverse.getAsBoolean()?m_armFrontAngle:m_armBackAngle);
     // m_reachSubsystem.setPosition(m_armExtent);
-    m_wristSubsystem.moveSetPoint(m_reverse.getAsBoolean()?m_wristAngle:-m_wristAngle);
+    m_wristSubsystem.moveSetPoint(m_reverse.getAsBoolean()?m_wristFrontAngle:m_wristBackAngle);
     m_exit = false;
   }
 
