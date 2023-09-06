@@ -245,6 +245,10 @@ public class DriveSubsystem extends SubsystemBase {
     return getLeftPosInFeet() < .5 && m_pathFollowTimer.get() > 5;
   }
 
+  public boolean isBalanced() {
+    return Math.abs(getPitch()) <= 0.1;
+  }
+
   @Override
   public void periodic() {
     m_drive.feed();
