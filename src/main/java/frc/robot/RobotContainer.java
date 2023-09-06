@@ -69,7 +69,7 @@ public class RobotContainer {
   private final CommandJoystick m_PRJoystick = new CommandJoystick(0);
   private final CommandJoystick m_BMRJoystick = new CommandJoystick(1);
   private final CommandJoystick m_IAEJoystick = new CommandJoystick(2);
-  public final CommandJoystick m_driveStick = m_PRJoystick;
+  public final CommandJoystick m_driveStick = m_IAEJoystick;
   // private final CommandJoystick m_stick2 = new CommandJoystick(1);
 
   /**
@@ -141,13 +141,13 @@ public class RobotContainer {
     // m_reachSubsystem, m_wristSubsystem, 42, 24, -52, ()->
     // m_driveStick.getThrottle() < 0));
     // CUBE low position
-    m_BMRJoystick.button(4).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, -55, 0, 20,
+    m_BMRJoystick.button(4).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, -55, 0, 20, 0, 0,
         () -> m_driveStick.getThrottle() < 0));
     // CUBE middle position
-    m_BMRJoystick.button(5).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, -60, 0, 0,
+    m_BMRJoystick.button(5).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, -60, 0, 0, 0, 0,
         () -> m_driveStick.getThrottle() < 0));
     // CUBE top position
-    m_BMRJoystick.button(6).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, -50, 16, 0,
+    m_BMRJoystick.button(6).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, -50, 16, 0, 0,0,
         () -> m_driveStick.getThrottle() < 0));
 
     m_BMRJoystick.button(7).whileTrue(new MoveArmCommand(m_armSubsystem, 0.2));
@@ -193,11 +193,11 @@ public class RobotContainer {
     // m_driveStick.getThrottle() < 0));
 
     // middle cone position
-    m_IAEJoystick.button(2).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 35, 1, -65,
+    m_IAEJoystick.button(2).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 35, -35, 5, -75, 65, 
         () -> m_driveStick.getThrottle() < 0));
 
     // top cone position
-    m_IAEJoystick.button(7).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 42, 24, -52,
+    m_IAEJoystick.button(7).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 42, -42, 24, 52, -52,
         () -> m_driveStick.getThrottle() < 0));
 
    }
