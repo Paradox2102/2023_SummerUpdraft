@@ -184,7 +184,7 @@ public class DriveSubsystem extends SubsystemBase {
     return m_rightDrive.getSelectedSensorVelocity();
   }
 
-  public double getPitch() {
+  public double getPitchInDegrees() {
     return m_gyro.getRoll();
   }
 
@@ -246,7 +246,7 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public boolean isBalanced() {
-    return Math.abs(getPitch()) <= 0.1;
+    return Math.abs(getPitchInDegrees()) <= 0.5;
   }
 
   @Override
@@ -260,6 +260,7 @@ public class DriveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Left Position Feet", getLeftPosInFeet());
     SmartDashboard.putNumber("Gyro Yaw", m_gyro.getAngle());
     SmartDashboard.putNumber("Gyro Roll", m_gyro.getRoll());
+    SmartDashboard.putNumber("Gyro Pitch", getPitchInDegrees());
     m_posTracker.update(m_frontCamera, m_backCamera);
     // This method will be called once per scheduler run
   }
