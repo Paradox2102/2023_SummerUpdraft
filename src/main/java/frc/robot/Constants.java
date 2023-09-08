@@ -66,4 +66,8 @@ public final class Constants {
   public static class Field {
     public static final double k_startAngleDegrees = -90;
   }
+
+  public static class Reach {
+    public static final double k_maxReach = 29;
+  }
 }

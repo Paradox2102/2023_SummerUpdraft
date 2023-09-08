@@ -11,7 +11,6 @@ import frc.ApriltagsCamera.Logger;
 import frc.robot.subsystems.DriveSubsystem;
 
 public class CalibrateDriveCommand extends CommandBase {
-  private static double k_power = 0.2;
   private Timer m_timer = new Timer();
   DriveSubsystem m_subsystem;
 
