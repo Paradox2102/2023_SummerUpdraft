@@ -185,20 +185,32 @@ public class RobotContainer {
     m_IAEJoystick.button(10).toggleOnTrue(new IntakeCommand(m_intakeSubsystem, -0.4));
 
     // bottom cone position
-    m_IAEJoystick.button(2).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 42, -42, 1, -95, 85,
-        () -> m_driveStick.getThrottle() < 0));
+    //m_IAEJoystick.button(2).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 42, -42, 1, -95, 85,
+    //    () -> m_driveStick.getThrottle() < 0));
 
     // middle cone position
     //m_IAEJoystick.button(2).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 35, -35, 9, -95, 95, 
     //    () -> m_driveStick.getThrottle() < 0));
 
     // top cone position
-    m_IAEJoystick.button(7).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 42, -42, Constants.Reach.k_maxReach, -95, 85,
-        () -> m_driveStick.getThrottle() < 0));
+    //m_IAEJoystick.button(7).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 42, -42, Constants.Reach.k_maxReach, -95, 85,
+    //    () -> m_driveStick.getThrottle() < 0));
 
     // bottom cone position
-    m_IAEJoystick.button(2).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 86, -96, 0, -55, 55,
+    m_IAEJoystick.button(7).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 103, -96, 0, -18, 15,
         () -> m_driveStick.getThrottle() < 0));
+
+    //bottom cube position
+    m_IAEJoystick.button(2).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 42, -42, 1, -95, 85,
+        () -> m_driveStick.getThrottle() < 0));
+
+    //middle cube position
+    //m_IAEJoystick.button(2).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 35, -35, 9, -95, 95, 
+    //    () -> m_driveStick.getThrottle() < 0));
+
+    //top cube position
+    //m_IAEJoystick.button(7).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 42, -42, Constants.Reach.k_maxReach, -95, 85,
+    //    () -> m_driveStick.getThrottle() < 0));
 
    }
 
