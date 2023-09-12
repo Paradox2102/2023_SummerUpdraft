@@ -19,10 +19,10 @@ public class AutoBalanceCommand extends CommandBase {
   private boolean m_isTipped;
   private boolean m_isBalanced;
   private static double k_p = -0.2;
-  private static double k_lookAheadTime = 0.25;
+  private static double k_lookAheadTime = 0.3;
   private static double k_maxSpeed = 0.75;
-  private static double k_tippedSpeed = 4.25;
-  private static double k_backupTime = 0.2;
+  private static double k_tippedSpeed = 2.25;
+  private static double k_backupTime = 0.175;
   private double m_power;
   private Timer m_tickTime = new Timer();
 

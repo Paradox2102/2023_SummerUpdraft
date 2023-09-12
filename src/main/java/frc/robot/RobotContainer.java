@@ -65,7 +65,7 @@ public class RobotContainer {
   private final CommandJoystick m_PRJoystick = new CommandJoystick(0);
   private final CommandJoystick m_BMRJoystick = new CommandJoystick(1);
   private final CommandJoystick m_IAEJoystick = new CommandJoystick(2);
-  public final CommandJoystick m_driveStick = m_IAEJoystick;
+  public final CommandJoystick m_driveStick = m_PRJoystick;
   // private final CommandJoystick m_stick2 = new CommandJoystick(1);
 
   /**
@@ -116,8 +116,10 @@ public class RobotContainer {
     // calibrate ticks to feet conversion
     m_PRJoystick.button(1).onTrue(new HandPosition(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 0, 0, 0));
     m_PRJoystick.button(2).onTrue(new AutoBalanceCommand(m_driveSubsystem));
-    m_PRJoystick.button(3).whileTrue(new MoveArmCommand(m_armSubsystem, 0.1));
-    m_PRJoystick.button(4).whileTrue(new MoveArmCommand(m_armSubsystem, -0.1));
+    m_PRJoystick.button(3).whileTrue(new MoveArmCommand(m_armSubsystem, 0.25));
+    m_PRJoystick.button(4).whileTrue(new MoveArmCommand(m_armSubsystem, -0.25));
+    m_PRJoystick.button(5).whileTrue(new MoveWristCommand(m_wristSubsystem, 0.25));
+    m_PRJoystick.button(5).whileTrue(new MoveWristCommand(m_wristSubsystem, -0.25));
   }
 
   private void configureBindingsBMR() {
