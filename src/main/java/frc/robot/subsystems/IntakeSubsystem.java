@@ -18,7 +18,7 @@ public class IntakeSubsystem extends SubsystemBase {
   private Timer m_timer = new Timer();
   private static double k_expiredTimer = 0.1;
   private double m_savedPower;
-  private static double k_stallSpeed = 4500;
+  private static double k_stallSpeed = 3000;
   private static double k_stallPower = 0.07;
 
   /** Creates a new IntakeSubsystem. */
