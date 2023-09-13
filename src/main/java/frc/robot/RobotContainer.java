@@ -65,7 +65,7 @@ public class RobotContainer {
   private final CommandJoystick m_PRJoystick = new CommandJoystick(0);
   private final CommandJoystick m_BMRJoystick = new CommandJoystick(1);
   private final CommandJoystick m_IAEJoystick = new CommandJoystick(2);
-  public final CommandJoystick m_driveStick = m_IAEJoystick;
+  public final CommandJoystick m_driveStick = m_PRJoystick;
   // private final CommandJoystick m_stick2 = new CommandJoystick(1);
 
   /**

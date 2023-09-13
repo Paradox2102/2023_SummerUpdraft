@@ -115,10 +115,6 @@ public class DriveSubsystem extends SubsystemBase {
     m_leftDrive.set(TalonFXControlMode.Velocity, leftSpeed);
   }
 
-  public void rampSpeed(double leftSpeed, double rightSpeed) {
-    
-  }
-
   public void stop() {
     setPower(0, 0);
     Logger.log("DriveSubsystem", 0, "Stop");

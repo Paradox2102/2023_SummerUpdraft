@@ -4,6 +4,7 @@
 
 package frc.robot.commands.autos;
 
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -21,8 +22,9 @@ public class AutoBalanceCommand extends CommandBase {
   private static double k_p = -0.2;
   private static double k_lookAheadTime = 0.3;
   private static double k_maxSpeed = 0.75;
-  private static double k_tippedSpeed = 2.25;
-  private static double k_backupTime = 0.175;
+  private static double k_tippedSpeed = 3.75;
+  private static double k_backupTime = 0.2;
+  private SlewRateLimiter m_backupRamp = new SlewRateLimiter(1.0/0.05);
   private double m_power;
   private Timer m_tickTime = new Timer();
 
@@ -62,6 +64,7 @@ public class AutoBalanceCommand extends CommandBase {
       }
     } else { 
       m_power = k_tippedSpeed * -Math.signum(m_previousPitch);
+      m_power = m_backupRamp.calculate(m_power);
       if (m_tickTime.get() > k_backupTime){
         m_isBalanced = true;
       }
