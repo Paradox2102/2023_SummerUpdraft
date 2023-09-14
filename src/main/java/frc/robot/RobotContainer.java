@@ -119,7 +119,10 @@ public class RobotContainer {
     m_PRJoystick.button(3).whileTrue(new MoveArmCommand(m_armSubsystem, 0.25));
     m_PRJoystick.button(4).whileTrue(new MoveArmCommand(m_armSubsystem, -0.25));
     m_PRJoystick.button(5).whileTrue(new MoveWristCommand(m_wristSubsystem, 0.25));
-    m_PRJoystick.button(5).whileTrue(new MoveWristCommand(m_wristSubsystem, -0.25));
+    m_PRJoystick.button(6).whileTrue(new MoveWristCommand(m_wristSubsystem, -0.25));
+    m_PRJoystick.button(7).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 90, -90, 0, Constants.Wrist.k_wristStartingAngle, Constants.Wrist.k_wristStartingAngle, () -> m_PRJoystick.getThrottle() > 0
+    ));
+    m_PRJoystick.button(9).onTrue(new HandPosition(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 0, 0, Constants.Wrist.k_wristHomeAngle));
   }
 
   private void configureBindingsBMR() {

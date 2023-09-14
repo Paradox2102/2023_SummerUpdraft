@@ -21,9 +21,9 @@ public class AutoBalanceCommand extends CommandBase {
   private boolean m_isBalanced;
   private static double k_p = -0.2;
   private static double k_lookAheadTime = 0.3;
-  private static double k_maxSpeed = 0.75;
-  private static double k_tippedSpeed = 3.75;
-  private static double k_backupTime = 0.2;
+  private static double k_maxSpeed = 0.5;
+  private static double k_tippedSpeed = 1;
+  private static double k_backupTime = 0.3;
   private SlewRateLimiter m_backupRamp = new SlewRateLimiter(1.0/0.05);
   private double m_power;
   private Timer m_tickTime = new Timer();
@@ -59,14 +59,18 @@ public class AutoBalanceCommand extends CommandBase {
       if (Math.abs(m_power) > k_maxSpeed) {
         m_power = k_maxSpeed * Math.signum(m_power);
       }
-      if(m_pitchROC > 30) {
+      if(Math.abs(m_pitchROC) > 30) {
         m_isTipped = true;
       }
     } else { 
       m_power = k_tippedSpeed * -Math.signum(m_previousPitch);
-      m_power = m_backupRamp.calculate(m_power);
+      //m_power = m_backupRamp.calculate(m_power);
       if (m_tickTime.get() > k_backupTime){
         m_isBalanced = true;
+        // m_isBalanced = m_subsystem.isBalanced();
+        // if(!m_isBalanced){
+        //   m_isTipped = false;
+        // }
       }
     }
     SmartDashboard.putNumber("Charge Station Power", m_power);
