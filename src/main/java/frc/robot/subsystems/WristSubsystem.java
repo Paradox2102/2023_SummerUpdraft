@@ -25,7 +25,7 @@ public class WristSubsystem extends SubsystemBase {
   private static final double k_i = 0; //0.01;
   private static final double k_f = 0.05;
   private static final double k_d = 0.001;
-  private static final double k_maxPower = 0.5;
+  private static final double k_maxPower = 0.3;
   private double m_angle = 0;
   private double m_setPoint = 0;
   private boolean m_PIDOn = false;

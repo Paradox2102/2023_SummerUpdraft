@@ -65,7 +65,7 @@ public class RobotContainer {
   private final CommandJoystick m_PRJoystick = new CommandJoystick(0);
   private final CommandJoystick m_BMRJoystick = new CommandJoystick(1);
   private final CommandJoystick m_IAEJoystick = new CommandJoystick(2);
-  public final CommandJoystick m_driveStick = m_PRJoystick;
+  public final CommandJoystick m_driveStick = m_IAEJoystick;
   // private final CommandJoystick m_stick2 = new CommandJoystick(1);
 
   /**
@@ -201,18 +201,26 @@ public class RobotContainer {
     //m_IAEJoystick.button(7).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 42, -42, Constants.Reach.k_maxReach, -95, 85,
     //    () -> m_driveStick.getThrottle() < 0));
 
-    // bottom cone position
-    m_IAEJoystick.button(7).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 103, -96, 0, -18, 15,
-        () -> m_driveStick.getThrottle() < 0));
+    // bottom cube position
+    //m_IAEJoystick.button(2).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 103, -96, 0, -18, 15,
+    //    () -> m_driveStick.getThrottle() < 0));
 
     //middle cube position
     //m_IAEJoystick.button(2).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 40, -40, 10, -122, 122, 
     //    () -> m_driveStick.getThrottle() < 0));
 
     //top cube position
-    m_IAEJoystick.button(7).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 47, -47, 27, -109, 109,
+    //m_IAEJoystick.button(7).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 47, -47, 27, -109, 109,
+    //    () -> m_driveStick.getThrottle() < 0));
+
+    //feeder cone position
+    m_IAEJoystick.button(7).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 47, -47, 0, -24, 24,
         () -> m_driveStick.getThrottle() < 0));
 
+    //feeder cube position
+    //m_IAEJoystick.button(7).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 22, -22, 9, -145, 145,
+    //    () -> m_driveStick.getThrottle() < 0));
+//0 extent -24 wrist 57 arm
    }
 
   /**
