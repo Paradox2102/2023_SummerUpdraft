@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 //import frc.robot.commands.Autos;
 import frc.robot.commands.MoveArmCommand;
 import frc.robot.commands.MoveWristCommand;
-import frc.robot.commands.SetWristPositionCommand;
+//import frc.robot.commands.SetWristPositionCommand;
 import frc.robot.commands.autos.balance.AutoBalanceCommand;
 import frc.ApriltagsCamera.ApriltagsCamera;
 import frc.robot.commands.HandPosition;
@@ -173,9 +173,9 @@ public class RobotContainer {
     // Isa's test joystick
     m_IAEJoystick.button(1).onTrue(new HandPosition(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 0, 0, Constants.Wrist.k_wristHomeAngle));
 
-    m_IAEJoystick.button(8).onTrue(new SetWristPositionCommand(m_wristSubsystem, -90));
+    //m_IAEJoystick.button(8).onTrue(new SetWristPositionCommand(m_wristSubsystem, -90));
 
-    m_IAEJoystick.button(8).onTrue(new SetWristPositionCommand(m_wristSubsystem, -90));
+    //m_IAEJoystick.button(8).onTrue(new SetWristPositionCommand(m_wristSubsystem, -90));
 
     m_IAEJoystick.button(5).whileTrue(new MoveArmCommand(m_armSubsystem, 0.2));
     m_IAEJoystick.button(3).whileTrue(new MoveArmCommand(m_armSubsystem, -0.2));
@@ -188,6 +188,9 @@ public class RobotContainer {
 
     m_IAEJoystick.button(9).whileTrue(new IntakeCommand(m_intakeSubsystem, 0.3));
     m_IAEJoystick.button(10).toggleOnTrue(new IntakeCommand(m_intakeSubsystem, -0.4));
+
+    //Angle Turn Rotation
+    //m_IAEJoystick.button(2).onTrue(new TurnToAngleCommand(m_driveSubsystem, 90));
 
     // bottom cone position
     //m_IAEJoystick.button(2).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 42, -42, 1, -95, 85,
