@@ -246,7 +246,7 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public boolean isBalanced() {
-    return Math.abs(getPitchInDegrees()) <= 0.5;
+    return Math.abs(getPitchInDegrees()) <= 5;
   }
 
   @Override

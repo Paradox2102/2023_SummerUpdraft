@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.MoveArmCommand;
 import frc.robot.commands.MoveWristCommand;
 import frc.robot.commands.SetWristPositionCommand;
-import frc.robot.commands.autos.AutoBalanceCommand;
+import frc.robot.commands.autos.balance.AutoBalanceCommand;
 import frc.ApriltagsCamera.ApriltagsCamera;
 import frc.robot.commands.HandPosition;
 import frc.robot.commands.HandPosition2;
@@ -65,7 +65,7 @@ public class RobotContainer {
   private final CommandJoystick m_PRJoystick = new CommandJoystick(0);
   private final CommandJoystick m_BMRJoystick = new CommandJoystick(1);
   private final CommandJoystick m_IAEJoystick = new CommandJoystick(2);
-  public final CommandJoystick m_driveStick = m_IAEJoystick;
+  public final CommandJoystick m_driveStick = m_PRJoystick;
   // private final CommandJoystick m_stick2 = new CommandJoystick(1);
 
   /**
