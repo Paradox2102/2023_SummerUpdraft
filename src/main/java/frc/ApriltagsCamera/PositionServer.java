@@ -167,26 +167,28 @@ public class PositionServer implements NetworkReceiver {
     public class Target {
         public int m_no;
         public int m_level;
+        public boolean m_isCone;
         public double m_x;
         public double m_y;
         public double m_h;
 
-        Target(int no, int level, double x, double y, double h) {
+        Target(int no, int level, double x, double y, double h, double type) {
             m_no = no;
             m_level = level;
             m_x = x;
             m_y = y;
             m_h = h;
+            m_isCone = type == 1;
         }
     }
 
     private Target m_target = null;
 
     private void processTarget(String target) {
-        double[] arg = ApriltagsCamera.parseDouble(target, 5);
+        double[] arg = ApriltagsCamera.parseDouble(target, 6);
 
         synchronized (m_lock) {
-            m_target = new Target((int) arg[0], (int) arg[1], arg[2], arg[3], arg[4]);
+            m_target = new Target((int) arg[0], (int) arg[1], arg[2], arg[3], arg[4], arg[5]);
         }
     }
 
