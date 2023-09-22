@@ -8,6 +8,7 @@ package frc.robot;
 //import frc.robot.Constants.OperatorConstants;
 // import frc.robot.commands.Autos;
 import frc.robot.commands.ReachCommand;
+import frc.robot.commands.autos.balance.AutoBalanceCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ReachSubsystem;
 // import edu.wpi.first.wpilibj.Joystick;
@@ -19,8 +20,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.MoveArmCommand;
 import frc.robot.commands.MoveWristCommand;
 //import frc.robot.commands.SetWristPositionCommand;
-import frc.robot.commands.autos.balance.AutoBalanceCommand;
 import frc.ApriltagsCamera.ApriltagsCamera;
+import frc.robot.commands.AutoPositionArmCommand;
 import frc.robot.commands.HandPosition;
 import frc.robot.commands.HandPosition2;
 import frc.robot.subsystems.ArmSubsystem;
@@ -65,7 +66,7 @@ public class RobotContainer {
   private final CommandJoystick m_PRJoystick = new CommandJoystick(0);
   private final CommandJoystick m_BMRJoystick = new CommandJoystick(1);
   private final CommandJoystick m_IAEJoystick = new CommandJoystick(2);
-  public final CommandJoystick m_driveStick = m_PRJoystick;
+  public final CommandJoystick m_driveStick = m_IAEJoystick;
   // private final CommandJoystick m_stick2 = new CommandJoystick(1);
 
   /**
@@ -192,6 +193,9 @@ public class RobotContainer {
     //Angle Turn Rotation
     //m_IAEJoystick.button(2).onTrue(new TurnToAngleCommand(m_driveSubsystem, 90));
 
+    //auto position command
+    m_IAEJoystick.button(2).onTrue(new AutoPositionArmCommand(m_driveSubsystem, () -> m_driveStick.getThrottle() < 0, m_armSubsystem, m_reachSubsystem, m_wristSubsystem));
+
     // bottom cone position
     //m_IAEJoystick.button(2).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 42, -42, 1, -95, 85,
     //    () -> m_driveStick.getThrottle() < 0));
@@ -217,8 +221,8 @@ public class RobotContainer {
     //    () -> m_driveStick.getThrottle() < 0));
 
     //feeder cone position
-    m_IAEJoystick.button(7).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 47, -47, 0, -24, 24,
-        () -> m_driveStick.getThrottle() < 0));
+    //m_IAEJoystick.button(7).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 47, -47, 0, -24, 24,
+        //() -> m_driveStick.getThrottle() < 0));
 
     //feeder cube position
     //m_IAEJoystick.button(7).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 22, -22, 9, -145, 145,
