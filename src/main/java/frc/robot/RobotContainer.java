@@ -184,7 +184,7 @@ public class RobotContainer {
     m_driver1.button(2).toggleOnTrue(new IntakeCommand(m_intakeSubsystem, -0.4));
 
     // Auto position arm
-    m_driver1.button(4).onTrue(new AutoPositionArmCommand(m_driveSubsystem, () -> m_driveStick.getThrottle() < 0, m_armSubsystem, m_reachSubsystem, m_wristSubsystem));
+    m_driver1.button(5).onTrue(new AutoPositionArmCommand(m_driveSubsystem, () -> m_driveStick.getThrottle() < 0, m_armSubsystem, m_reachSubsystem, m_wristSubsystem));
    
     // Driver 2 joystick
 

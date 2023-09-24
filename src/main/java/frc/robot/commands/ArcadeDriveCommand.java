@@ -47,7 +47,7 @@ public class ArcadeDriveCommand extends CommandBase {
     double turn = m_turn.getAsDouble();
 
     drive = Math.abs(drive) * drive;
-    turn = Math.abs(turn) * turn;
+    turn = Math.abs(turn) * turn * 0.5;
 
     boolean reverse = m_reverse.getAsBoolean();
 

@@ -52,7 +52,7 @@ public class AutoPositionArmCommand extends InstantCommand {
       // feeder positions
       if (target.m_no == 9) {
         if (target.m_isCone) {
-          command = new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 47, -47, 0, -24, 24,
+          command = new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 47, -47, 0, -30, 30,
               m_reverse);
         } else {
           command = new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 22, -22, 9, -145, 145,
@@ -72,10 +72,10 @@ public class AutoPositionArmCommand extends InstantCommand {
             break;
           case 1: // middle
             if (target.m_isCone) {
-              command = new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 35, -35, 9, -95, 95,
+              command = new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 45, -45, 14, -100, 100,
                   m_reverse);
             } else {
-              command = new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 40, -40, 10, -122, 122,
+              command = new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 40, -40, 10, -117, 117,
                   m_reverse);
             }
             break;
