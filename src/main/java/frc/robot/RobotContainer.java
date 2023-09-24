@@ -63,10 +63,12 @@ public class RobotContainer {
   // set up multiple joysticks
   // All joysticks are available for button use, but only one has control of
   // arcade drive.
-  private final CommandJoystick m_PRJoystick = new CommandJoystick(0);
-  private final CommandJoystick m_BMRJoystick = new CommandJoystick(1);
-  private final CommandJoystick m_IAEJoystick = new CommandJoystick(2);
-  public final CommandJoystick m_driveStick = m_IAEJoystick;
+  private final CommandJoystick m_driver1 = new CommandJoystick(0);
+  private final CommandJoystick m_driver2 = new CommandJoystick(1);
+  private final CommandJoystick m_PRJoystick = new CommandJoystick(2);
+  private final CommandJoystick m_BMRJoystick = new CommandJoystick(3);
+  private final CommandJoystick m_IAEJoystick = new CommandJoystick(4);
+  public final CommandJoystick m_driveStick = m_driver1;
   // private final CommandJoystick m_stick2 = new CommandJoystick(1);
 
   /**
@@ -170,6 +172,23 @@ public class RobotContainer {
   }
 
   private void configureBindingsIAE() {
+    // Driver 1 joystick
+
+    // Move arm to vertical
+    m_driver1.button(3).onTrue(new HandPosition(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 0, 0, Constants.Wrist.k_wristHomeAngle));
+
+    // Outtake
+    m_driver1.button(1).whileTrue(new IntakeCommand(m_intakeSubsystem, 0.3));
+
+    // Intake toggle
+    m_driver1.button(2).toggleOnTrue(new IntakeCommand(m_intakeSubsystem, -0.4));
+
+    // Auto position arm
+    m_driver1.button(4).onTrue(new AutoPositionArmCommand(m_driveSubsystem, () -> m_driveStick.getThrottle() < 0, m_armSubsystem, m_reachSubsystem, m_wristSubsystem));
+   
+    // Driver 2 joystick
+
+    // None assigned
 
     // Isa's test joystick
     m_IAEJoystick.button(1).onTrue(new HandPosition(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 0, 0, Constants.Wrist.k_wristHomeAngle));
