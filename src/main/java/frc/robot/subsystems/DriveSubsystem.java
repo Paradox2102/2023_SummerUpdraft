@@ -124,6 +124,10 @@ public class DriveSubsystem extends SubsystemBase {
     return m_posTracker;
   }
 
+  public double getYawInDegrees() {
+    return m_posTracker.getPose2d().getRotation().getDegrees();
+  }
+
   public void resetEncoders() {
     m_leftDrive.setSelectedSensorPosition(0);
     m_rightDrive.setSelectedSensorPosition(0);
@@ -261,6 +265,7 @@ public class DriveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Gyro Yaw", m_gyro.getAngle());
     SmartDashboard.putNumber("Gyro Roll", m_gyro.getRoll());
     SmartDashboard.putNumber("Gyro Pitch", getPitchInDegrees());
+    SmartDashboard.putNumber("Robot Yaw", getYawInDegrees());
     m_posTracker.update(m_frontCamera, m_backCamera);
     // This method will be called once per scheduler run
   }

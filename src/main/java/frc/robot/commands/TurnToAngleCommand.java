@@ -18,7 +18,7 @@ public class TurnToAngleCommand extends CommandBase {
   private final double m_targetAngleInDegrees;
   private final PositionTracker m_tracker;
   //private static final double k_minPower = 0.07;
-  private static final double k_minSpeed = 1;
+  private static final double k_minSpeed = 0.4;
   private static final double k_maxSpeed = 4;
   private static final double k_deadZone = 1;
   public static final double k_p = 12.0/180;
@@ -52,6 +52,7 @@ public class TurnToAngleCommand extends CommandBase {
     SmartDashboard.putNumber("target angle", m_targetAngleInDegrees);
     SmartDashboard.putNumber("robot angle", position.getRotation().getDegrees());
     SmartDashboard.putNumber("turn speed", speed);
+    Logger.log("TurnToAngleCommand", 1, String.format("execute: t=%f,r=%f,s=%f", m_targetAngleInDegrees, position.getRotation().getDegrees(), speed));
   }
 
   public double getAngleError() {

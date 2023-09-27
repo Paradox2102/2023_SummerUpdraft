@@ -214,8 +214,8 @@ public class RobotContainer {
     //Angle Turn Rotation
     m_IAEJoystick.button(2).onTrue(new TurnToAngleCommand(m_driveSubsystem, 90));
 
-    m_IAEJoystick.povRight().onTrue(new TurnByIncrementCommand(m_driveSubsystem, -1));
-    m_IAEJoystick.povLeft().onTrue(new TurnByIncrementCommand(m_driveSubsystem, 1));
+    m_IAEJoystick.povRight().onTrue(new TurnByIncrementCommand(m_driveSubsystem, -1.5));
+    m_IAEJoystick.povLeft().onTrue(new TurnByIncrementCommand(m_driveSubsystem, 1.5));
 
     //auto position command
     //m_IAEJoystick.button(2).onTrue(new AutoPositionArmCommand(m_driveSubsystem, () -> m_driveStick.getThrottle() < 0, m_armSubsystem, m_reachSubsystem, m_wristSubsystem));
