@@ -17,8 +17,11 @@ public class TurnToAngleCommand extends CommandBase {
   private final DriveSubsystem m_subsystem;
   private final double m_targetAngleInDegrees;
   private final PositionTracker m_tracker;
-  private static final double k_minPower = 0.07;
+  //private static final double k_minPower = 0.07;
+  private static final double k_minSpeed = 1;
+  private static final double k_maxSpeed = 4;
   private static final double k_deadZone = 1;
+  public static final double k_p = 12.0/180;
 
 
   /** Creates a new TurnToAngleCommand. */
@@ -41,14 +44,14 @@ public class TurnToAngleCommand extends CommandBase {
   public void execute() {
     Pose2d position = m_tracker.getPose2d();
     double normDifference = getAngleError();
-    double power = Constants.Camera.k_p * normDifference;
-    if (Math.abs(power) < k_minPower) {
-      power = k_minPower * Math.signum(power);
+    double speed = k_p * normDifference;
+    if (Math.abs(speed) < k_minSpeed) {
+      speed = k_minSpeed * Math.signum(speed);
     }
-    m_subsystem.setPower(power, -power);
+    m_subsystem.setSpeedFPS(speed, -speed);
     SmartDashboard.putNumber("target angle", m_targetAngleInDegrees);
-    SmartDashboard.putNumber("current", normDifference);
-    SmartDashboard.putNumber("turnPower", power);
+    SmartDashboard.putNumber("robot angle", position.getRotation().getDegrees());
+    SmartDashboard.putNumber("turn speed", speed);
   }
 
   public double getAngleError() {

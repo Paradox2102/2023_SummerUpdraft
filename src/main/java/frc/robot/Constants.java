@@ -61,7 +61,6 @@ public final class Constants {
     public static final double k_rearCameraAngle = 179;
     public static final double k_xFrontCameraOffsetInches = 6.5;
     public static final double k_xRearCameraOffsetInches = -7.5;
-    public static final double k_p = 1.0/180;
   }
 
   public static class Field {

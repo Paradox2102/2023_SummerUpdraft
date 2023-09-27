@@ -8,6 +8,8 @@ package frc.robot;
 //import frc.robot.Constants.OperatorConstants;
 // import frc.robot.commands.Autos;
 import frc.robot.commands.ReachCommand;
+import frc.robot.commands.TurnByIncrementCommand;
+import frc.robot.commands.TurnToAngleCommand;
 import frc.robot.commands.autos.balance.AutoBalanceCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ReachSubsystem;
@@ -68,7 +70,7 @@ public class RobotContainer {
   private final CommandJoystick m_PRJoystick = new CommandJoystick(2);
   private final CommandJoystick m_BMRJoystick = new CommandJoystick(3);
   private final CommandJoystick m_IAEJoystick = new CommandJoystick(4);
-  public final CommandJoystick m_driveStick = m_driver1;
+  public final CommandJoystick m_driveStick = m_IAEJoystick;
   // private final CommandJoystick m_stick2 = new CommandJoystick(1);
 
   /**
@@ -210,10 +212,13 @@ public class RobotContainer {
     m_IAEJoystick.button(10).toggleOnTrue(new IntakeCommand(m_intakeSubsystem, -0.4));
 
     //Angle Turn Rotation
-    //m_IAEJoystick.button(2).onTrue(new TurnToAngleCommand(m_driveSubsystem, 90));
+    m_IAEJoystick.button(2).onTrue(new TurnToAngleCommand(m_driveSubsystem, 90));
+
+    m_IAEJoystick.povRight().onTrue(new TurnByIncrementCommand(m_driveSubsystem, -1));
+    m_IAEJoystick.povLeft().onTrue(new TurnByIncrementCommand(m_driveSubsystem, 1));
 
     //auto position command
-    m_IAEJoystick.button(2).onTrue(new AutoPositionArmCommand(m_driveSubsystem, () -> m_driveStick.getThrottle() < 0, m_armSubsystem, m_reachSubsystem, m_wristSubsystem));
+    //m_IAEJoystick.button(2).onTrue(new AutoPositionArmCommand(m_driveSubsystem, () -> m_driveStick.getThrottle() < 0, m_armSubsystem, m_reachSubsystem, m_wristSubsystem));
 
     // bottom cone position
     //m_IAEJoystick.button(2).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 42, -42, 1, -95, 85,
