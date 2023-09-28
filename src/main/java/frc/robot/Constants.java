@@ -70,4 +70,9 @@ public final class Constants {
   public static class Reach {
     public static final double k_maxReach = 29;
   }
+
+  // Target locations
+  public static double[] k_targetX = {  11.41, 9.63, 7.85, 5.91, 4.13, 2.35, 0.41,-1.37,-3.15,-9.00 };
+	public static double[] k_targetY = { 4.02,2.79,1.38,53.67 };
+	public static double[] k_targetH = { 0.00,2.83,3.83,4.38 };
 }

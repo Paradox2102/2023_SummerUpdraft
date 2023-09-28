@@ -8,7 +8,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.ApriltagsCamera.Logger;
-import frc.robot.Constants;
 import frc.robot.ParadoxField;
 import frc.robot.PositionTracker;
 import frc.robot.subsystems.DriveSubsystem;
@@ -48,6 +47,11 @@ public class TurnToAngleCommand extends CommandBase {
     if (Math.abs(speed) < k_minSpeed) {
       speed = k_minSpeed * Math.signum(speed);
     }
+    else if (Math.abs(speed) > k_maxSpeed)
+    {
+      speed = k_maxSpeed * Math.signum(speed);
+    }
+
     m_subsystem.setSpeedFPS(speed, -speed);
     SmartDashboard.putNumber("target angle", m_targetAngleInDegrees);
     SmartDashboard.putNumber("robot angle", position.getRotation().getDegrees());
