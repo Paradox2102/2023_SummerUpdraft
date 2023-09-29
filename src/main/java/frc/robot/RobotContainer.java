@@ -10,6 +10,7 @@ package frc.robot;
 import frc.robot.commands.ReachCommand;
 import frc.robot.commands.TurnByIncrementCommand;
 import frc.robot.commands.TurnToAngleCommand;
+import frc.robot.commands.TurnToTargetCommand;
 import frc.robot.commands.autos.balance.AutoBalanceCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ReachSubsystem;
@@ -80,6 +81,8 @@ public class RobotContainer {
     // Configure the trigger bindings
     configureBindings();
     m_armSubsystem.setExtent(() -> m_reachSubsystem.getDistance());
+    m_frontCamera.connect("10.21.2.10", 5800);
+    // m_backCamera.connect("10.21.2.11", 5800);
   }
 
   /**
@@ -212,7 +215,9 @@ public class RobotContainer {
     m_IAEJoystick.button(10).toggleOnTrue(new IntakeCommand(m_intakeSubsystem, -0.4));
 
     //Angle Turn Rotation
-    m_IAEJoystick.button(2).onTrue(new TurnToAngleCommand(m_driveSubsystem, 90));
+    m_IAEJoystick.button(2).onTrue(new AutoPositionArmCommand(m_driveSubsystem, () -> m_driveStick.getThrottle() < 0, m_armSubsystem, m_reachSubsystem, m_wristSubsystem));
+    // m_IAEJoystick.button(2).onTrue(new TurnToAngleCommand(m_driveSubsystem, 0));
+    m_IAEJoystick.button(7).onTrue(new TurnToTargetCommand(m_driveSubsystem, m_armSubsystem, m_reachSubsystem, m_wristSubsystem,  () -> m_driveStick.getThrottle() < 0));
 
     m_IAEJoystick.povRight().onTrue(new TurnByIncrementCommand(m_driveSubsystem, -1.5));
     m_IAEJoystick.povLeft().onTrue(new TurnByIncrementCommand(m_driveSubsystem, 1.5));

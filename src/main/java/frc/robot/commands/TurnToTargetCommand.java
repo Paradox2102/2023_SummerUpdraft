@@ -9,6 +9,7 @@ import java.util.function.BooleanSupplier;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.ApriltagsCamera.Logger;
 import frc.ApriltagsCamera.PositionServer.Target;
 import frc.robot.Constants;
 import frc.robot.ParadoxField;
@@ -31,6 +32,7 @@ public class TurnToTargetCommand extends InstantCommand {
 
   public TurnToTargetCommand(DriveSubsystem driveSubsystem, ArmSubsystem armSubsystem,
       ReachSubsystem reachSubsystem, WristSubsystem wristSubsystem, BooleanSupplier reverse) {
+        Logger.log("TurnToTargetCommand", 1, "TurnToTarget");
     m_driveSubsystem = driveSubsystem;
     m_armSubsystem = armSubsystem;
     m_reachSubsystem = reachSubsystem;
@@ -42,16 +44,23 @@ public class TurnToTargetCommand extends InstantCommand {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    Logger.log("TurnToTargetCommand", 1, "Initialize");
     Pose2d pos = m_tracker.getPose2d();
     double x = pos.getX();
     double y = pos.getY();
     Target target = m_tracker.m_posServer.getTarget();
+
+    if(target == null) {
+      Logger.log("TurnToTargetCommand", 3, "no target");
+
+      return;
+    }
     double dx = x - target.m_x;
     double dy = y - target.m_y;
     double angleInDegrees = -Math.toDegrees(Math.atan2(dy, dx));
     double dist = 12 * Math.sqrt(dx * dx + dy * dy);
 
-    if (m_reverse.getAsBoolean()) {
+    if (!m_reverse.getAsBoolean()) {
       angleInDegrees = ParadoxField.normalizeAngle(angleInDegrees + 180);
 
     }
@@ -93,12 +102,12 @@ public class TurnToTargetCommand extends InstantCommand {
       }
     }
 
-    new TurnToAngleCommand(m_driveSubsystem, angleInDegrees).schedule();
+    // new TurnToAngleCommand(m_driveSubsystem, angleInDegrees).schedule();
 
-    // new SequentialCommandGroup(
-    //     new TurnToAngleCommand(m_driveSubsystem, angleInDegrees),
-    //     new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, armAngle, -armAngle,
-    //         armExtent, wristAngle, -wristAngle, m_reverse))
-    //     .schedule();
+    new SequentialCommandGroup(
+        new TurnToAngleCommand(m_driveSubsystem, angleInDegrees),
+        new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, armAngle, -armAngle,
+            armExtent, wristAngle, -wristAngle, m_reverse))
+        .schedule();
   }
 }
