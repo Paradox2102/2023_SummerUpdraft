@@ -171,13 +171,15 @@ public class PositionServer implements NetworkReceiver {
         public double m_x;
         public double m_y;
         public double m_h;
+        public double m_ext;    // extent adjustment
 
-        Target(int no, int level, double x, double y, double h, double type) {
+        Target(int no, int level, double x, double y, double h, double type, double ext) {
             m_no = no;
             m_level = level;
             m_x = x;
             m_y = y;
             m_h = h;
+            m_ext = ext;
             m_isCone = type == 1;
         }
     }
@@ -185,10 +187,10 @@ public class PositionServer implements NetworkReceiver {
     private Target m_target = null;
 
     private void processTarget(String target) {
-        double[] arg = ApriltagsCamera.parseDouble(target, 6);
+        double[] arg = ApriltagsCamera.parseDouble(target, 7);
 
         synchronized (m_lock) {
-            m_target = new Target((int) arg[0], (int) arg[1], arg[2], arg[3], arg[4], arg[5]);
+            m_target = new Target((int) arg[0], (int) arg[1], arg[2], arg[3], arg[4], arg[5], arg[6]);
         }
     }
 

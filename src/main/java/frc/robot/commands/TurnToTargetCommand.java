@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.ApriltagsCamera.Logger;
 import frc.ApriltagsCamera.PositionServer.Target;
-import frc.robot.Constants;
 import frc.robot.ParadoxField;
 import frc.robot.PositionTracker;
 import frc.robot.subsystems.ArmSubsystem;
@@ -62,11 +61,10 @@ public class TurnToTargetCommand extends InstantCommand {
 
     if (!m_reverse.getAsBoolean()) {
       angleInDegrees = ParadoxField.normalizeAngle(angleInDegrees + 180);
-
     }
 
     double armAngle = 90 - Math.toDegrees(Math.atan2(target.m_h, dist));
-    double armExtent = Math.sqrt(dist*dist + target.m_h*target.m_h);
+    double armExtent = Math.sqrt(dist*dist + target.m_h*target.m_h) + target.m_ext;
     double wristAngle = 0;
 
     if (target.m_no == 9) {
