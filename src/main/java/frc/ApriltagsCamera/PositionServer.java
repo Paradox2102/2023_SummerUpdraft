@@ -3,7 +3,16 @@ package frc.ApriltagsCamera;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.ApriltagsCamera.Network.NetworkReceiver;
+import frc.pathfinder.Pathfinder;
+import frc.pathfinder.Pathfinder.Path;
+import frc.pathfinder.Pathfinder.Waypoint;
+import frc.robot.Constants;
+import frc.robot.ParadoxField;
+import frc.robot.PositionTracker;
+import frc.robot.Tracker;
 
 public class PositionServer implements NetworkReceiver {
     private Network m_network = new Network();
@@ -21,7 +30,7 @@ public class PositionServer implements NetworkReceiver {
     double m_angle = 90;
 
     public void start() {
-        //m_gyro = gyro;
+        // m_gyro = gyro;
         m_network.listen(this, 5802);
 
         m_watchdogTimer.scheduleAtFixedRate(new TimerTask() {
@@ -171,9 +180,20 @@ public class PositionServer implements NetworkReceiver {
         public double m_x;
         public double m_y;
         public double m_h;
-        public double m_ext;    // extent adjustment
+        public double m_ext; // extent adjustment
 
-        Target(int no, int level, double x, double y, double h, double type, double ext) {
+        public double m_endpointX0;
+        public double m_endpointLeftX;
+        public double m_endpointLeftAngle;
+        public double m_endpointRightX;
+        public double m_endpointRightAngle;
+        public double m_endpointP1;
+        public double m_endpointY;
+        public double m_endpointP0;
+
+        Target(int no, int level, double x, double y, double h, double type, double ext,
+                double x0, double leftX, double leftAngle, double rightX, double rightAngle, double p1,
+                double endpointY, double p0) {
             m_no = no;
             m_level = level;
             m_x = x;
@@ -181,16 +201,93 @@ public class PositionServer implements NetworkReceiver {
             m_h = h;
             m_ext = ext;
             m_isCone = type == 1;
+
+            SmartDashboard.putNumber("Target no", no);
+            SmartDashboard.putNumber("Target level", level);
+
+            m_endpointX0 = x0;
+            m_endpointLeftX = leftX;
+            m_endpointLeftAngle = leftAngle;
+            m_endpointRightX = rightX;
+            m_endpointRightAngle = rightAngle;
+            m_endpointP1 = p1;
+            m_endpointY = endpointY;
+            m_endpointP0 = p0;
+
+            SmartDashboard.putNumber("Path x0", x0);
+            SmartDashboard.putNumber("Path leftX", leftX);
+            SmartDashboard.putNumber("Path leftAngle", leftAngle);
+            SmartDashboard.putNumber("Path rightX", rightX);
+            SmartDashboard.putNumber("Path rightAngle", rightAngle);
+            SmartDashboard.putNumber("Path p1", p1);
+            SmartDashboard.putNumber("Path y", endpointY);
+            SmartDashboard.putNumber("Path p0", p0);
+        }
+
+        private static final int k_nPoints = 1000;
+        private static final double k_dt = 0.02;
+        private static final double k_wheelbase = Constants.Drive.k_wheelBase;
+        private static final double k_maxSpeed = 4;
+        private static final double k_maxAccel = 5.000000;
+        private static final double k_maxDecl = 5.000000;
+        private static final double k_maxJerk = 100;
+
+        public Path getPath(PositionTracker tracker) {
+            Pose2d pos = tracker.getPose2d();
+            double robotX = pos.getX();
+            double robotY = pos.getY();
+            double robotAngle = pos.getRotation().getDegrees();
+
+	    	double endX;
+	    	double endAngle;
+	    	
+	    	if ((robotX < m_endpointX0) ^ !m_redAlliance)
+	    	{
+	    		// to right
+		    	endX = m_endpointRightX;
+		    	endAngle = Math.toRadians(m_endpointRightAngle);
+	    	}
+	    	else
+	    	{
+	    		// to left
+		    	endX = m_endpointLeftX;
+		    	endAngle = Math.toRadians(m_endpointLeftAngle);	    		
+	    	}
+	    	
+            Waypoint[] waypoints = {
+                    new Waypoint(robotX, robotY, Math.toRadians(robotAngle), m_endpointP0, m_endpointP1),
+                    new Waypoint(endX, m_endpointY, endAngle)
+            };
+
+            SmartDashboard.putNumber("Waypoint1 x", waypoints[0].x);
+            SmartDashboard.putNumber("Waypoint1 y", waypoints[0].y);
+            SmartDashboard.putNumber("Waypoint1 angle", Math.toDegrees(waypoints[0].angle));
+            SmartDashboard.putNumber("Waypoint1 l1", waypoints[0].l1);
+            SmartDashboard.putNumber("Waypoint1 l2", waypoints[0].l2);
+
+            SmartDashboard.putNumber("Waypoint2 x", waypoints[1].x);
+            SmartDashboard.putNumber("Waypoint2 y", waypoints[1].y);
+            SmartDashboard.putNumber("Waypoints2 angle", Math.toDegrees(waypoints[1].angle));
+
+            return Pathfinder.computePath(waypoints, k_nPoints, k_dt, k_maxSpeed, k_maxAccel, k_maxDecl, k_maxJerk,
+                    k_wheelbase);
+        }
+
+        public boolean isPathReversed(PositionTracker tracker) {
+            double yaw = tracker.getPose2d().getRotation().getDegrees();
+
+            return ParadoxField.normalizeAngle(yaw) < 0;
         }
     }
 
     private Target m_target = null;
 
     private void processTarget(String target) {
-        double[] arg = ApriltagsCamera.parseDouble(target, 7);
+        double[] arg = ApriltagsCamera.parseDouble(target, 15);
 
         synchronized (m_lock) {
-            m_target = new Target((int) arg[0], (int) arg[1], arg[2], arg[3], arg[4], arg[5], arg[6]);
+            m_target = new Target((int) arg[0], (int) arg[1], arg[2], arg[3], arg[4], arg[5], arg[6],
+                    arg[7], arg[8], arg[9], arg[10], arg[11], arg[12], arg[13], arg[14]);
         }
     }
 

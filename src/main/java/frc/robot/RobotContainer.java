@@ -24,6 +24,7 @@ import frc.robot.commands.MoveWristCommand;
 //import frc.robot.commands.SetWristPositionCommand;
 import frc.ApriltagsCamera.ApriltagsCamera;
 import frc.robot.commands.AutoPositionArmCommand;
+import frc.robot.commands.DriveToTargetCommand;
 import frc.robot.commands.HandPosition;
 import frc.robot.commands.HandPosition2;
 import frc.robot.subsystems.ArmSubsystem;
@@ -190,6 +191,9 @@ public class RobotContainer {
     // Auto position arm
     m_driver1.button(5).onTrue(new AutoPositionArmCommand(m_driveSubsystem, () -> m_driveStick.getThrottle() < 0, m_armSubsystem, m_reachSubsystem, m_wristSubsystem));
    
+    // Drive to target
+    m_driver1.button(4).onTrue(new DriveToTargetCommand(m_driveSubsystem, m_armSubsystem, m_reachSubsystem, m_wristSubsystem, () -> m_driveStick.getThrottle() < 0));
+    
     // Driver 2 joystick
 
     // None assigned
