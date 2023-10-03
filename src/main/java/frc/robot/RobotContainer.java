@@ -74,6 +74,8 @@ public class RobotContainer {
   public final CommandJoystick m_driveStick = m_IAEJoystick;
   // private final CommandJoystick m_stick2 = new CommandJoystick(1);
 
+  private final double k_cancelThreshold = 0.25; // Joystick x threshold for canceling commands
+
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -102,7 +104,6 @@ public class RobotContainer {
   private void configureBindings() {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
 
-
     m_driveSubsystem.setDefaultCommand(new RunCommand(()// runnable
     -> m_driveSubsystem
         .arcadeDrive(m_driveStick.getThrottle() > 0 ? -m_driveStick.getY() : m_driveStick.getY(), -m_driveStick.getX()),
@@ -128,9 +129,12 @@ public class RobotContainer {
     m_PRJoystick.button(4).whileTrue(new MoveArmCommand(m_armSubsystem, -0.25));
     m_PRJoystick.button(5).whileTrue(new MoveWristCommand(m_wristSubsystem, 0.25));
     m_PRJoystick.button(6).whileTrue(new MoveWristCommand(m_wristSubsystem, -0.25));
-    m_PRJoystick.button(7).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 90, -90, 0, Constants.Wrist.k_wristStartingAngle, Constants.Wrist.k_wristStartingAngle, () -> m_PRJoystick.getThrottle() > 0
-    ));
-    m_PRJoystick.button(9).onTrue(new HandPosition(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 0, 0, Constants.Wrist.k_wristHomeAngle));
+    m_PRJoystick.button(7)
+        .onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 90, -90, 0,
+            Constants.Wrist.k_wristStartingAngle, Constants.Wrist.k_wristStartingAngle,
+            () -> m_PRJoystick.getThrottle() > 0));
+    m_PRJoystick.button(9).onTrue(
+        new HandPosition(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 0, 0, Constants.Wrist.k_wristHomeAngle));
   }
 
   private void configureBindingsBMR() {
@@ -150,14 +154,17 @@ public class RobotContainer {
     // m_reachSubsystem, m_wristSubsystem, 42, 24, -52, ()->
     // m_driveStick.getThrottle() < 0));
     // CUBE low position
-    m_BMRJoystick.button(4).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, -55, 0, 20, 0, 0,
-        () -> m_driveStick.getThrottle() < 0));
+    m_BMRJoystick.button(4)
+        .onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, -55, 0, 20, 0, 0,
+            () -> m_driveStick.getThrottle() < 0));
     // CUBE middle position
-    m_BMRJoystick.button(5).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, -60, 0, 0, 0, 0,
-        () -> m_driveStick.getThrottle() < 0));
+    m_BMRJoystick.button(5)
+        .onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, -60, 0, 0, 0, 0,
+            () -> m_driveStick.getThrottle() < 0));
     // CUBE top position
-    m_BMRJoystick.button(6).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, -50, 16, 0, 0,0,
-        () -> m_driveStick.getThrottle() < 0));
+    m_BMRJoystick.button(6)
+        .onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, -50, 16, 0, 0, 0,
+            () -> m_driveStick.getThrottle() < 0));
 
     m_BMRJoystick.button(7).whileTrue(new MoveArmCommand(m_armSubsystem, 0.2));
     m_BMRJoystick.button(8).whileTrue(new MoveArmCommand(m_armSubsystem, -0.2));
@@ -174,6 +181,10 @@ public class RobotContainer {
 
     // m_stick.button(15).whileTrue(new CalibrateDriveCommand(m_driveSubsystem));
 
+  }
+
+  Boolean cancelCommand() {
+    return Math.abs(m_driver1.getX()) > k_cancelThreshold;
   }
 
   private void configureBindingsIAE() {
@@ -193,6 +204,9 @@ public class RobotContainer {
    
     // Drive to target
     m_driver1.button(4).onTrue(new DriveToTargetCommand(m_driveSubsystem, m_armSubsystem, m_reachSubsystem, m_wristSubsystem, () -> m_driveStick.getThrottle() < 0));
+    
+    m_driver1.povRight().onTrue(new TurnByIncrementCommand(m_driveSubsystem, -1.5, ()->cancelCommand()));
+    m_driver1.povLeft().onTrue(new TurnByIncrementCommand(m_driveSubsystem, 1.5, ()->cancelCommand()));
     
     // Driver 2 joystick
 
@@ -220,10 +234,11 @@ public class RobotContainer {
     //Angle Turn Rotation
     m_IAEJoystick.button(2).onTrue(new AutoPositionArmCommand(m_driveSubsystem, () -> m_driveStick.getThrottle() < 0, m_armSubsystem, m_reachSubsystem, m_wristSubsystem));
     // m_IAEJoystick.button(2).onTrue(new TurnToAngleCommand(m_driveSubsystem, 0));
-    m_IAEJoystick.button(7).onTrue(new TurnToTargetCommand(m_driveSubsystem, m_armSubsystem, m_reachSubsystem, m_wristSubsystem,  () -> m_driveStick.getThrottle() < 0));
+    m_IAEJoystick.button(7).onTrue(new TurnToTargetCommand(m_driveSubsystem, m_armSubsystem, 
+                              m_reachSubsystem, m_wristSubsystem,  () -> m_driveStick.getThrottle() < 0, () -> cancelCommand()));
 
-    m_IAEJoystick.povRight().onTrue(new TurnByIncrementCommand(m_driveSubsystem, -1.5));
-    m_IAEJoystick.povLeft().onTrue(new TurnByIncrementCommand(m_driveSubsystem, 1.5));
+    m_IAEJoystick.povRight().onTrue(new TurnByIncrementCommand(m_driveSubsystem, -1.5, ()->cancelCommand()));
+    m_IAEJoystick.povLeft().onTrue(new TurnByIncrementCommand(m_driveSubsystem, 1.5, ()->cancelCommand()));
 
     //auto position command
     //m_IAEJoystick.button(2).onTrue(new AutoPositionArmCommand(m_driveSubsystem, () -> m_driveStick.getThrottle() < 0, m_armSubsystem, m_reachSubsystem, m_wristSubsystem));

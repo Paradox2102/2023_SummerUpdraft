@@ -5,6 +5,9 @@
 //copied from normal season code
 package frc.robot.commands.autos;
 
+import java.util.function.BooleanSupplier;
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -25,7 +28,9 @@ public class CreatePathCommand extends CommandBase {
   private Waypoint[] m_waypoints;
   private PurePursuitData m_data;
   private boolean m_blue = false;
-  private boolean m_isClimbingChargeStation = false;
+  private DoubleSupplier m_speed = null;
+  private BooleanSupplier m_cancel = null;
+  // private boolean m_isClimbingChargeStation = false;
   // private PurePursuitData m_data;
   private Path m_path;
   private static final double k_lookAheadTime = 0.45;
@@ -72,11 +77,11 @@ public class CreatePathCommand extends CommandBase {
     init(driveSubsystem, waypoints, setPosition, reversed, name, data, lookAheadTime);
   }
 
-  public CreatePathCommand(DriveSubsystem driveSubsystem, Waypoint[] waypoints, boolean setPosition, boolean reversed,
-      String name, PurePursuitData data, double lookAheadTime, boolean isClimbingChargeStation) {
-    init(driveSubsystem, waypoints, setPosition, reversed, name, data, lookAheadTime);
-    m_isClimbingChargeStation = isClimbingChargeStation;
-  }
+  // public CreatePathCommand(DriveSubsystem driveSubsystem, Waypoint[] waypoints, boolean setPosition, boolean reversed,
+  //     String name, PurePursuitData data, double lookAheadTime, boolean isClimbingChargeStation) {
+  //   init(driveSubsystem, waypoints, setPosition, reversed, name, data, lookAheadTime);
+  //   m_isClimbingChargeStation = isClimbingChargeStation;
+  // }
 
   public CreatePathCommand(DriveSubsystem driveSubsystem, Waypoint[] waypoints, boolean setPosition, boolean reversed,
       String name, PurePursuitData data) {
@@ -86,6 +91,14 @@ public class CreatePathCommand extends CommandBase {
   public CreatePathCommand(DriveSubsystem driveSubsystem, Waypoint[] waypoints, boolean setPosition, boolean reversed,
       String name) {
     init(driveSubsystem, waypoints, setPosition, reversed, name, new PurePursuitData(), k_lookAheadTime);
+  }
+
+  public CreatePathCommand(DriveSubsystem driveSubsystem, Waypoint[] waypoints, boolean setPosition, boolean reversed,
+      String name, DoubleSupplier speed, BooleanSupplier cancel) {
+    init(driveSubsystem, waypoints, setPosition, reversed, name, new PurePursuitData(), k_lookAheadTime);
+
+    m_speed = speed;
+    m_cancel = cancel;
   }
 
   // Called when the command is initially scheduled.
@@ -105,7 +118,7 @@ public class CreatePathCommand extends CommandBase {
     m_path.setLookAheadTime(m_lookAheadTime);
 
     Logger.log(m_name, 2, "initialize");
-    m_driveSubsystem.startPath(m_path, m_reversed, m_setPosition, null);
+    m_driveSubsystem.startPath(m_path, m_reversed, m_setPosition, m_speed, m_cancel);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -124,10 +137,6 @@ public class CreatePathCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (m_isClimbingChargeStation) {
-      return m_driveSubsystem.isPathFinished() || m_driveSubsystem.isFailingChargeStationClimb();
-    } else {
       return m_driveSubsystem.isPathFinished();
-    }
   }
 }

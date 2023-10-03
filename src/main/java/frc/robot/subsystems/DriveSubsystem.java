@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import java.util.OptionalDouble;
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -134,8 +135,8 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   // Start autonomous path during Teleop
-  public void startPath(Path path, boolean isReversed, boolean setPosition, DoubleSupplier speed) {
-    m_pursuit.loadPath(path, isReversed, true, setPosition, speed);
+  public void startPath(Path path, boolean isReversed, boolean setPosition, DoubleSupplier speed, BooleanSupplier cancel) {
+    m_pursuit.loadPath(path, isReversed, true, setPosition, speed, cancel);
     m_pursuit.startPath();
     m_pathFollowTimer.reset();
     m_pathFollowTimer.start();

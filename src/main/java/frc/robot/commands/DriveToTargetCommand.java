@@ -11,7 +11,6 @@ import frc.ApriltagsCamera.Logger;
 import frc.ApriltagsCamera.PositionServer.Target;
 import frc.pathfinder.Pathfinder.Path;
 import frc.robot.PositionTracker;
-import frc.robot.Tracker;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ReachSubsystem;

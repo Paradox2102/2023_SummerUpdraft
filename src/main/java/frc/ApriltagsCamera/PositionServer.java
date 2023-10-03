@@ -12,7 +12,6 @@ import frc.pathfinder.Pathfinder.Waypoint;
 import frc.robot.Constants;
 import frc.robot.ParadoxField;
 import frc.robot.PositionTracker;
-import frc.robot.Tracker;
 
 public class PositionServer implements NetworkReceiver {
     private Network m_network = new Network();

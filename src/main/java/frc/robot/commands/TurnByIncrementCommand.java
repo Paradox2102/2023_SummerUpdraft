@@ -4,6 +4,8 @@
 
 package frc.robot.commands;
 
+import java.util.function.BooleanSupplier;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.PositionTracker;
@@ -17,12 +19,14 @@ public class TurnByIncrementCommand extends CommandBase {
   private double m_distance;
   private double m_targetAngleInDegrees = 0;
   private static final double k_angleReset = 5;
+  private BooleanSupplier m_cancel;
 
   /** Creates a new TurnByIncrementCommand. */
-  public TurnByIncrementCommand(DriveSubsystem subsystem, double incrementAngleInDegees) {
+  public TurnByIncrementCommand(DriveSubsystem subsystem, double incrementAngleInDegees, BooleanSupplier cancel) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_subsystem = subsystem;
     m_incrementAngleInDegrees = incrementAngleInDegees;
+    m_cancel = cancel;
     m_tracker = m_subsystem.getTracker();
   }
 
@@ -36,7 +40,7 @@ public class TurnByIncrementCommand extends CommandBase {
       m_targetAngleInDegrees = m_currentAngle;
     }
     m_targetAngleInDegrees += m_incrementAngleInDegrees;
-    new TurnToAngleCommand(m_subsystem, m_targetAngleInDegrees).schedule();
+    new TurnToAngleCommand(m_subsystem, m_targetAngleInDegrees, m_cancel).schedule();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

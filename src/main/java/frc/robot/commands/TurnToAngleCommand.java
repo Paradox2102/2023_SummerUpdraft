@@ -4,6 +4,8 @@
 
 package frc.robot.commands;
 
+import java.util.function.BooleanSupplier;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -16,6 +18,7 @@ public class TurnToAngleCommand extends CommandBase {
   private final DriveSubsystem m_subsystem;
   private final double m_targetAngleInDegrees;
   private final PositionTracker m_tracker;
+  private final BooleanSupplier m_cancel;
   //private static final double k_minPower = 0.07;
   private static final double k_minSpeed = 0.4;
   private static final double k_maxSpeed = 4;
@@ -24,18 +27,19 @@ public class TurnToAngleCommand extends CommandBase {
 
 
   /** Creates a new TurnToAngleCommand. */
-  public TurnToAngleCommand(DriveSubsystem subsystem, double targetAngleInDegrees) {
-    // Use addRequirements() here to declare subsystem dependencies.
+  public TurnToAngleCommand(DriveSubsystem subsystem, double targetAngleInDegrees, BooleanSupplier cancel) {
+    Logger.log("TurnToAngleCommand", 0, "TurnToAngleCommand()");
+    
     m_subsystem = subsystem;
     m_targetAngleInDegrees = targetAngleInDegrees;
     m_tracker = m_subsystem.getTracker();
-    Logger.log("TurnToAngleCommand", 0, "TurnToAngleCommand");
+    m_cancel = cancel;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    Logger.log("TurnToAngleCommand", 0, "Initialize");
+    Logger.log("TurnToAngleCommand", 0, "Initialize()");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -71,11 +75,12 @@ public class TurnToAngleCommand extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     Logger.log("TurnToAngleCommand", 0, "End");
+    m_subsystem.stop();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (Math.abs(getAngleError()) < k_deadZone);
+    return (Math.abs(getAngleError()) < k_deadZone) || m_cancel.getAsBoolean();
   }
 }

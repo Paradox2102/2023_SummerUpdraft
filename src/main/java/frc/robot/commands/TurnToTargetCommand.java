@@ -28,15 +28,17 @@ public class TurnToTargetCommand extends InstantCommand {
   private final ReachSubsystem m_reachSubsystem;
   private final WristSubsystem m_wristSubsystem;
   private final BooleanSupplier m_reverse;
+  private final BooleanSupplier m_cancel;
 
   public TurnToTargetCommand(DriveSubsystem driveSubsystem, ArmSubsystem armSubsystem,
-      ReachSubsystem reachSubsystem, WristSubsystem wristSubsystem, BooleanSupplier reverse) {
+      ReachSubsystem reachSubsystem, WristSubsystem wristSubsystem, BooleanSupplier reverse, BooleanSupplier cancel) {
         Logger.log("TurnToTargetCommand", 1, "TurnToTarget");
     m_driveSubsystem = driveSubsystem;
     m_armSubsystem = armSubsystem;
     m_reachSubsystem = reachSubsystem;
     m_wristSubsystem = wristSubsystem;
     m_reverse = reverse;
+    m_cancel = cancel;
     m_tracker = m_driveSubsystem.getTracker();
   }
 
@@ -103,7 +105,7 @@ public class TurnToTargetCommand extends InstantCommand {
     // new TurnToAngleCommand(m_driveSubsystem, angleInDegrees).schedule();
 
     new SequentialCommandGroup(
-        new TurnToAngleCommand(m_driveSubsystem, angleInDegrees),
+        new TurnToAngleCommand(m_driveSubsystem, angleInDegrees, m_cancel),
         new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, armAngle, -armAngle,
             armExtent, wristAngle, -wristAngle, m_reverse))
         .schedule();
