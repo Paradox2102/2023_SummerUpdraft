@@ -25,7 +25,7 @@ public class CreatePathCommand extends CommandBase {
   private boolean m_reversed;
   private String m_name;
   private double m_lookAheadTime;
-  private Waypoint[] m_waypoints;
+  private Waypoint[] m_waypoints = null;
   private PurePursuitData m_data;
   private boolean m_blue = false;
   private DoubleSupplier m_speed = null;
@@ -51,22 +51,22 @@ public class CreatePathCommand extends CommandBase {
     m_data = data;
     // flips waypoints if you are on the blue side
     // if (DriverStation.getAlliance() == Alliance.Blue) {
-    //   Logger.log("CreatePathCommand", 3, "Setting Blue side");
-    //   for (Waypoint waypoint : waypoints) {
-    //     waypoint.x = -waypoint.x;
-    //   }
+    // Logger.log("CreatePathCommand", 3, "Setting Blue side");
+    // for (Waypoint waypoint : waypoints) {
+    // waypoint.x = -waypoint.x;
+    // }
     // } else {
-    //   Logger.log("CreatePathCommand", 3, "Setting Red side");
+    // Logger.log("CreatePathCommand", 3, "Setting Red side");
     // }
     // m_path = Pathfinder.computePath(waypoints, k_nPoints, k_dt, data.k_maxSpeed,
-    //     data.k_maxAccel, data.k_maxDecl, data.k_maxJerk, k_wheelbase);
+    // data.k_maxAccel, data.k_maxDecl, data.k_maxJerk, k_wheelbase);
     // m_path.setLookAheadTime(lookAheadTime);
-    
+
     // changes the waypoints back to red after path is created
     // if (DriverStation.getAlliance() == Alliance.Blue) {
-    //   for (Waypoint waypoint : waypoints) {
-    //     waypoint.x = -waypoint.x;
-    //   }
+    // for (Waypoint waypoint : waypoints) {
+    // waypoint.x = -waypoint.x;
+    // }
     // }
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(driveSubsystem);
@@ -77,10 +77,13 @@ public class CreatePathCommand extends CommandBase {
     init(driveSubsystem, waypoints, setPosition, reversed, name, data, lookAheadTime);
   }
 
-  // public CreatePathCommand(DriveSubsystem driveSubsystem, Waypoint[] waypoints, boolean setPosition, boolean reversed,
-  //     String name, PurePursuitData data, double lookAheadTime, boolean isClimbingChargeStation) {
-  //   init(driveSubsystem, waypoints, setPosition, reversed, name, data, lookAheadTime);
-  //   m_isClimbingChargeStation = isClimbingChargeStation;
+  // public CreatePathCommand(DriveSubsystem driveSubsystem, Waypoint[] waypoints,
+  // boolean setPosition, boolean reversed,
+  // String name, PurePursuitData data, double lookAheadTime, boolean
+  // isClimbingChargeStation) {
+  // init(driveSubsystem, waypoints, setPosition, reversed, name, data,
+  // lookAheadTime);
+  // m_isClimbingChargeStation = isClimbingChargeStation;
   // }
 
   public CreatePathCommand(DriveSubsystem driveSubsystem, Waypoint[] waypoints, boolean setPosition, boolean reversed,
@@ -101,6 +104,15 @@ public class CreatePathCommand extends CommandBase {
     m_cancel = cancel;
   }
 
+  public CreatePathCommand(DriveSubsystem driveSubsystem, Path path, boolean setPosition, boolean reversed,
+      String name, DoubleSupplier speed, BooleanSupplier cancel) {
+    init(driveSubsystem, null, setPosition, reversed, name, new PurePursuitData(), k_lookAheadTime);
+
+    m_speed = speed;
+    m_cancel = cancel;
+    m_path = path;
+  }
+
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
@@ -113,8 +125,11 @@ public class CreatePathCommand extends CommandBase {
         waypoint.angle = Math.toRadians(180) - waypoint.angle;
       }
     }
+
+    if (m_waypoints != null){
     m_path = Pathfinder.computePath(m_waypoints, k_nPoints, k_dt, m_data.k_maxSpeed, m_data.k_maxAccel,
         m_data.k_maxDecl, m_data.k_maxJerk, k_wheelbase);
+    }
     m_path.setLookAheadTime(m_lookAheadTime);
 
     Logger.log(m_name, 2, "initialize");
@@ -137,6 +152,6 @@ public class CreatePathCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-      return m_driveSubsystem.isPathFinished();
+    return m_driveSubsystem.isPathFinished();
   }
 }
