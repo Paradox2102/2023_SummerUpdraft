@@ -9,6 +9,7 @@ package frc.robot;
 // import frc.robot.commands.Autos;
 import frc.robot.commands.ReachCommand;
 import frc.robot.commands.TurnByIncrementCommand;
+import frc.robot.commands.TurnToAngleCommand;
 import frc.robot.commands.TurnToTargetCommand;
 import frc.robot.commands.autos.balance.AutoBalanceCommand;
 import frc.robot.commands.autos.balance.BalanceAuto;
@@ -204,7 +205,7 @@ public class RobotContainer {
     m_driver1.button(5).onTrue(new AutoPositionArmCommand(m_driveSubsystem, () -> m_driveStick.getThrottle() < 0, m_armSubsystem, m_reachSubsystem, m_wristSubsystem));
    
     // Drive to target
-    m_driver1.button(4).onTrue(new DriveToTargetCommand(m_driveSubsystem, m_armSubsystem, m_reachSubsystem, m_wristSubsystem, () -> m_driveStick.getThrottle() < 0));
+    //m_driver1.button(4).onTrue(new DriveToTargetCommand(m_driveSubsystem, m_armSubsystem, m_reachSubsystem, m_wristSubsystem, () -> m_driveStick.getThrottle() < 0));
     
     m_driver1.povRight().onTrue(new TurnByIncrementCommand(m_driveSubsystem, -1.5, ()->cancelCommand()));
     m_driver1.povLeft().onTrue(new TurnByIncrementCommand(m_driveSubsystem, 1.5, ()->cancelCommand()));
@@ -234,9 +235,12 @@ public class RobotContainer {
 
     //Angle Turn Rotation
     m_IAEJoystick.button(2).onTrue(new AutoPositionArmCommand(m_driveSubsystem, () -> m_driveStick.getThrottle() < 0, m_armSubsystem, m_reachSubsystem, m_wristSubsystem));
-    // m_IAEJoystick.button(2).onTrue(new TurnToAngleCommand(m_driveSubsystem, 0));
+    //m_IAEJoystick.button(2).onTrue(new TurnToAngleCommand(m_driveSubsystem, 0, () -> cancelCommand()));
     m_IAEJoystick.button(7).onTrue(new TurnToTargetCommand(m_driveSubsystem, m_armSubsystem, 
                               m_reachSubsystem, m_wristSubsystem,  () -> m_driveStick.getThrottle() < 0, () -> cancelCommand()));
+    
+    //Drive To Target
+    m_IAEJoystick.button(8).onTrue(new DriveToTargetCommand(m_driveSubsystem, m_armSubsystem, m_reachSubsystem, m_wristSubsystem, () -> m_driveStick.getThrottle() < 0, () -> m_IAEJoystick.getY(), () -> cancelCommand()));
 
     m_IAEJoystick.povRight().onTrue(new TurnByIncrementCommand(m_driveSubsystem, -1.5, ()->cancelCommand()));
     m_IAEJoystick.povLeft().onTrue(new TurnByIncrementCommand(m_driveSubsystem, 1.5, ()->cancelCommand()));
