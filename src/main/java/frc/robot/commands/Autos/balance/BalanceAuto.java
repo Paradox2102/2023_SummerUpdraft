@@ -5,10 +5,11 @@
 package frc.robot.commands.autos.balance;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.pathfinder.Pathfinder.Waypoint;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 import frc.robot.commands.HandPosition;
-import frc.robot.commands.autos.CreatePathCommand;
+import frc.robot.commands.autos.DriveForTimeCommand;
+import frc.robot.commands.autos.DriveUntilPitchCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ReachSubsystem;
@@ -19,13 +20,15 @@ import frc.robot.subsystems.WristSubsystem;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class BalanceAuto extends SequentialCommandGroup {
   /** Creates a new BalanceAuto. */
-  private static Waypoint[] k_balanceWaypoints = {
-    new Waypoint(-4.3, 5.75, 90), 
-    new Waypoint(-4.3, 12.05, 90)
-  };
+  private static double k_pitch = 15;
+  private static double k_armAngle = 110;
   public BalanceAuto(DriveSubsystem driveSubsystem, ArmSubsystem armSubsystem, WristSubsystem wristSubsystem, ReachSubsystem reachSubsystem) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new HandPosition(armSubsystem, reachSubsystem, wristSubsystem, 90, 0, Constants.Wrist.k_wristHomeAngle), new CreatePathCommand(driveSubsystem, k_balanceWaypoints, true, false, "drive to balance"), new AutoBalanceCommand(driveSubsystem));
+    addCommands(new HandPosition(armSubsystem, reachSubsystem, wristSubsystem, -90, 0, Constants.Wrist.k_wristHomeAngle), 
+    new WaitCommand(0.5), 
+    new HandPosition(armSubsystem, reachSubsystem, wristSubsystem, k_armAngle, 0, Constants.Wrist.k_wristHomeAngle), 
+    new DriveUntilPitchCommand(driveSubsystem, k_pitch), 
+    new DriveForTimeCommand(driveSubsystem, 1.75), new AutoBalanceCommand(driveSubsystem));
   }
 }

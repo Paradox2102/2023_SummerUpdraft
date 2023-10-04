@@ -10,7 +10,7 @@ import frc.robot.subsystems.DriveSubsystem;
 public class DriveUntilPitchCommand extends CommandBase {
   private DriveSubsystem m_subsystem;
   private double m_pitch;
-  private static double k_speed = 2;
+  private static double k_speed = 5;
   /** Creates a new DriveUntilPitchCommand. */
   public DriveUntilPitchCommand(DriveSubsystem subsystem, double angle) {
     // Use addRequirements() here to declare subsystem dependencies.

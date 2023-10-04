@@ -11,6 +11,7 @@ import frc.robot.commands.ReachCommand;
 import frc.robot.commands.TurnByIncrementCommand;
 import frc.robot.commands.TurnToTargetCommand;
 import frc.robot.commands.autos.balance.AutoBalanceCommand;
+import frc.robot.commands.autos.balance.BalanceAuto;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ReachSubsystem;
 // import edu.wpi.first.wpilibj.Joystick;
@@ -71,7 +72,7 @@ public class RobotContainer {
   private final CommandJoystick m_PRJoystick = new CommandJoystick(2);
   private final CommandJoystick m_BMRJoystick = new CommandJoystick(3);
   private final CommandJoystick m_IAEJoystick = new CommandJoystick(4);
-  public final CommandJoystick m_driveStick = m_IAEJoystick;
+  public final CommandJoystick m_driveStick = m_PRJoystick;
   // private final CommandJoystick m_stick2 = new CommandJoystick(1);
 
   private final double k_cancelThreshold = 0.25; // Joystick x threshold for canceling commands
@@ -285,7 +286,7 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
     // return m_chooseAuto.getSelected();
-    return null;
+    return new BalanceAuto(m_driveSubsystem, m_armSubsystem, m_wristSubsystem, m_reachSubsystem);
     // return new DriveForwardCommand(m_driveSubsystem);
   }
 }

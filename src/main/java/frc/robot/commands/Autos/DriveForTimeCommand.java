@@ -6,28 +6,31 @@ package frc.robot.commands.autos;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.ApriltagsCamera.Logger;
 import frc.robot.subsystems.DriveSubsystem;
 
 public class DriveForTimeCommand extends CommandBase {
   /** Creates a new DriveForTimeCommand. */
   DriveSubsystem m_subsystem;
-  private Timer m_timer;
+  private Timer m_timer = new Timer();
   private double m_time;
-  private static double k_speed = 4500;
+  private static double k_speed = 2;
 
-  public DriveForTimeCommand(DriveSubsystem subsystem, Double time) {
+  public DriveForTimeCommand(DriveSubsystem subsystem, double time) {
     // Use addRequirements() here to declare subsystem dependencies.
+    Logger.log("DriveForTimeCommand", 0, "DriveForTimeCommand");
     m_time = time;
     m_subsystem = subsystem;
     addRequirements(subsystem);
-    m_timer.reset();
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_timer.start();
-    m_subsystem.setSpeed(k_speed, k_speed);
+    Logger.log("DriveForTimeCommand", 0, "Initialize");
+    m_timer.start();    
+    m_timer.reset();
+    m_subsystem.setSpeedFPS(k_speed, k_speed);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -39,6 +42,7 @@ public class DriveForTimeCommand extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     m_subsystem.stop();
+    Logger.log("DriveForTimeCommand", 0, "End");
   }
 
   // Returns true when the command should end.
