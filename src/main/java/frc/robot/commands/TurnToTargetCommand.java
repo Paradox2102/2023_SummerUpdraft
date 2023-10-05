@@ -104,7 +104,7 @@ public class TurnToTargetCommand extends InstantCommand {
 
     new TurnToAngleCommand(m_driveSubsystem, angleInDegrees, m_cancel).schedule();
 
-    //new SequentialCommandGroup(
+    // new SequentialCommandGroup(
     //    new TurnToAngleCommand(m_driveSubsystem, angleInDegrees, m_cancel),
     //    new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, armAngle, -armAngle,
     //        armExtent, wristAngle, -wristAngle, m_reverse))

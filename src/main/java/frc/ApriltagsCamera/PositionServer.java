@@ -272,10 +272,16 @@ public class PositionServer implements NetworkReceiver {
                     k_wheelbase);
         }
 
+        // Returns true if the robot must run backwards
         public boolean isPathReversed(PositionTracker tracker) {
+            Pose2d pos = tracker.getPose2d();
+            double dx = m_x - pos.getX();
+            double dy = m_y - pos.getY();
+            double a = Math.toDegrees(Math.atan2(dy, dx));                  // Angle to target
             double yaw = tracker.getPose2d().getRotation().getDegrees();
+            double da = ParadoxField.normalizeAngle(yaw - a);    // Difference between the robot heading and the target
 
-            return ParadoxField.normalizeAngle(yaw) < 0;
+	    	return ((da > 90) || (da < -90));   // If more than 90 degrees off, run robot backwards
         }
     }
 

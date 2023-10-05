@@ -4,27 +4,18 @@
 
 package frc.robot;
 
-// import frc.robot.commands.ArcadeDriveCommand;
-//import frc.robot.Constants.OperatorConstants;
-// import frc.robot.commands.Autos;
 import frc.robot.commands.ReachCommand;
 import frc.robot.commands.TurnByIncrementCommand;
-import frc.robot.commands.TurnToAngleCommand;
 import frc.robot.commands.TurnToTargetCommand;
 import frc.robot.commands.autos.Auto2CubeRight;
 import frc.robot.commands.autos.balance.AutoBalanceCommand;
-import frc.robot.commands.autos.balance.BalanceAuto;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ReachSubsystem;
-// import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.subsystems.IntakeSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
-//import frc.robot.Constants.OperatorConstants;
-//import frc.robot.commands.Autos;
 import frc.robot.commands.MoveArmCommand;
 import frc.robot.commands.MoveWristCommand;
-//import frc.robot.commands.SetWristPositionCommand;
 import frc.ApriltagsCamera.ApriltagsCamera;
 import frc.robot.commands.AutoPositionArmCommand;
 import frc.robot.commands.DriveToTargetCommand;
@@ -58,18 +49,19 @@ public class RobotContainer {
       Constants.Camera.k_rearCameraAngle);
 
   // The robot's subsystems and commands are defined here...
-  // The robot's subsystems and commands are defined here...
   final DriveSubsystem m_driveSubsystem = new DriveSubsystem(m_frontCamera, m_backCamera, m_aprilTags);
   final ArmSubsystem m_armSubsystem = new ArmSubsystem();
   public final ReachSubsystem m_reachSubsystem = new ReachSubsystem(() -> m_armSubsystem.getArmAngleDegrees());
   final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
   final WristSubsystem m_wristSubsystem = new WristSubsystem(() -> m_armSubsystem.getArmAngleDegrees());
   SendableChooser<Command> m_chooseAuto = new SendableChooser<>();
+  
   // We have multiple developers working on different parts of the system, so we
   // set up multiple joysticks
   // All joysticks are available for button use, but only one has control of
   // arcade drive.
   private final CommandJoystick m_driver1 = new CommandJoystick(0);
+  @SuppressWarnings("unused")
   private final CommandJoystick m_driver2 = new CommandJoystick(1);
   private final CommandJoystick m_PRJoystick = new CommandJoystick(2);
   private final CommandJoystick m_BMRJoystick = new CommandJoystick(3);
@@ -85,9 +77,10 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
-    m_armSubsystem.setExtent(() -> m_reachSubsystem.getDistance());
+    
+    m_armSubsystem.setExtent(() -> m_reachSubsystem.getDistance());   // Gives the arm subsystem access to the current arm extent
     m_frontCamera.connect("10.21.2.10", 5800);
-    // m_backCamera.connect("10.21.2.11", 5800);
+    m_backCamera.connect("10.21.2.11", 5800);
   }
 
   /**
