@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -16,6 +17,7 @@ import edu.wpi.first.wpilibj.Solenoid;
 // import com.revrobotics.dummy.CANSparkMax;
 // import com.revrobotics.dummy.RelativeEncoder;
 // import com.revrobotics.dummy.CANSparkMax.IdleMode;
+// import com.ctre.phoenix.motorcontrol.can.dummy.TalonSRX;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
