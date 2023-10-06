@@ -70,7 +70,7 @@ public class RobotContainer {
   public final CommandJoystick m_driveStick = m_IAEJoystick;
   // private final CommandJoystick m_stick2 = new CommandJoystick(1);
 
-  private final double k_cancelThreshold = 0.25; // Joystick x threshold for canceling commands
+  private final double k_cancelThreshold = 0.50; // Joystick x threshold for canceling commands
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.

@@ -65,9 +65,11 @@ public class TurnToTargetCommand extends InstantCommand {
     double angleInDegrees = -Math.toDegrees(Math.atan2(dy, dx));
     double dist = 12 * Math.sqrt(dx * dx + dy * dy);
 
-    if (!m_reverse.getAsBoolean()) {
+    // if (!m_reverse.getAsBoolean()) {
+    if (target.isPathReversed(m_tracker)) {
       angleInDegrees = ParadoxField.normalizeAngle(angleInDegrees + 180);
-    } else {
+    } 
+    else {
       angleInDegrees = ParadoxField.normalizeAngle(-180 - angleInDegrees);
     }
 
@@ -120,7 +122,7 @@ public class TurnToTargetCommand extends InstantCommand {
     SmartDashboard.putBoolean("TT Reverse", m_reverse.getAsBoolean());
     SmartDashboard.putNumber("TT TargetHeight", target.m_h);
 
-    //new TurnToAngleCommand(m_driveSubsystem, angleInDegrees, m_cancel).schedule();
+    // new TurnToAngleCommand(m_driveSubsystem, angleInDegrees, m_cancel).schedule();
 
     new SequentialCommandGroup(
        new TurnToAngleCommand(m_driveSubsystem, angleInDegrees, m_cancel),

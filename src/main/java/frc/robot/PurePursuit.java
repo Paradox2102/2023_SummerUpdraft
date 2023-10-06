@@ -292,7 +292,7 @@ public class PurePursuit {
 	 * 
 	 */
 	public boolean isFinished() {
-		SmartDashboard.putBoolean("PP Cancel", m_cancel.getAsBoolean());
+		SmartDashboard.putBoolean("PP Cancel", (m_cancel != null) ? m_cancel.getAsBoolean() : false);
 		return m_finished.get() || (m_cancel != null && m_cancel.getAsBoolean());
 	}
 
@@ -330,6 +330,8 @@ public class PurePursuit {
 	 */
 	private SpeedContainer followPath() {
 		NavigatorPos pos = m_navigator.getPos();
+
+		// Logger.log("PurePursuit", 1, "followPath()");
 
 		synchronized (m_dataLock) {
 			m_path = m_loadedPath;
@@ -380,7 +382,9 @@ public class PurePursuit {
 		}
 
 		if (m_speed != null) {
-			double speed = m_speed.getAsDouble(); // -1 to +1 (from joystick)
+			double speed = -m_speed.getAsDouble(); // -1 to +1 (from joystick)
+
+			// Logger.log("PurePursuit", 1, String.format("speed=%f", speed));
 
 			if (speed < 0) {
 				// Goes backwards in a straight line
@@ -392,6 +396,8 @@ public class PurePursuit {
 				velocity = velocity * speed;
 			}
 		}
+
+		// Logger.log("PurePursuit", 1, String.format("velocity=%f", velocity));
 
 		SmartDashboard.putNumber("Velocity", velocity);
 
@@ -444,6 +450,8 @@ public class PurePursuit {
 		double speedDiff = velocity * curvature * (m_wheelBase / 2.0) * k_curvatureAdjust;
 		double leftSpeed = !m_isReversed ? velocity - speedDiff : velocity + speedDiff;
 		double rightSpeed = !m_isReversed ? velocity + speedDiff : velocity - speedDiff;
+
+		// Logger.log("PurePursuit", 1, "logData...");
 
 		logData(pos.yaw, velocity, (leftSpeed), (rightSpeed), pos.leftVel, pos.rightVel, pos.x,
 				pos.y, closestPos.x, closestPos.y, nextPos.x, nextPos.y, distance, dX, theta, curvature, speedDiff,

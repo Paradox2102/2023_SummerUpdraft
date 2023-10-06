@@ -61,20 +61,21 @@ public class DriveToTargetCommand extends InstantCommand {
     }
 
     Path path = target.getPath(m_tracker);
+;
     new SequentialCommandGroup(
-        new CreatePathCommand(m_driveSubsystem, path, false, !target.isPathReversed(m_tracker), "driveToTarget",
-            m_speed,
-            m_cancel),
+        new CreatePathCommand(m_driveSubsystem, path, false, target.isPathReversed(m_tracker),
+            "driveToTarget", 0.5,
+            // null, null),
+            m_speed, m_cancel),
         new WaitForJoystickCommand(m_driveSubsystem, m_speed)).schedule();
-    ;
 
     // new SequentialCommandGroup(
-    // new CreatePathCommand(m_driveSubsystem, path, false,
-    // target.isPathReversed(m_tracker), "driveToTarget", m_speed,
-    // m_cancel),
-    // new TurnToTargetCommand(m_driveSubsystem, m_armSubsystem, m_reachSubsystem,
-    // m_wristSubsystem, m_reverse,
-    // m_cancel))
-    // .schedule();
+    //   new CreatePathCommand(m_driveSubsystem, path, false,
+    //   target.isPathReversed(m_tracker), "driveToTarget", 0.5, m_speed,
+    //   m_cancel),
+      
+    //   new TurnToTargetCommand(m_driveSubsystem, m_armSubsystem, m_reachSubsystem,
+    //   m_wristSubsystem, m_reverse,
+    //   m_cancel)).schedule();
   }
 }
