@@ -252,9 +252,13 @@ public class PositionServer implements NetworkReceiver {
 		    	endX = m_endpointLeftX;
 		    	endAngle = Math.toRadians(m_endpointLeftAngle);	    		
 	    	}
+
+            double dx = endX - robotX;
+            double dy = m_endpointY - robotY;
+            double d = Math.sqrt(dx*dx + dy*dy);
 	    	
             Waypoint[] waypoints = {
-                    new Waypoint(robotX, robotY, Math.toRadians(robotAngle), m_endpointP0, m_endpointP1),
+                    new Waypoint(robotX, robotY, Math.toRadians(robotAngle), m_endpointP0 * d, m_endpointP1 * d),
                     new Waypoint(endX, m_endpointY, endAngle)
             };
 
