@@ -7,10 +7,12 @@ package frc.robot.commands;
 import java.util.function.BooleanSupplier;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.ApriltagsCamera.Logger;
 import frc.ApriltagsCamera.PositionServer.Target;
+import frc.robot.Constants;
 import frc.robot.ParadoxField;
 import frc.robot.PositionTracker;
 import frc.robot.subsystems.ArmSubsystem;
@@ -29,6 +31,7 @@ public class TurnToTargetCommand extends InstantCommand {
   private final WristSubsystem m_wristSubsystem;
   private final BooleanSupplier m_reverse;
   private final BooleanSupplier m_cancel;
+  private final double k_minArmLength = 27.0;
 
   public TurnToTargetCommand(DriveSubsystem driveSubsystem, ArmSubsystem armSubsystem,
       ReachSubsystem reachSubsystem, WristSubsystem wristSubsystem, BooleanSupplier reverse, BooleanSupplier cancel) {
@@ -40,6 +43,7 @@ public class TurnToTargetCommand extends InstantCommand {
     m_reverse = reverse;
     m_cancel = cancel;
     m_tracker = m_driveSubsystem.getTracker();
+  
   }
 
   // Called when the command is initially scheduled.
@@ -63,10 +67,17 @@ public class TurnToTargetCommand extends InstantCommand {
 
     if (!m_reverse.getAsBoolean()) {
       angleInDegrees = ParadoxField.normalizeAngle(angleInDegrees + 180);
+    } else {
+      angleInDegrees = ParadoxField.normalizeAngle(-180 - angleInDegrees);
     }
 
     double armAngle = 90 - Math.toDegrees(Math.atan2(target.m_h, dist));
-    double armExtent = Math.sqrt(dist*dist + target.m_h*target.m_h) + target.m_ext;
+    double armExtent = Math.sqrt(dist*dist + target.m_h*target.m_h) + target.m_ext - k_minArmLength - 5;
+    if (armExtent > Constants.Reach.k_maxReach) {
+      armExtent = Constants.Reach.k_maxReach;
+    } else if (armExtent < 0 ) {
+      armExtent = 0;
+    }
     double wristAngle = 0;
 
     if (target.m_no == 9) {
@@ -101,13 +112,20 @@ public class TurnToTargetCommand extends InstantCommand {
           break;
       }
     }
+    SmartDashboard.putNumber("TT AngleInDegrees", angleInDegrees);
+    SmartDashboard.putNumber("TT Distance", dist);
+    SmartDashboard.putNumber("TT ArmAngle", armAngle);
+    SmartDashboard.putNumber("TT ArmExtent", armExtent);
+    SmartDashboard.putNumber("TT WristAngle", wristAngle);
+    SmartDashboard.putBoolean("TT Reverse", m_reverse.getAsBoolean());
+    SmartDashboard.putNumber("TT TargetHeight", target.m_h);
 
-    new TurnToAngleCommand(m_driveSubsystem, angleInDegrees, m_cancel).schedule();
+    //new TurnToAngleCommand(m_driveSubsystem, angleInDegrees, m_cancel).schedule();
 
-    // new SequentialCommandGroup(
-    //    new TurnToAngleCommand(m_driveSubsystem, angleInDegrees, m_cancel),
-    //    new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, armAngle, -armAngle,
-    //        armExtent, wristAngle, -wristAngle, m_reverse))
-    //    .schedule();
+    new SequentialCommandGroup(
+       new TurnToAngleCommand(m_driveSubsystem, angleInDegrees, m_cancel),
+       new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, armAngle, -armAngle,
+           armExtent, wristAngle, -wristAngle, () -> target.isPathReversed(m_tracker)))
+       .schedule();
   }
 }

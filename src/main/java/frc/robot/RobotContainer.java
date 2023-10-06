@@ -25,6 +25,7 @@ import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.WristSubsystem;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -66,7 +67,7 @@ public class RobotContainer {
   private final CommandJoystick m_PRJoystick = new CommandJoystick(2);
   private final CommandJoystick m_BMRJoystick = new CommandJoystick(3);
   private final CommandJoystick m_IAEJoystick = new CommandJoystick(4);
-  public final CommandJoystick m_driveStick = m_PRJoystick;
+  public final CommandJoystick m_driveStick = m_IAEJoystick;
   // private final CommandJoystick m_stick2 = new CommandJoystick(1);
 
   private final double k_cancelThreshold = 0.25; // Joystick x threshold for canceling commands
@@ -185,7 +186,7 @@ public class RobotContainer {
   }
 
   Boolean cancelCommand() {
-    return Math.abs(m_driver1.getX()) > k_cancelThreshold;
+    return Math.abs(m_driveStick.getX()) > k_cancelThreshold;
   }
 
   private void configureBindingsIAE() {

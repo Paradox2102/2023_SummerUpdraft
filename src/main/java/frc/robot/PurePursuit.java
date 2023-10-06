@@ -292,6 +292,7 @@ public class PurePursuit {
 	 * 
 	 */
 	public boolean isFinished() {
+		SmartDashboard.putBoolean("PP Cancel", m_cancel.getAsBoolean());
 		return m_finished.get() || (m_cancel != null && m_cancel.getAsBoolean());
 	}
 
