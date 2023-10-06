@@ -17,13 +17,13 @@ public class WaitForJoystickCommand extends CommandBase {
   public WaitForJoystickCommand(DriveSubsystem subsystem, DoubleSupplier speed) {
     m_driveSubsystem = subsystem;
     m_speed = speed;
-    // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(m_driveSubsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-
+    m_driveSubsystem.stop();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

@@ -25,7 +25,6 @@ import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.WristSubsystem;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -246,11 +245,11 @@ public class RobotContainer {
     // m_IAEJoystick.button(2).onTrue(new TurnToAngleCommand(m_driveSubsystem, 0, ()
     // -> cancelCommand()));
     m_IAEJoystick.button(7).onTrue(new TurnToTargetCommand(m_driveSubsystem, m_armSubsystem,
-        m_reachSubsystem, m_wristSubsystem, () -> m_driveStick.getThrottle() < 0, () -> cancelCommand()));
+        m_reachSubsystem, m_wristSubsystem, /*() -> m_driveStick.getThrottle() < 0,*/ () -> cancelCommand()));
 
     // Drive To Target
     m_IAEJoystick.button(8).onTrue(new DriveToTargetCommand(m_driveSubsystem, m_armSubsystem, m_reachSubsystem,
-        m_wristSubsystem, () -> m_driveStick.getThrottle() < 0, () -> m_IAEJoystick.getY(), () -> cancelCommand()));
+        m_wristSubsystem, /*() -> m_driveStick.getThrottle() < 0,*/ () -> m_IAEJoystick.getY(), () -> cancelCommand()));
 
     m_IAEJoystick.povRight().onTrue(new TurnByIncrementCommand(m_driveSubsystem, -1.5, () -> cancelCommand()));
     m_IAEJoystick.povLeft().onTrue(new TurnByIncrementCommand(m_driveSubsystem, 1.5, () -> cancelCommand()));
