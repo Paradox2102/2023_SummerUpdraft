@@ -66,7 +66,7 @@ public class RobotContainer {
   private final CommandJoystick m_PRJoystick = new CommandJoystick(2);
   private final CommandJoystick m_BMRJoystick = new CommandJoystick(3);
   private final CommandJoystick m_IAEJoystick = new CommandJoystick(4);
-  public final CommandJoystick m_driveStick = m_IAEJoystick;
+  public final CommandJoystick m_driveStick = m_driver1;
   // private final CommandJoystick m_stick2 = new CommandJoystick(1);
 
   private final double k_cancelThreshold = 0.50; // Joystick x threshold for canceling commands
@@ -206,12 +206,16 @@ public class RobotContainer {
         m_armSubsystem, m_reachSubsystem, m_wristSubsystem));
 
     // Drive to target
-    // m_driver1.button(4).onTrue(new DriveToTargetCommand(m_driveSubsystem,
-    // m_armSubsystem, m_reachSubsystem, m_wristSubsystem, () ->
-    // m_driveStick.getThrottle() < 0));
+    m_driver1.button(4).onTrue(new TurnToTargetCommand(m_driveSubsystem, m_armSubsystem,
+        m_reachSubsystem, m_wristSubsystem, () -> cancelCommand()));
 
-    m_driver1.povRight().onTrue(new TurnByIncrementCommand(m_driveSubsystem, -1.5, () -> cancelCommand()));
-    m_driver1.povLeft().onTrue(new TurnByIncrementCommand(m_driveSubsystem, 1.5, () -> cancelCommand()));
+    // Drive To Target
+    m_driver1.button(6).onTrue(new DriveToTargetCommand(m_driveSubsystem, m_armSubsystem, m_reachSubsystem,
+        m_wristSubsystem, () -> m_driver1.getY(), () -> cancelCommand()));
+
+
+    m_driver1.povRight().onTrue(new TurnByIncrementCommand(m_driveSubsystem, 1.5, () -> cancelCommand()));
+    m_driver1.povLeft().onTrue(new TurnByIncrementCommand(m_driveSubsystem, -1.5, () -> cancelCommand()));
 
     // Driver 2 joystick
 

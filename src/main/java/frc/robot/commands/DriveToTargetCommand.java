@@ -64,32 +64,34 @@ public class DriveToTargetCommand extends InstantCommand {
     Command commands[] = TurnToTargetCommand.getCommands(m_driveSubsystem, m_armSubsystem, m_reachSubsystem,
         m_wristSubsystem, m_cancel);
 
-    // Only one of the following three commands should be un-commeneted at once
-    
-    // Just drive to target, do not turn or deploy arm
-    new SequentialCommandGroup(
-        new CreatePathCommand(m_driveSubsystem, path, false, target.isPathReversed(m_tracker),
-            "driveToTarget", 0.5,
-            // null, null),
-            m_speed, m_cancel),
-        new WaitForJoystickCommand(m_driveSubsystem, m_speed)).schedule();
-
-    // Un-comment to get it to turn to target at the end
-    // new SequentialCommandGroup(
-    //     new CreatePathCommand(m_driveSubsystem, path, false, target.isPathReversed(m_tracker),
-    //         "driveToTarget", 0.5,
-    //         // null, null),
-    //         m_speed, m_cancel),
-    //     new WaitForJoystickCommand(m_driveSubsystem, m_speed),
-    //     commands[0]).schedule();
+    if (target.m_no == 9) {
+      // Just drive to target, do not turn or deploy arm
+      new SequentialCommandGroup(
+          new CreatePathCommand(m_driveSubsystem, path, false,
+              target.isPathReversed(m_tracker),
+              "driveToTarget", 0.5,
+              // null, null),
+              m_speed, m_cancel),
+          new WaitForJoystickCommand(m_driveSubsystem, m_speed)).schedule();
+    } else {
+      // Un-comment to get it to turn to target at the end
+      new SequentialCommandGroup(
+          new CreatePathCommand(m_driveSubsystem, path, false, target.isPathReversed(m_tracker),
+              "driveToTarget", 0.5,
+              // null, null),
+              m_speed, m_cancel),
+          commands[0],
+          new WaitForJoystickCommand(m_driveSubsystem, m_speed)).schedule();
+    }
 
     // Uncomment to get it to turn to target and deploy arm at end
     // new SequentialCommandGroup(
-    //     new CreatePathCommand(m_driveSubsystem, path, false, target.isPathReversed(m_tracker),
-    //         "driveToTarget", 0.5,
-    //         // null, null),
-    //         m_speed, m_cancel),
-    //     new WaitForJoystickCommand(m_driveSubsystem, m_speed),
-    //     commands[0], commands[1]).schedule();
+    // new CreatePathCommand(m_driveSubsystem, path, false,
+    // target.isPathReversed(m_tracker),
+    // "driveToTarget", 0.5,
+    // // null, null),
+    // m_speed, m_cancel),
+    // commands[0], commands[1],
+    // new WaitForJoystickCommand(m_driveSubsystem, m_speed)).schedule();
   }
 }
