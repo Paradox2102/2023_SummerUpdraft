@@ -237,26 +237,27 @@ public class PositionServer implements NetworkReceiver {
             double robotY = pos.getY();
             double robotAngle = pos.getRotation().getDegrees();
 
-	    	double endX;
-	    	double endAngle;
-	    	
-	    	if ((robotX < m_endpointX0) ^ !m_redAlliance)
-	    	{
-	    		// to right
-		    	endX = m_endpointRightX;
-		    	endAngle = Math.toRadians(m_endpointRightAngle);
-	    	}
-	    	else
-	    	{
-	    		// to left
-		    	endX = m_endpointLeftX;
-		    	endAngle = Math.toRadians(m_endpointLeftAngle);	    		
-	    	}
+            double endX;
+            double endAngle;
+
+            if ((robotX < m_endpointX0) ^ !m_redAlliance) {
+                // to right
+                endX = m_endpointRightX;
+                endAngle = Math.toRadians(m_endpointRightAngle);
+            } else {
+                // to left
+                endX = m_endpointLeftX;
+                endAngle = Math.toRadians(m_endpointLeftAngle);
+            }
+
+            if (isPathReversed(tracker)) {
+                robotAngle = ParadoxField.normalizeAngle(robotAngle + 180);
+            }
 
             double dx = endX - robotX;
             double dy = m_endpointY - robotY;
-            double d = Math.sqrt(dx*dx + dy*dy);
-	    	
+            double d = Math.sqrt(dx * dx + dy * dy);
+
             Waypoint[] waypoints = {
                     new Waypoint(robotX, robotY, Math.toRadians(robotAngle), m_endpointP0 * d, m_endpointP1 * d),
                     new Waypoint(endX, m_endpointY, endAngle)
@@ -272,6 +273,8 @@ public class PositionServer implements NetworkReceiver {
             SmartDashboard.putNumber("Waypoint2 y", waypoints[1].y);
             SmartDashboard.putNumber("Waypoints2 angle", Math.toDegrees(waypoints[1].angle));
 
+            SmartDashboard.putBoolean("Waypoint is reversed", isPathReversed(tracker));
+
             return Pathfinder.computePath(waypoints, k_nPoints, k_dt, k_maxSpeed, k_maxAccel, k_maxDecl, k_maxJerk,
                     k_wheelbase);
         }
@@ -281,11 +284,11 @@ public class PositionServer implements NetworkReceiver {
             Pose2d pos = tracker.getPose2d();
             double dx = m_x - pos.getX();
             double dy = m_y - pos.getY();
-            double a = Math.toDegrees(Math.atan2(dy, dx));                  // Angle to target
+            double a = Math.toDegrees(Math.atan2(dy, dx)); // Angle to target
             double yaw = tracker.getPose2d().getRotation().getDegrees();
-            double da = ParadoxField.normalizeAngle(yaw - a);    // Difference between the robot heading and the target
+            double da = ParadoxField.normalizeAngle(yaw - a); // Difference between the robot heading and the target
 
-	    	return ((da > 90) || (da < -90));   // If more than 90 degrees off, run robot backwards
+            return ((da > 90) || (da < -90)); // If more than 90 degrees off, run robot backwards
         }
     }
 

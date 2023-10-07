@@ -24,6 +24,7 @@ import frc.robot.commands.HandPosition2;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.WristSubsystem;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
@@ -61,6 +62,7 @@ public class RobotContainer {
   // All joysticks are available for button use, but only one has control of
   // arcade drive.
   private final CommandJoystick m_driver1 = new CommandJoystick(0);
+  final Joystick m_driver1Joystick = new Joystick(0);
   @SuppressWarnings("unused")
   private final CommandJoystick m_driver2 = new CommandJoystick(1);
   private final CommandJoystick m_PRJoystick = new CommandJoystick(2);
@@ -185,7 +187,8 @@ public class RobotContainer {
   }
 
   Boolean cancelCommand() {
-    return Math.abs(m_driveStick.getX()) > k_cancelThreshold;
+    // return Math.abs(m_driveStick.getX()) > k_cancelThreshold;
+    return m_driver1Joystick.getRawButton(8);
   }
 
   private void configureBindingsIAE() {

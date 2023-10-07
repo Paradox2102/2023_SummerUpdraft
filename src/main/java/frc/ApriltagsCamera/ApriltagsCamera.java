@@ -699,7 +699,7 @@ public class ApriltagsCamera implements frc.ApriltagsCamera.Network.NetworkRecei
 	int m_frameCount = 0;
 	int m_missingCount = 0;
 	int m_lastFrame = -1;
-	boolean m_logTags = false;
+	boolean m_logTags = true;
 
 	public void processRegions(DifferentialDrivePoseEstimator poseEstimator) {
 		ApriltagsCameraRegions regions = getRegions();
@@ -718,34 +718,34 @@ public class ApriltagsCamera implements frc.ApriltagsCamera.Network.NetworkRecei
 
 			if (m_logTags) {
 				Logger.log("Robot", -1, String.format("nRegions = %d", regions.m_regions.size()));
-				SmartDashboard.putNumber("nRegions", regions.m_regions.size());
-				SmartDashboard.putNumber("nFrames", ++m_frameCount);
-				SmartDashboard.putNumber("Delay", System.currentTimeMillis() - regions.m_captureTime);
-				SmartDashboard.putNumber("FPS", regions.m_fps);
+				SmartDashboard.putNumber("cam: nRegions", regions.m_regions.size());
+				SmartDashboard.putNumber("cam: nFrames", ++m_frameCount);
+				SmartDashboard.putNumber("cam: Delay", System.currentTimeMillis() - regions.m_captureTime);
+				SmartDashboard.putNumber("cam: FPS", regions.m_fps);
 
 				if (regions.m_regions.size() == 0) {
 					SmartDashboard.putNumber("missing", ++m_missingCount);
 				}
 
 				for (ApriltagsCameraRegion region : regions.m_regions) {
-					if (region.m_tag == 1) {
+					if (region.m_tag == 2) {
 
-						SmartDashboard.putNumber(String.format("Tag%d", region.m_tag), region.m_tag);
-						SmartDashboard.putNumber(String.format("Dist%d", region.m_tag),
+						SmartDashboard.putNumber(String.format("cam: Tag%d", region.m_tag), region.m_tag);
+						SmartDashboard.putNumber(String.format("cam: Dist%d", region.m_tag),
 								Math.sqrt(region.m_tvec[0] * region.m_tvec[0] +
 										region.m_tvec[1] * region.m_tvec[1] +
 										region.m_tvec[2] * region.m_tvec[2]));
-						SmartDashboard.putNumber(String.format("rx%d", region.m_tag), region.m_rvec[0]);
-						SmartDashboard.putNumber(String.format("ry%d", region.m_tag), region.m_rvec[1]);
-						SmartDashboard.putNumber(String.format("rz%d", region.m_tag), region.m_rvec[2]);
-						SmartDashboard.putNumber(String.format("tx%d", region.m_tag), region.m_tvec[0]);
-						SmartDashboard.putNumber(String.format("ty%d", region.m_tag), region.m_tvec[1]);
-						SmartDashboard.putNumber(String.format("tz%d", region.m_tag), region.m_tvec[2]);
-						SmartDashboard.putNumber(String.format("angle%d", region.m_tag),
+						SmartDashboard.putNumber(String.format("cam: rx%d", region.m_tag), region.m_rvec[0]);
+						SmartDashboard.putNumber(String.format("cam: ry%d", region.m_tag), region.m_rvec[1]);
+						SmartDashboard.putNumber(String.format("cam: rz%d", region.m_tag), region.m_rvec[2]);
+						SmartDashboard.putNumber(String.format("cam: tx%d", region.m_tag), region.m_tvec[0]);
+						SmartDashboard.putNumber(String.format("cam: ty%d", region.m_tag), region.m_tvec[1]);
+						SmartDashboard.putNumber(String.format("cam: tz%d", region.m_tag), region.m_tvec[2]);
+						SmartDashboard.putNumber(String.format("cam: angle%d", region.m_tag),
 								ParadoxField.normalizeAngle(region.m_angleInDegrees));
-						SmartDashboard.putNumber(String.format("relAngle%d", region.m_tag),
+						SmartDashboard.putNumber(String.format("cam: relAngle%d", region.m_tag),
 								ParadoxField.normalizeAngle(region.m_relAngleInDegrees));
-						SmartDashboard.putNumber(String.format("offset%d", region.m_tag), region.m_angleOffset);
+						SmartDashboard.putNumber(String.format("cam: offset%d", region.m_tag), region.m_angleOffset);
 					}
 				}
 			}

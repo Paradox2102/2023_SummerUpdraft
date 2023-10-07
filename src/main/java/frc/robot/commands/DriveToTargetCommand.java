@@ -7,6 +7,9 @@ package frc.robot.commands;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
+import javax.swing.text.StyleContext.SmallAttributeSet;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -60,38 +63,42 @@ public class DriveToTargetCommand extends InstantCommand {
 
     Path path = target.getPath(m_tracker);
 
+    SmartDashboard.putBoolean("Path reversed", target.isPathReversed(m_tracker));
+
     @SuppressWarnings("unused")
     Command commands[] = TurnToTargetCommand.getCommands(m_driveSubsystem, m_armSubsystem, m_reachSubsystem,
         m_wristSubsystem, m_cancel);
 
-    if (target.m_no == 9) {
-      // Just drive to target, do not turn or deploy arm
-      new SequentialCommandGroup(
-          new CreatePathCommand(m_driveSubsystem, path, false,
-              target.isPathReversed(m_tracker),
-              "driveToTarget", 0.5,
-              // null, null),
-              m_speed, m_cancel),
-          new WaitForJoystickCommand(m_driveSubsystem, m_speed)).schedule();
-    } else {
-      // Un-comment to get it to turn to target at the end
-      new SequentialCommandGroup(
-          new CreatePathCommand(m_driveSubsystem, path, false, target.isPathReversed(m_tracker),
-              "driveToTarget", 0.5,
-              // null, null),
-              m_speed, m_cancel),
-          commands[0],
-          new WaitForJoystickCommand(m_driveSubsystem, m_speed)).schedule();
-    }
+    if (commands != null) {
+      if (target.m_no == 9) {
+        // Just drive to target, do not turn or deploy arm
+        new SequentialCommandGroup(
+            new CreatePathCommand(m_driveSubsystem, path, false,
+                target.isPathReversed(m_tracker),
+                "driveToTarget", 0.5,
+                // null, null),
+                m_speed, m_cancel),
+            new WaitForJoystickCommand(m_driveSubsystem, m_speed)).schedule();
+      } else {
+        // Un-comment to get it to turn to target at the end
+        new SequentialCommandGroup(
+            new CreatePathCommand(m_driveSubsystem, path, false, target.isPathReversed(m_tracker),
+                "driveToTarget", 0.5,
+                // null, null),
+                m_speed, m_cancel),
+            commands[0],
+            new WaitForJoystickCommand(m_driveSubsystem, m_speed)).schedule();
+      }
 
-    // Uncomment to get it to turn to target and deploy arm at end
-    // new SequentialCommandGroup(
-    // new CreatePathCommand(m_driveSubsystem, path, false,
-    // target.isPathReversed(m_tracker),
-    // "driveToTarget", 0.5,
-    // // null, null),
-    // m_speed, m_cancel),
-    // commands[0], commands[1],
-    // new WaitForJoystickCommand(m_driveSubsystem, m_speed)).schedule();
+      // Uncomment to get it to turn to target and deploy arm at end
+      // new SequentialCommandGroup(
+      // new CreatePathCommand(m_driveSubsystem, path, false,
+      // target.isPathReversed(m_tracker),
+      // "driveToTarget", 0.5,
+      // // null, null),
+      // m_speed, m_cancel),
+      // commands[0], commands[1],
+      // new WaitForJoystickCommand(m_driveSubsystem, m_speed)).schedule();
+    }
   }
 }

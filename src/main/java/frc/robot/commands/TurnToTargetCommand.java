@@ -73,7 +73,7 @@ public class TurnToTargetCommand extends InstantCommand {
     // if (!m_reverse.getAsBoolean()) {
     if (target.isPathReversed(tracker)) {
       angleInDegrees = ParadoxField.normalizeAngle(angleInDegrees + 180);
-    } else {
+    }  {
       angleInDegrees = ParadoxField.normalizeAngle(-180 - angleInDegrees);
     }
 
@@ -113,7 +113,7 @@ public class TurnToTargetCommand extends InstantCommand {
           if (target.m_isCone) {
             wristAngle = -95;
           } else {
-            wristAngle = -109;
+            wristAngle = -100;
           }
           break;
       }
@@ -123,8 +123,12 @@ public class TurnToTargetCommand extends InstantCommand {
     SmartDashboard.putNumber("TT ArmAngle", armAngle);
     SmartDashboard.putNumber("TT ArmExtent", armExtent);
     SmartDashboard.putNumber("TT WristAngle", wristAngle);
-    // SmartDashboard.putBoolean("TT Reverse", m_reverse.getAsBoolean());
+    SmartDashboard.putBoolean("TT Reverse", target.isPathReversed(tracker));
     SmartDashboard.putNumber("TT TargetHeight", target.m_h);
+    SmartDashboard.putNumber("TT Height", target.m_h);
+    SmartDashboard.putNumber("TT X", target.m_x);
+    SmartDashboard.putNumber("TT Y", target.m_y);
+    SmartDashboard.putNumber("TT ext", target.m_ext);
 
     return new Command[] { new TurnToAngleCommand(driveSubsystem, angleInDegrees, cancel),
         new HandPosition2(armSubsystem, reachSubsystem, wristSubsystem, armAngle, -armAngle,
@@ -216,6 +220,8 @@ public class TurnToTargetCommand extends InstantCommand {
     //     .schedule();
     Command[] commands = getCommands(m_driveSubsystem, m_armSubsystem, m_reachSubsystem, m_wristSubsystem, m_cancel);
     
-    new SequentialCommandGroup(commands[0], commands[1]).schedule();;
+    if (commands != null) {
+      new SequentialCommandGroup(commands[0], commands[1]).schedule();;
+    }
   }
 }
