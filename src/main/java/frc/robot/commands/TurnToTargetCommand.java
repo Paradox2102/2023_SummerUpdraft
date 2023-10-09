@@ -5,8 +5,10 @@
 package frc.robot.commands;
 
 import java.util.function.BooleanSupplier;
+import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.networktables.DoubleSubscriber;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -33,23 +35,28 @@ public class TurnToTargetCommand extends InstantCommand {
   // private final BooleanSupplier m_reverse;
   private final BooleanSupplier m_cancel;
   static private final double k_minArmLength = 27.0;
+  private final boolean m_turnOnly;
+  private final DoubleSupplier m_speed;
 
   public TurnToTargetCommand(DriveSubsystem driveSubsystem, ArmSubsystem armSubsystem,
-      ReachSubsystem reachSubsystem, WristSubsystem wristSubsystem, /*BooleanSupplier reverse,*/ BooleanSupplier cancel) {
+      ReachSubsystem reachSubsystem, WristSubsystem wristSubsystem,
+      /* BooleanSupplier reverse, */ BooleanSupplier cancel, boolean turnOnly, DoubleSupplier speed) {
     Logger.log("TurnToTargetCommand", 1, "TurnToTarget");
     m_driveSubsystem = driveSubsystem;
     m_armSubsystem = armSubsystem;
     m_reachSubsystem = reachSubsystem;
     m_wristSubsystem = wristSubsystem;
+    m_turnOnly = turnOnly;
+    m_speed = speed;
     // m_reverse = reverse;
     m_cancel = cancel;
     // m_tracker = m_driveSubsystem.getTracker();
   }
 
   // Compute the commands needed to turn to the target and deploy the arm
-  //  Returns an array:
-  //    commands[0] = command to turn to target
-  //    commands[1] = command to deploy the arm
+  // Returns an array:
+  // commands[0] = command to turn to target
+  // commands[1] = command to deploy the arm
   public static Command[] getCommands(DriveSubsystem driveSubsystem, ArmSubsystem armSubsystem,
       ReachSubsystem reachSubsystem, WristSubsystem wristSubsystem, BooleanSupplier cancel) {
 
@@ -73,7 +80,8 @@ public class TurnToTargetCommand extends InstantCommand {
     // if (!m_reverse.getAsBoolean()) {
     if (target.isPathReversed(tracker)) {
       angleInDegrees = ParadoxField.normalizeAngle(angleInDegrees + 180);
-    }  {
+    }
+    {
       angleInDegrees = ParadoxField.normalizeAngle(-180 - angleInDegrees);
     }
 
@@ -139,89 +147,15 @@ public class TurnToTargetCommand extends InstantCommand {
   @Override
   public void initialize() {
     Logger.log("TurnToTargetCommand", 1, "Initialize");
-    // Pose2d pos = m_tracker.getPose2d();
-    // double x = pos.getX();
-    // double y = pos.getY();
-    // Target target = m_tracker.m_posServer.getTarget();
 
-    // if (target == null) {
-    //   Logger.log("TurnToTargetCommand", 3, "no target");
-
-    //   return;
-    // }
-    // double dx = x - target.m_x;
-    // double dy = y - target.m_y;
-    // double angleInDegrees = -Math.toDegrees(Math.atan2(dy, dx));
-    // double dist = 12 * Math.sqrt(dx * dx + dy * dy);
-
-    // // if (!m_reverse.getAsBoolean()) {
-    // if (target.isPathReversed(m_tracker)) {
-    //   angleInDegrees = ParadoxField.normalizeAngle(angleInDegrees + 180);
-    // } else {
-    //   angleInDegrees = ParadoxField.normalizeAngle(-180 - angleInDegrees);
-    // }
-
-    // double armAngle = 90 - Math.toDegrees(Math.atan2(target.m_h, dist));
-    // double armExtent = Math.sqrt(dist * dist + target.m_h * target.m_h) + target.m_ext - k_minArmLength - 5;
-    // if (armExtent > Constants.Reach.k_maxReach) {
-    //   armExtent = Constants.Reach.k_maxReach;
-    // } else if (armExtent < 0) {
-    //   armExtent = 0;
-    // }
-    // double wristAngle = 0;
-
-    // if (target.m_no == 9) {
-    //   if (target.m_isCone) {
-    //     wristAngle = -30;
-    //   } else {
-    //     wristAngle = -145;
-    //   }
-    // } else {
-    //   // reg positions
-    //   switch (target.m_level) {
-    //     case 0: // low position
-    //       if (target.m_isCone) {
-    //         wristAngle = -95;
-    //       } else {
-    //         wristAngle = -18;
-    //       }
-    //       break;
-    //     case 1: // middle
-    //       if (target.m_isCone) {
-    //         wristAngle = -100;
-    //       } else {
-    //         wristAngle = -117;
-    //       }
-    //       break;
-    //     case 2: // high
-    //       if (target.m_isCone) {
-    //         wristAngle = -95;
-    //       } else {
-    //         wristAngle = -109;
-    //       }
-    //       break;
-    //   }
-    // }
-    // SmartDashboard.putNumber("TT AngleInDegrees", angleInDegrees);
-    // SmartDashboard.putNumber("TT Distance", dist);
-    // SmartDashboard.putNumber("TT ArmAngle", armAngle);
-    // SmartDashboard.putNumber("TT ArmExtent", armExtent);
-    // SmartDashboard.putNumber("TT WristAngle", wristAngle);
-    // SmartDashboard.putBoolean("TT Reverse", m_reverse.getAsBoolean());
-    // SmartDashboard.putNumber("TT TargetHeight", target.m_h);
-
-    // // new TurnToAngleCommand(m_driveSubsystem, angleInDegrees,
-    // // m_cancel).schedule();
-
-    // new SequentialCommandGroup(
-    //     new TurnToAngleCommand(m_driveSubsystem, angleInDegrees, m_cancel),
-    //     new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, armAngle, -armAngle,
-    //         armExtent, wristAngle, -wristAngle, () -> target.isPathReversed(m_tracker)))
-    //     .schedule();
     Command[] commands = getCommands(m_driveSubsystem, m_armSubsystem, m_reachSubsystem, m_wristSubsystem, m_cancel);
-    
+
     if (commands != null) {
-      new SequentialCommandGroup(commands[0], commands[1]).schedule();;
+      if (m_turnOnly) {
+        new SequentialCommandGroup(commands[0], new WaitForJoystickCommand(m_driveSubsystem, m_speed)).schedule();
+      } else {
+        new SequentialCommandGroup(commands[0], commands[1]).schedule();
+      }
     }
   }
 }

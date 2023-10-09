@@ -86,8 +86,9 @@ public class DriveToTargetCommand extends InstantCommand {
                 "driveToTarget", 0.5,
                 // null, null),
                 m_speed, m_cancel),
-            commands[0],
-            new WaitForJoystickCommand(m_driveSubsystem, m_speed)).schedule();
+            new TurnToTargetCommand(m_driveSubsystem, m_armSubsystem, m_reachSubsystem, m_wristSubsystem, m_cancel, true, m_speed)).schedule();
+            // commands[0],
+            // new WaitForJoystickCommand(m_driveSubsystem, m_speed)).schedule();
       }
 
       // Uncomment to get it to turn to target and deploy arm at end

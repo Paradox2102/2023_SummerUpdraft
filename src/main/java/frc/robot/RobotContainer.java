@@ -191,6 +191,11 @@ public class RobotContainer {
     return m_driver1Joystick.getRawButton(8);
   }
 
+  Boolean isReversed() {
+    PositionTracker tracker = m_driveSubsystem.getTracker();
+    return tracker.m_posServer.getTarget().isPathReversed(tracker);
+  }
+
   private void configureBindingsIAE() {
     // Driver 1 joystick
 
@@ -205,16 +210,18 @@ public class RobotContainer {
     m_driver1.button(2).toggleOnTrue(new IntakeCommand(m_intakeSubsystem, -0.4));
 
     // Auto position arm
-    m_driver1.button(5).onTrue(new AutoPositionArmCommand(m_driveSubsystem, () -> m_driveStick.getThrottle() < 0,
+    m_driver1.button(5).onTrue(new AutoPositionArmCommand(m_driveSubsystem, () -> isReversed(),
         m_armSubsystem, m_reachSubsystem, m_wristSubsystem));
 
     // Drive to target
     m_driver1.button(4).onTrue(new TurnToTargetCommand(m_driveSubsystem, m_armSubsystem,
-        m_reachSubsystem, m_wristSubsystem, () -> cancelCommand()));
+        m_reachSubsystem, m_wristSubsystem, () -> cancelCommand(), false, ()->m_driveStick.getY()));
 
     // Drive To Target
     m_driver1.button(6).onTrue(new DriveToTargetCommand(m_driveSubsystem, m_armSubsystem, m_reachSubsystem,
         m_wristSubsystem, () -> m_driver1.getY(), () -> cancelCommand()));
+
+    m_driver1.button(7).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 102, -102, 0, 18, 15,() -> m_driveStick.getThrottle() < 0));
 
 
     m_driver1.povRight().onTrue(new TurnByIncrementCommand(m_driveSubsystem, 1.5, () -> cancelCommand()));
@@ -252,7 +259,7 @@ public class RobotContainer {
     // m_IAEJoystick.button(2).onTrue(new TurnToAngleCommand(m_driveSubsystem, 0, ()
     // -> cancelCommand()));
     m_IAEJoystick.button(7).onTrue(new TurnToTargetCommand(m_driveSubsystem, m_armSubsystem,
-        m_reachSubsystem, m_wristSubsystem, /*() -> m_driveStick.getThrottle() < 0,*/ () -> cancelCommand()));
+        m_reachSubsystem, m_wristSubsystem, () -> cancelCommand(), false, ()->m_driveStick.getY()));
 
     // Drive To Target
     m_IAEJoystick.button(8).onTrue(new DriveToTargetCommand(m_driveSubsystem, m_armSubsystem, m_reachSubsystem,
