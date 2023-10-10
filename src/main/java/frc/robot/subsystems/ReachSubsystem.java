@@ -27,7 +27,7 @@ public class ReachSubsystem extends SubsystemBase {
   private double k_ticksToInches = 29.5 / 148869;
   private double m_position = 0;
   private static final double k_stallPower = 0.1;
-  private static final double k_stallTime = 0.2;
+  private static final double k_stallTime = 0.4;
   private static final double k_stallSpeed = 250;
   private static final double k_p = 16 / 30.0;
   private static final double k_f = 0.06;
@@ -99,6 +99,7 @@ public class ReachSubsystem extends SubsystemBase {
       // power = k_maxPower * Math.signum(power);
       // }
     }
+    SmartDashboard.putNumber("Reach Raw Power", power);
 
     // stall check
     if (Math.abs(power) > k_stallPower) {
@@ -110,8 +111,8 @@ public class ReachSubsystem extends SubsystemBase {
             m_state = State.stalledUp;
           } else {
             m_state = State.stalledDown;
-            // Logger.log("Reach Subsystem", 1, String.format("state = %s",
-            // m_state.toString()));
+            Logger.log("Reach Subsystem", 1, String.format("state = %s",
+            m_state.toString()));
           }
         } else {
           m_timer.reset();
