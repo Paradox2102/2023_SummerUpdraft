@@ -105,8 +105,8 @@ public class CreatePathCommand extends CommandBase {
   }
 
   public CreatePathCommand(DriveSubsystem driveSubsystem, Path path, boolean setPosition, boolean reversed,
-      String name, DoubleSupplier speed, BooleanSupplier cancel) {
-    init(driveSubsystem, null, setPosition, reversed, name, new PurePursuitData(), k_lookAheadTime);
+      String name, double lookaheadTime, DoubleSupplier speed, BooleanSupplier cancel) {
+    init(driveSubsystem, null, setPosition, reversed, name, new PurePursuitData(), lookaheadTime);
 
     m_speed = speed;
     m_cancel = cancel;

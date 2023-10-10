@@ -4,27 +4,18 @@
 
 package frc.robot;
 
-// import frc.robot.commands.ArcadeDriveCommand;
-//import frc.robot.Constants.OperatorConstants;
-// import frc.robot.commands.Autos;
 import frc.robot.commands.ReachCommand;
 import frc.robot.commands.TurnByIncrementCommand;
-import frc.robot.commands.TurnToAngleCommand;
 import frc.robot.commands.TurnToTargetCommand;
 import frc.robot.commands.autos.Auto2CubeRight;
 import frc.robot.commands.autos.balance.AutoBalanceCommand;
-import frc.robot.commands.autos.balance.BalanceAuto;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ReachSubsystem;
-// import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.subsystems.IntakeSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
-//import frc.robot.Constants.OperatorConstants;
-//import frc.robot.commands.Autos;
 import frc.robot.commands.MoveArmCommand;
 import frc.robot.commands.MoveWristCommand;
-//import frc.robot.commands.SetWristPositionCommand;
 import frc.ApriltagsCamera.ApriltagsCamera;
 import frc.robot.commands.AutoPositionArmCommand;
 import frc.robot.commands.DriveToTargetCommand;
@@ -33,6 +24,7 @@ import frc.robot.commands.HandPosition2;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.WristSubsystem;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
@@ -58,26 +50,28 @@ public class RobotContainer {
       Constants.Camera.k_rearCameraAngle);
 
   // The robot's subsystems and commands are defined here...
-  // The robot's subsystems and commands are defined here...
   final DriveSubsystem m_driveSubsystem = new DriveSubsystem(m_frontCamera, m_backCamera, m_aprilTags);
   final ArmSubsystem m_armSubsystem = new ArmSubsystem();
   public final ReachSubsystem m_reachSubsystem = new ReachSubsystem(() -> m_armSubsystem.getArmAngleDegrees());
   final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
   final WristSubsystem m_wristSubsystem = new WristSubsystem(() -> m_armSubsystem.getArmAngleDegrees());
   SendableChooser<Command> m_chooseAuto = new SendableChooser<>();
+  
   // We have multiple developers working on different parts of the system, so we
   // set up multiple joysticks
   // All joysticks are available for button use, but only one has control of
   // arcade drive.
   private final CommandJoystick m_driver1 = new CommandJoystick(0);
+  final Joystick m_driver1Joystick = new Joystick(0);
+  @SuppressWarnings("unused")
   private final CommandJoystick m_driver2 = new CommandJoystick(1);
   private final CommandJoystick m_PRJoystick = new CommandJoystick(2);
   private final CommandJoystick m_BMRJoystick = new CommandJoystick(3);
   private final CommandJoystick m_IAEJoystick = new CommandJoystick(4);
-  public final CommandJoystick m_driveStick = m_PRJoystick;
+  public final CommandJoystick m_driveStick = m_driver1;
   // private final CommandJoystick m_stick2 = new CommandJoystick(1);
 
-  private final double k_cancelThreshold = 0.25; // Joystick x threshold for canceling commands
+  private final double k_cancelThreshold = 0.50; // Joystick x threshold for canceling commands
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -85,9 +79,10 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
-    m_armSubsystem.setExtent(() -> m_reachSubsystem.getDistance());
+    
+    m_armSubsystem.setExtent(() -> m_reachSubsystem.getDistance());   // Gives the arm subsystem access to the current arm extent
     m_frontCamera.connect("10.21.2.10", 5800);
-    // m_backCamera.connect("10.21.2.11", 5800);
+    m_backCamera.connect("10.21.2.11", 5800);
   }
 
   /**
@@ -192,7 +187,13 @@ public class RobotContainer {
   }
 
   Boolean cancelCommand() {
-    return Math.abs(m_driver1.getX()) > k_cancelThreshold;
+    // return Math.abs(m_driveStick.getX()) > k_cancelThreshold;
+    return m_driver1Joystick.getRawButton(8);
+  }
+
+  Boolean isReversed() {
+    PositionTracker tracker = m_driveSubsystem.getTracker();
+    return tracker.m_posServer.getTarget().isPathReversed(tracker);
   }
 
   private void configureBindingsIAE() {
@@ -209,16 +210,22 @@ public class RobotContainer {
     m_driver1.button(2).toggleOnTrue(new IntakeCommand(m_intakeSubsystem, -0.4));
 
     // Auto position arm
-    m_driver1.button(5).onTrue(new AutoPositionArmCommand(m_driveSubsystem, () -> m_driveStick.getThrottle() < 0,
+    m_driver1.button(5).onTrue(new AutoPositionArmCommand(m_driveSubsystem, () -> isReversed(),
         m_armSubsystem, m_reachSubsystem, m_wristSubsystem));
 
     // Drive to target
-    // m_driver1.button(4).onTrue(new DriveToTargetCommand(m_driveSubsystem,
-    // m_armSubsystem, m_reachSubsystem, m_wristSubsystem, () ->
-    // m_driveStick.getThrottle() < 0));
+    m_driver1.button(4).onTrue(new TurnToTargetCommand(m_driveSubsystem, m_armSubsystem,
+        m_reachSubsystem, m_wristSubsystem, () -> cancelCommand(), false, ()->m_driveStick.getY()));
 
-    m_driver1.povRight().onTrue(new TurnByIncrementCommand(m_driveSubsystem, -1.5, () -> cancelCommand()));
-    m_driver1.povLeft().onTrue(new TurnByIncrementCommand(m_driveSubsystem, 1.5, () -> cancelCommand()));
+    // Drive To Target
+    m_driver1.button(6).onTrue(new DriveToTargetCommand(m_driveSubsystem, m_armSubsystem, m_reachSubsystem,
+        m_wristSubsystem, () -> m_driver1.getY(), () -> cancelCommand()));
+
+    m_driver1.button(7).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 102, -102, 0, 18, 15,() -> m_driveStick.getThrottle() < 0));
+
+
+    m_driver1.povRight().onTrue(new TurnByIncrementCommand(m_driveSubsystem, 1.5, () -> cancelCommand()));
+    m_driver1.povLeft().onTrue(new TurnByIncrementCommand(m_driveSubsystem, -1.5, () -> cancelCommand()));
 
     // Driver 2 joystick
 
@@ -252,11 +259,11 @@ public class RobotContainer {
     // m_IAEJoystick.button(2).onTrue(new TurnToAngleCommand(m_driveSubsystem, 0, ()
     // -> cancelCommand()));
     m_IAEJoystick.button(7).onTrue(new TurnToTargetCommand(m_driveSubsystem, m_armSubsystem,
-        m_reachSubsystem, m_wristSubsystem, () -> m_driveStick.getThrottle() < 0, () -> cancelCommand()));
+        m_reachSubsystem, m_wristSubsystem, () -> cancelCommand(), false, ()->m_driveStick.getY()));
 
     // Drive To Target
     m_IAEJoystick.button(8).onTrue(new DriveToTargetCommand(m_driveSubsystem, m_armSubsystem, m_reachSubsystem,
-        m_wristSubsystem, () -> m_driveStick.getThrottle() < 0, () -> m_IAEJoystick.getY(), () -> cancelCommand()));
+        m_wristSubsystem, /*() -> m_driveStick.getThrottle() < 0,*/ () -> m_IAEJoystick.getY(), () -> cancelCommand()));
 
     m_IAEJoystick.povRight().onTrue(new TurnByIncrementCommand(m_driveSubsystem, -1.5, () -> cancelCommand()));
     m_IAEJoystick.povLeft().onTrue(new TurnByIncrementCommand(m_driveSubsystem, 1.5, () -> cancelCommand()));

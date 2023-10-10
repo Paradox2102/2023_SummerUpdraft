@@ -4,6 +4,7 @@ package frc.robot;
 import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix.sensors.PigeonIMU;
+// import com.ctre.phoenix.sensors.dummy.PigeonIMU;
 
 public class Sensor implements SensorData{
 	private DoubleSupplier m_leftPos;

@@ -20,7 +20,7 @@ public class TurnToAngleCommand extends CommandBase {
   private final PositionTracker m_tracker;
   private final BooleanSupplier m_cancel;
   //private static final double k_minPower = 0.07;
-  private static final double k_minSpeed = 0.4;
+  private static final double k_minSpeed = 0.8; //0.4;
   private static final double k_maxSpeed = 4;
   private static final double k_deadZone = 1;
   public static final double k_p = 12.0/180;

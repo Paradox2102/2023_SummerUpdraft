@@ -13,6 +13,8 @@ import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.WPI_PigeonIMU;
+// import com.ctre.phoenix.motorcontrol.can.dummy.WPI_TalonFX;
+// import com.ctre.phoenix.sensors.dummy.WPI_PigeonIMU;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -42,7 +44,7 @@ public class DriveSubsystem extends SubsystemBase {
   private static double k_fLeft = (0.05);
   private static double k_fRight = (0.05);
   private static double k_p = 0.1; // 0.025
-  private static double k_i = 0.00025; //0.000025;
+  private static double k_i = 0.001; //0.0005; //0.00025; //0.000025;
   private static double k_d = 0;
   Navigator m_navigator;
   private Sensor m_sensors;
@@ -257,16 +259,19 @@ public class DriveSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     m_drive.feed();
-    SmartDashboard.putNumber("Right Speed", m_rightDrive.getSelectedSensorVelocity());
-    SmartDashboard.putNumber("Left Speed", m_leftDrive.getSelectedSensorVelocity());
-    SmartDashboard.putNumber("Right Position", m_rightDrive.getSelectedSensorPosition());
-    SmartDashboard.putNumber("Left Position", m_leftDrive.getSelectedSensorPosition());
-    SmartDashboard.putNumber("Right Position Feet", getRightPosInFeet());
-    SmartDashboard.putNumber("Left Position Feet", getLeftPosInFeet());
-    SmartDashboard.putNumber("Gyro Yaw", m_gyro.getAngle());
-    SmartDashboard.putNumber("Gyro Roll", m_gyro.getRoll());
-    SmartDashboard.putNumber("Gyro Pitch", getPitchInDegrees());
-    SmartDashboard.putNumber("Robot Yaw", getYawInDegrees());
+    // SmartDashboard.putNumber("Right Speed", m_rightDrive.getSelectedSensorVelocity());
+    // SmartDashboard.putNumber("Left Speed", m_leftDrive.getSelectedSensorVelocity());
+    // SmartDashboard.putNumber("Right Position", m_rightDrive.getSelectedSensorPosition());
+    // SmartDashboard.putNumber("Left Position", m_leftDrive.getSelectedSensorPosition());
+    // SmartDashboard.putNumber("Right Position Feet", getRightPosInFeet());
+    // SmartDashboard.putNumber("Left Position Feet", getLeftPosInFeet());
+    // SmartDashboard.putNumber("Gyro Yaw", m_gyro.getAngle());
+    // SmartDashboard.putNumber("Gyro Roll", m_gyro.getRoll());
+    // SmartDashboard.putNumber("Gyro Pitch", getPitchInDegrees());
+    // SmartDashboard.putNumber("Robot Yaw", getYawInDegrees());
+    SmartDashboard.putNumber("Robot X",m_posTracker.getPose2d().getX());
+    SmartDashboard.putNumber("Robot Y", m_posTracker.getPose2d().getY());
+    SmartDashboard.putNumber("Robot angle", m_posTracker.getPose2d().getRotation().getDegrees());
     m_posTracker.update(m_frontCamera, m_backCamera);
     // This method will be called once per scheduler run
   }

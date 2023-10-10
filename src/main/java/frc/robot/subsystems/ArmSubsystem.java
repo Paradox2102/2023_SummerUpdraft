@@ -7,15 +7,21 @@ package frc.robot.subsystems;
 import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.RelativeEncoder;
+import edu.wpi.first.wpilibj.Solenoid;
+// import edu.wpi.first.wpilibj.dummy.Solenoid;
+// import com.revrobotics.dummy.CANSparkMax;
+// import com.revrobotics.dummy.RelativeEncoder;
+// import com.revrobotics.dummy.CANSparkMax.IdleMode;
+// import com.ctre.phoenix.motorcontrol.can.dummy.TalonSRX;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;

@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+// import com.ctre.phoenix.motorcontrol.can.dummy.TalonFX;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -18,8 +19,8 @@ public class IntakeSubsystem extends SubsystemBase {
   private Timer m_timer = new Timer();
   private static double k_expiredTimer = 0.1;
   private double m_savedPower;
-  private static double k_stallSpeed = 1500;//3000
-  private static double k_stallPower = 0.075;
+  private static double k_stallSpeed = 2000;//3000
+  private static double k_stallPower = 0.1; //0.075;
 
   /** Creates a new IntakeSubsystem. */
   public IntakeSubsystem() {
