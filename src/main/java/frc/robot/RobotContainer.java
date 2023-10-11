@@ -7,7 +7,7 @@ package frc.robot;
 import frc.robot.commands.ReachCommand;
 import frc.robot.commands.TurnByIncrementCommand;
 import frc.robot.commands.TurnToTargetCommand;
-import frc.robot.commands.autos.Auto2CubeRight;
+import frc.robot.commands.autos.Auto2CubeLeft;
 import frc.robot.commands.autos.balance.AutoBalanceCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ReachSubsystem;
@@ -326,6 +326,6 @@ public class RobotContainer {
     // return m_chooseAuto.getSelected();
     // return new BalanceAuto(m_driveSubsystem, m_armSubsystem, m_wristSubsystem,
     // m_reachSubsystem);
-    return new Auto2CubeRight(m_driveSubsystem, m_armSubsystem, m_reachSubsystem, m_wristSubsystem, m_intakeSubsystem);
+    return new Auto2CubeLeft(m_driveSubsystem, m_armSubsystem, m_reachSubsystem, m_wristSubsystem, m_intakeSubsystem);
   }
 }
