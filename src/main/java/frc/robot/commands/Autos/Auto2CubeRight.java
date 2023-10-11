@@ -23,7 +23,7 @@ public class Auto2CubeRight extends SequentialCommandGroup {
 
   /*
    * 1.329, 5.525, 90
-   * 1.828, 21.808, 90
+   * 1.329, 21.808, 90
    */
   private static final Waypoint[] k_out = {
       new Waypoint(1.329, 5.525, Math.toRadians(90)),

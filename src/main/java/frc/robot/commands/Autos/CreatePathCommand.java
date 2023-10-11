@@ -50,24 +50,24 @@ public class CreatePathCommand extends CommandBase {
     m_waypoints = waypoints;
     m_data = data;
     // flips waypoints if you are on the blue side
-    // if (DriverStation.getAlliance() == Alliance.Blue) {
-    // Logger.log("CreatePathCommand", 3, "Setting Blue side");
-    // for (Waypoint waypoint : waypoints) {
-    // waypoint.x = -waypoint.x;
-    // }
-    // } else {
-    // Logger.log("CreatePathCommand", 3, "Setting Red side");
-    // }
-    // m_path = Pathfinder.computePath(waypoints, k_nPoints, k_dt, data.k_maxSpeed,
-    // data.k_maxAccel, data.k_maxDecl, data.k_maxJerk, k_wheelbase);
-    // m_path.setLookAheadTime(lookAheadTime);
+    if (DriverStation.getAlliance() == Alliance.Blue) {
+      Logger.log("CreatePathCommand", 3, "Setting Blue side");
+      for (Waypoint waypoint : waypoints) {
+        waypoint.x = -waypoint.x;
+      }
+    } else {
+      Logger.log("CreatePathCommand", 3, "Setting Red side");
+    }
+    m_path = Pathfinder.computePath(waypoints, k_nPoints, k_dt, data.k_maxSpeed,
+        data.k_maxAccel, data.k_maxDecl, data.k_maxJerk, k_wheelbase);
+    m_path.setLookAheadTime(lookAheadTime);
 
     // changes the waypoints back to red after path is created
-    // if (DriverStation.getAlliance() == Alliance.Blue) {
-    // for (Waypoint waypoint : waypoints) {
-    // waypoint.x = -waypoint.x;
-    // }
-    // }
+    if (DriverStation.getAlliance() == Alliance.Blue) {
+      for (Waypoint waypoint : waypoints) {
+        waypoint.x = -waypoint.x;
+      }
+    }
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(driveSubsystem);
   }
@@ -126,9 +126,9 @@ public class CreatePathCommand extends CommandBase {
       }
     }
 
-    if (m_waypoints != null){
-    m_path = Pathfinder.computePath(m_waypoints, k_nPoints, k_dt, m_data.k_maxSpeed, m_data.k_maxAccel,
-        m_data.k_maxDecl, m_data.k_maxJerk, k_wheelbase);
+    if (m_waypoints != null) {
+      m_path = Pathfinder.computePath(m_waypoints, k_nPoints, k_dt, m_data.k_maxSpeed, m_data.k_maxAccel,
+          m_data.k_maxDecl, m_data.k_maxJerk, k_wheelbase);
     }
     m_path.setLookAheadTime(m_lookAheadTime);
 
