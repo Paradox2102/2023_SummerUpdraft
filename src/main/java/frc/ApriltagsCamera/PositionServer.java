@@ -144,19 +144,19 @@ public class PositionServer implements NetworkReceiver {
 
     }
 
-    private void processBezier(String bezier) {
-        Logger.log("PositionServer", 1, String.format("processBezier: cnt=%d %s", m_nBezier, bezier));
+    // private void processBezier(String bezier) {
+    //     Logger.log("PositionServer", 1, String.format("processBezier: cnt=%d %s", m_nBezier, bezier));
 
-        if ((m_newData != null) && (m_nBezier < m_newData.length)) {
-            double[] arg = ApriltagsCamera.parseDouble(bezier, 8);
-            m_newData[m_nBezier] = new BezierData(arg[0], arg[1], arg[2], arg[3], arg[4], arg[5], arg[6], arg[7]);
-        } else {
-            m_newData = null;
-            Logger.log("PositionServer", 3, String.format("Invalid Bezier Command: %s", bezier));
-        }
+    //     if ((m_newData != null) && (m_nBezier < m_newData.length)) {
+    //         double[] arg = ApriltagsCamera.parseDouble(bezier, 8);
+    //         m_newData[m_nBezier] = new BezierData(arg[0], arg[1], arg[2], arg[3], arg[4], arg[5], arg[6], arg[7]);
+    //     } else {
+    //         m_newData = null;
+    //         Logger.log("PositionServer", 3, String.format("Invalid Bezier Command: %s", bezier));
+    //     }
 
-        m_nBezier++;
-    }
+    //     m_nBezier++;
+    // }
 
     private void processEnd(String end) {
         if (m_newData != null) {
@@ -309,6 +309,60 @@ public class PositionServer implements NetworkReceiver {
         }
     }
 
+    private static int k_maxButtons = 100;
+    private boolean[] m_buttonStates = new boolean[k_maxButtons]; 
+
+    // if (state) {
+    //     m_buttonCount[buttonNo]++;
+    //     if (m_buttonCount[buttonNo] >= k_debounce)
+    //     {
+    //         m_buttonStates[buttonNo] = false;
+    //     }
+    // }
+    // else {
+    //     m_buttonCount[buttonNo] = 0;
+    // }
+
+    public boolean getButtonState(int buttonNo)
+    {
+        boolean state = false;
+
+        if ((buttonNo >= 0) && (buttonNo < k_maxButtons))
+        {
+            state = m_buttonStates[buttonNo];
+            m_buttonStates[buttonNo] = false;
+        }
+
+        if (state)
+        {
+            Logger.log("PositionServer", 1, String.format("Button %d true", buttonNo));
+        }
+
+        return(state);
+    }
+
+    void processButton(String cmd)
+    {
+        // Logger.log("PositionServer", 1, cmd);
+        
+        int[] arg = ApriltagsCamera.parseIntegers(cmd, 1);
+
+        if (arg != null)
+        {
+            int buttonNo = arg[0];
+
+            Logger.log("PositionServer", 1, String.format("Button %d pressed", buttonNo));
+
+            if ((buttonNo >= 0) && (buttonNo < k_maxButtons))
+            {
+                m_buttonStates[buttonNo] = true;
+            }
+        }
+        else {
+            Logger.log("PositionServer", 1, "processButton: bad command");
+        }
+    }
+
     @Override
     public void processData(String data) {
         Logger.log("PositionServer", 1, String.format("Data: %s", data));
@@ -318,8 +372,11 @@ public class PositionServer implements NetworkReceiver {
                 processPath(data.substring(1).trim());
                 break;
 
-            case 'B': // Bezier curve
-                processBezier(data.substring(1).trim());
+            // case 'B': // Bezier curve
+            //     processBezier(data.substring(1).trim());
+            //     break;
+            case 'B': // button
+                processButton(data.substring(1).trim());
                 break;
 
             case 'E': // End

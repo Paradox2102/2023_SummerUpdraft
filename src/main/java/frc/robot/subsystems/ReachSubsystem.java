@@ -67,6 +67,11 @@ public class ReachSubsystem extends SubsystemBase {
     m_timer.reset();
     m_timer.start();
     m_manual = false;
+    m_state = State.normal;
+  }
+
+  public void incrementPosition(double incInInches) {
+    setPosition(m_setPosition + incInInches);
   }
 
   public double getDistance() {

@@ -14,21 +14,19 @@ public class ReachCommand extends CommandBase {
 
   /** Creates a new ReachCommand. */
   public ReachCommand(ReachSubsystem subsystem, double power) {
-    Logger.log("Reach Command", 1, "reach command");
+    Logger.log("ReachCommand", 0, "ReachCommand()");
     m_subsystem = subsystem;
     m_power = power;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(m_subsystem);
-    Logger.log("ReachCommand", 0, "ReachCommand");
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    Logger.log("Reach Command", 1, "initialize");
+    Logger.log("ReachCommand", 1, "initialize()");
 
     m_subsystem.setPower(m_power);
-    Logger.log("ReachCommand", 0, "Initialize");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -39,9 +37,8 @@ public class ReachCommand extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    Logger.log("Reach Command", 1, "end");
+    Logger.log("ReachCommand", 1, "end()");
     m_subsystem.setPower(0);
-    Logger.log("ReachCommand", 0, "End");
   }
 
   // Returns true when the command should end.

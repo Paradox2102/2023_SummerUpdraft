@@ -72,6 +72,11 @@ public class WristSubsystem extends SubsystemBase {
     Logger.log("WristSubsystem", 0, String.format("%s, %f", "Move Set Point: ", m_setPoint));
   }
 
+  public void incrementSetPoint(double increment)
+  {
+    moveSetPoint(m_setPoint + increment);
+  }
+
   public void switchPID(boolean on) {
     m_PIDOn = on;
     Logger.log("WristSubsystem", 0, String.format("%s, %b", "Switch PID", m_PIDOn));

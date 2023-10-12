@@ -69,7 +69,7 @@ public class Robot extends TimedRobot {
     // robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
-    // SmartDashboard.putBoolean("Joystick button 8", m_robotContainer.m_driver1Joystick.getRawButton(8));
+    // SmartDashboard.putBoolean("Joystick button 1", m_robotContainer.m_driver2.getRawButton(1));
   }
 
   /** This function is called once each time the robot enters Disabled mode. */

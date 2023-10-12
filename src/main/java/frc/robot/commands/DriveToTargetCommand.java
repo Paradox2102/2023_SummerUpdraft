@@ -7,8 +7,6 @@ package frc.robot.commands;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
-import javax.swing.text.StyleContext.SmallAttributeSet;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -65,7 +63,7 @@ public class DriveToTargetCommand extends InstantCommand {
 
     SmartDashboard.putBoolean("Path reversed", target.isPathReversed(m_tracker));
 
-    @SuppressWarnings("unused")
+    // @SuppressWarnings("unused")
     Command commands[] = TurnToTargetCommand.getCommands(m_driveSubsystem, m_armSubsystem, m_reachSubsystem,
         m_wristSubsystem, m_cancel);
 

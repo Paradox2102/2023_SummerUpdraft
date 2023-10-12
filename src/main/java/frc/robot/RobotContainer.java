@@ -25,6 +25,9 @@ import frc.robot.commands.AutoPositionArmCommand;
 import frc.robot.commands.DriveToTargetCommand;
 import frc.robot.commands.HandPosition;
 import frc.robot.commands.HandPosition2;
+import frc.robot.commands.IncArmPositionCommand;
+import frc.robot.commands.IncWristPositionCommand;
+import frc.robot.commands.IncrementReachCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.WristSubsystem;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
@@ -61,7 +64,7 @@ public class RobotContainer {
   final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
   final WristSubsystem m_wristSubsystem = new WristSubsystem(() -> m_armSubsystem.getArmAngleDegrees());
   SendableChooser<Command> m_chooseAuto = new SendableChooser<>();
-  
+
   // We have multiple developers working on different parts of the system, so we
   // set up multiple joysticks
   // All joysticks are available for button use, but only one has control of
@@ -69,14 +72,14 @@ public class RobotContainer {
   private final CommandJoystick m_driver1 = new CommandJoystick(0);
   final Joystick m_driver1Joystick = new Joystick(0);
   @SuppressWarnings("unused")
-  private final CommandJoystick m_driver2 = new CommandJoystick(1);
+  final Joystick m_driver2 = new Joystick(1);
   private final CommandJoystick m_PRJoystick = new CommandJoystick(2);
   private final CommandJoystick m_BMRJoystick = new CommandJoystick(3);
   private final CommandJoystick m_IAEJoystick = new CommandJoystick(4);
   public final CommandJoystick m_driveStick = m_driver1;
   // private final CommandJoystick m_stick2 = new CommandJoystick(1);
 
-  private final double k_cancelThreshold = 0.50; // Joystick x threshold for canceling commands
+  // private final double k_cancelThreshold = 0.50; // Joystick x threshold for canceling commands
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -84,8 +87,9 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
-    
-    m_armSubsystem.setExtent(() -> m_reachSubsystem.getDistance());   // Gives the arm subsystem access to the current arm extent
+
+    m_armSubsystem.setExtent(() -> m_reachSubsystem.getDistance()); // Gives the arm subsystem access to the current arm
+                                                                    // extent
     m_frontCamera.connect("10.21.2.10", 5800);
     m_backCamera.connect("10.21.2.11", 5800);
   }
@@ -122,7 +126,18 @@ public class RobotContainer {
     configureBindingsIAE();
   }
 
+  private boolean getPositionServerButtonState(int button) {
+    return m_driveSubsystem.getTracker().m_posServer.getButtonState(button);
+  }
+
   private void configureBindingsPR() {
+    // Config position server buttons
+    new Trigger(() -> getPositionServerButtonState(1)).onTrue(new IncrementReachCommand(m_reachSubsystem, 1));
+    new Trigger(() -> getPositionServerButtonState(2)).onTrue(new IncrementReachCommand(m_reachSubsystem, -1));
+    new Trigger(() -> getPositionServerButtonState(3)).onTrue(new IncWristPositionCommand(m_wristSubsystem, 5));
+    new Trigger(() -> getPositionServerButtonState(4)).onTrue(new IncWristPositionCommand(m_wristSubsystem, -5));
+    new Trigger(() -> getPositionServerButtonState(5)).onTrue(new IncArmPositionCommand(m_armSubsystem, 5));
+    new Trigger(() -> getPositionServerButtonState(6)).onTrue(new IncArmPositionCommand(m_armSubsystem, -5));
 
     // Paul's test joystick
     // calibrate ticks to feet conversion
@@ -133,7 +148,8 @@ public class RobotContainer {
     m_PRJoystick.button(5).whileTrue(new MoveWristCommand(m_wristSubsystem, 0.25));
     m_PRJoystick.button(6).whileTrue(new MoveWristCommand(m_wristSubsystem, -0.25));
     m_PRJoystick.button(7)
-        .onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 40, -40, 10, -122, 122, () -> true));
+        .onTrue(
+            new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 40, -40, 10, -122, 122, () -> true));
     m_PRJoystick.button(9).onTrue(
         new HandPosition(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 0, 0, Constants.Wrist.k_wristHomeAngle));
     m_PRJoystick.button(10).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 103, -103, 0,
@@ -220,14 +236,14 @@ public class RobotContainer {
 
     // Drive to target
     m_driver1.button(4).onTrue(new TurnToTargetCommand(m_driveSubsystem, m_armSubsystem,
-        m_reachSubsystem, m_wristSubsystem, () -> cancelCommand(), false, ()->m_driveStick.getY()));
+        m_reachSubsystem, m_wristSubsystem, () -> cancelCommand(), false, () -> m_driveStick.getY()));
 
     // Drive To Target
     m_driver1.button(6).onTrue(new DriveToTargetCommand(m_driveSubsystem, m_armSubsystem, m_reachSubsystem,
         m_wristSubsystem, () -> m_driver1.getY(), () -> cancelCommand()));
 
-    m_driver1.button(7).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 102, -102, 0, 18, 15,() -> m_driveStick.getThrottle() < 0));
-
+    m_driver1.button(7).onTrue(new HandPosition2(m_armSubsystem, m_reachSubsystem, m_wristSubsystem, 102, -102, 0, 18,
+        15, () -> m_driveStick.getThrottle() < 0));
 
     m_driver1.povRight().onTrue(new TurnByIncrementCommand(m_driveSubsystem, 1.5, () -> cancelCommand()));
     m_driver1.povLeft().onTrue(new TurnByIncrementCommand(m_driveSubsystem, -1.5, () -> cancelCommand()));
@@ -264,11 +280,12 @@ public class RobotContainer {
     // m_IAEJoystick.button(2).onTrue(new TurnToAngleCommand(m_driveSubsystem, 0, ()
     // -> cancelCommand()));
     m_IAEJoystick.button(7).onTrue(new TurnToTargetCommand(m_driveSubsystem, m_armSubsystem,
-        m_reachSubsystem, m_wristSubsystem, () -> cancelCommand(), false, ()->m_driveStick.getY()));
+        m_reachSubsystem, m_wristSubsystem, () -> cancelCommand(), false, () -> m_driveStick.getY()));
 
     // Drive To Target
     m_IAEJoystick.button(8).onTrue(new DriveToTargetCommand(m_driveSubsystem, m_armSubsystem, m_reachSubsystem,
-        m_wristSubsystem, /*() -> m_driveStick.getThrottle() < 0,*/ () -> m_IAEJoystick.getY(), () -> cancelCommand()));
+        m_wristSubsystem, /* () -> m_driveStick.getThrottle() < 0, */ () -> m_IAEJoystick.getY(),
+        () -> cancelCommand()));
 
     m_IAEJoystick.povRight().onTrue(new TurnByIncrementCommand(m_driveSubsystem, -1.5, () -> cancelCommand()));
     m_IAEJoystick.povLeft().onTrue(new TurnByIncrementCommand(m_driveSubsystem, 1.5, () -> cancelCommand()));
@@ -319,14 +336,18 @@ public class RobotContainer {
     // m_reachSubsystem, m_wristSubsystem, 22, -22, 9, -145, 145,
     // () -> m_driveStick.getThrottle() < 0));
     // 0 extent -24 wrist 57 arm
-    
-    //sends auto choices to shuffleboard
+
+    // sends auto choices to shuffleboard
     m_chooseAuto.addOption("Balance", new BalanceAuto(m_driveSubsystem, m_armSubsystem, m_wristSubsystem,
-    m_reachSubsystem));
-    m_chooseAuto.addOption("2 Cube Right", new Auto2CubeRight(m_driveSubsystem, m_armSubsystem, m_reachSubsystem, m_wristSubsystem, m_intakeSubsystem));
-    m_chooseAuto.addOption("2 Cube Left", new Auto2CubeLeft(m_driveSubsystem, m_armSubsystem, m_reachSubsystem, m_wristSubsystem, m_intakeSubsystem));
-    m_chooseAuto.addOption("Drive Forward Left Side", new AutoDriveForwardLeft(m_driveSubsystem, m_armSubsystem, m_reachSubsystem, m_wristSubsystem));
-    m_chooseAuto.addOption("Drive Forward Right Side", new AutoDriveForwardRight(m_driveSubsystem, m_armSubsystem, m_reachSubsystem, m_wristSubsystem));
+        m_reachSubsystem));
+    m_chooseAuto.addOption("2 Cube Right",
+        new Auto2CubeRight(m_driveSubsystem, m_armSubsystem, m_reachSubsystem, m_wristSubsystem, m_intakeSubsystem));
+    m_chooseAuto.addOption("2 Cube Left",
+        new Auto2CubeLeft(m_driveSubsystem, m_armSubsystem, m_reachSubsystem, m_wristSubsystem, m_intakeSubsystem));
+    m_chooseAuto.addOption("Drive Forward Left Side",
+        new AutoDriveForwardLeft(m_driveSubsystem, m_armSubsystem, m_reachSubsystem, m_wristSubsystem));
+    m_chooseAuto.addOption("Drive Forward Right Side",
+        new AutoDriveForwardRight(m_driveSubsystem, m_armSubsystem, m_reachSubsystem, m_wristSubsystem));
     SmartDashboard.putData(m_chooseAuto);
   }
 
@@ -340,9 +361,13 @@ public class RobotContainer {
     return m_chooseAuto.getSelected();
     // return new BalanceAuto(m_driveSubsystem, m_armSubsystem, m_wristSubsystem,
     // m_reachSubsystem);
-    //return new Auto2CubeLeft(m_driveSubsystem, m_armSubsystem, m_reachSubsystem, m_wristSubsystem, m_intakeSubsystem);
-    //return new Auto2CubeRight(m_driveSubsystem, m_armSubsystem, m_reachSubsystem, m_wristSubsystem, m_intakeSubsystem);
-    //return new AutoDriveForwardLeft(m_driveSubsystem, m_armSubsystem, m_reachSubsystem, m_wristSubsystem);
-    //return new AutoDriveForwardRight(m_driveSubsystem, m_armSubsystem, m_reachSubsystem, m_wristSubsystem);
+    // return new Auto2CubeLeft(m_driveSubsystem, m_armSubsystem, m_reachSubsystem,
+    // m_wristSubsystem, m_intakeSubsystem);
+    // return new Auto2CubeRight(m_driveSubsystem, m_armSubsystem, m_reachSubsystem,
+    // m_wristSubsystem, m_intakeSubsystem);
+    // return new AutoDriveForwardLeft(m_driveSubsystem, m_armSubsystem,
+    // m_reachSubsystem, m_wristSubsystem);
+    // return new AutoDriveForwardRight(m_driveSubsystem, m_armSubsystem,
+    // m_reachSubsystem, m_wristSubsystem);
   }
 }

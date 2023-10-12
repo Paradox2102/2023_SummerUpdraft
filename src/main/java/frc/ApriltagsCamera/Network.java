@@ -346,6 +346,7 @@ public class Network
 				catch (Exception ex)
 				{
 					Logger.log("Network", 3, "Host network error: " + ex);
+					ex.printStackTrace();
 					
 					closeConnection();
 

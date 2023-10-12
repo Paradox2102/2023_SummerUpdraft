@@ -98,6 +98,10 @@ public class ArmSubsystem extends SubsystemBase {
     Logger.log("ArmSubsystem", 0, String.format("%s, %f", "Set Position: ", m_setPoint));
   }
 
+  public void incrementPosition(double increment) {
+    setPosition(m_setPoint + increment);
+  }
+
   public void setArmBrake(boolean brake) {
     m_brake.set(!brake);
     SmartDashboard.putBoolean("Arm Brake", brake);
