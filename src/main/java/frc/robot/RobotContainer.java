@@ -8,8 +8,11 @@ import frc.robot.commands.ReachCommand;
 import frc.robot.commands.TurnByIncrementCommand;
 import frc.robot.commands.TurnToTargetCommand;
 import frc.robot.commands.autos.Auto2CubeRight;
+import frc.robot.commands.autos.AutoDriveForwardLeft;
+import frc.robot.commands.autos.AutoDriveForwardRight;
 import frc.robot.commands.autos.Auto2CubeLeft;
 import frc.robot.commands.autos.balance.AutoBalanceCommand;
+import frc.robot.commands.autos.balance.BalanceAuto;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ReachSubsystem;
 import frc.robot.commands.IntakeCommand;
@@ -27,6 +30,7 @@ import frc.robot.subsystems.WristSubsystem;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -315,6 +319,15 @@ public class RobotContainer {
     // m_reachSubsystem, m_wristSubsystem, 22, -22, 9, -145, 145,
     // () -> m_driveStick.getThrottle() < 0));
     // 0 extent -24 wrist 57 arm
+    
+    //sends auto choices to shuffleboard
+    m_chooseAuto.addOption("Balance", new BalanceAuto(m_driveSubsystem, m_armSubsystem, m_wristSubsystem,
+    m_reachSubsystem));
+    m_chooseAuto.addOption("2 Cube Right", new Auto2CubeRight(m_driveSubsystem, m_armSubsystem, m_reachSubsystem, m_wristSubsystem, m_intakeSubsystem));
+    m_chooseAuto.addOption("2 Cube Left", new Auto2CubeLeft(m_driveSubsystem, m_armSubsystem, m_reachSubsystem, m_wristSubsystem, m_intakeSubsystem));
+    m_chooseAuto.addOption("Drive Forward Left Side", new AutoDriveForwardLeft(m_driveSubsystem, m_armSubsystem, m_reachSubsystem, m_wristSubsystem));
+    m_chooseAuto.addOption("Drive Forward Right Side", new AutoDriveForwardRight(m_driveSubsystem, m_armSubsystem, m_reachSubsystem, m_wristSubsystem));
+    SmartDashboard.putData(m_chooseAuto);
   }
 
   /**
@@ -324,10 +337,12 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    // return m_chooseAuto.getSelected();
+    return m_chooseAuto.getSelected();
     // return new BalanceAuto(m_driveSubsystem, m_armSubsystem, m_wristSubsystem,
     // m_reachSubsystem);
-    return new Auto2CubeLeft(m_driveSubsystem, m_armSubsystem, m_reachSubsystem, m_wristSubsystem, m_intakeSubsystem);
+    //return new Auto2CubeLeft(m_driveSubsystem, m_armSubsystem, m_reachSubsystem, m_wristSubsystem, m_intakeSubsystem);
     //return new Auto2CubeRight(m_driveSubsystem, m_armSubsystem, m_reachSubsystem, m_wristSubsystem, m_intakeSubsystem);
+    //return new AutoDriveForwardLeft(m_driveSubsystem, m_armSubsystem, m_reachSubsystem, m_wristSubsystem);
+    //return new AutoDriveForwardRight(m_driveSubsystem, m_armSubsystem, m_reachSubsystem, m_wristSubsystem);
   }
 }

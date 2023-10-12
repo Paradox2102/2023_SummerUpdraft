@@ -15,19 +15,19 @@ import frc.robot.subsystems.WristSubsystem;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class AutoDriveForwardLeft extends SequentialCommandGroup {
+public class AutoDriveForwardRight extends SequentialCommandGroup {
   /*
-    -11.797,5.317, 90
-  -11.797,19.44,90
+  3.24,5.358, 90
+  3.24,12.586,90
   */
   private static final Waypoint[] k_out = {
-      new Waypoint(  -11.797, 5.317, Math.toRadians( 90)),
-      new Waypoint(-11.797, 19.44, Math.toRadians(90))
+      new Waypoint(3.24, 5.358, Math.toRadians( 90)),
+      new Waypoint(3.24, 12.586, Math.toRadians(90))
   };
 
 
   /** Creates a new TestAuto. */
-  public AutoDriveForwardLeft(DriveSubsystem driveSubsystem, ArmSubsystem armSubsystem, ReachSubsystem reachSubsystem,
+  public AutoDriveForwardRight(DriveSubsystem driveSubsystem, ArmSubsystem armSubsystem, ReachSubsystem reachSubsystem,
       WristSubsystem wristSubsystem) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());

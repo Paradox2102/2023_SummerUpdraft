@@ -111,7 +111,7 @@ public class PositionTrackerPose extends PositionTracker {
 		// }
 
 		m_posServer.setAllianceColor(DriverStation.getAlliance() == DriverStation.Alliance.Red);
-
+		SmartDashboard.putBoolean("Red Alliance", DriverStation.getAlliance() == DriverStation.Alliance.Red);
 		Pose2d pos = m_poseEstimator.getEstimatedPosition();
 		pos = ParadoxField.pose2dFromFRC(pos);
 		SmartDashboard.putNumber("xPos", pos.getX());
