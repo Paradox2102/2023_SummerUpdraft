@@ -49,23 +49,29 @@ public class CreatePathCommand extends CommandBase {
     m_lookAheadTime = lookAheadTime;
     m_waypoints = waypoints;
     m_data = data;
-    // flips waypoints if you are on the blue side
-    if (DriverStation.getAlliance() == Alliance.Blue) {
-      Logger.log("CreatePathCommand", 3, "Setting Blue side");
-      for (Waypoint waypoint : waypoints) {
-        waypoint.x = -waypoint.x;
+
+    if (waypoints != null) {
+      // flips waypoints if you are on the blue side
+      if (DriverStation.getAlliance() == Alliance.Blue) {
+        Logger.log("CreatePathCommand", 3, "Setting Blue side");
+        for (Waypoint waypoint : waypoints) {
+          waypoint.x = -waypoint.x;
+        }
+      } else {
+        Logger.log("CreatePathCommand", 3, "Setting Red side");
       }
-    } else {
-      Logger.log("CreatePathCommand", 3, "Setting Red side");
+
+      m_path = Pathfinder.computePath(waypoints, k_nPoints, k_dt, data.k_maxSpeed,
+          data.k_maxAccel, data.k_maxDecl, data.k_maxJerk, k_wheelbase);
     }
-    m_path = Pathfinder.computePath(waypoints, k_nPoints, k_dt, data.k_maxSpeed,
-        data.k_maxAccel, data.k_maxDecl, data.k_maxJerk, k_wheelbase);
     m_path.setLookAheadTime(lookAheadTime);
 
-    // changes the waypoints back to red after path is created
-    if (DriverStation.getAlliance() == Alliance.Blue) {
-      for (Waypoint waypoint : waypoints) {
-        waypoint.x = -waypoint.x;
+    if (waypoints != null) {
+      // changes the waypoints back to red after path is created
+      if (DriverStation.getAlliance() == Alliance.Blue) {
+        for (Waypoint waypoint : waypoints) {
+          waypoint.x = -waypoint.x;
+        }
       }
     }
     // Use addRequirements() here to declare subsystem dependencies.
@@ -106,27 +112,29 @@ public class CreatePathCommand extends CommandBase {
 
   public CreatePathCommand(DriveSubsystem driveSubsystem, Path path, boolean setPosition, boolean reversed,
       String name, double lookaheadTime, DoubleSupplier speed, BooleanSupplier cancel) {
+    m_path = path;
     init(driveSubsystem, null, setPosition, reversed, name, new PurePursuitData(), lookaheadTime);
 
     m_speed = speed;
     m_cancel = cancel;
-    m_path = path;
+
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    boolean blue = DriverStation.getAlliance() == Alliance.Blue;
-    if (blue != m_blue) {
-      m_blue = blue;
-      Logger.log(m_name, 3, m_blue ? "Setting Blue side" : "Setting Red side");
-      for (Waypoint waypoint : m_waypoints) {
-        waypoint.x = -waypoint.x;
-        waypoint.angle = Math.toRadians(180) - waypoint.angle;
-      }
-    }
-
     if (m_waypoints != null) {
+      boolean blue = DriverStation.getAlliance() == Alliance.Blue;
+
+      if (blue != m_blue) {
+        m_blue = blue;
+        Logger.log(m_name, 3, m_blue ? "Setting Blue side" : "Setting Red side");
+        for (Waypoint waypoint : m_waypoints) {
+          waypoint.x = -waypoint.x;
+          waypoint.angle = Math.toRadians(180) - waypoint.angle;
+        }
+      }
+
       m_path = Pathfinder.computePath(m_waypoints, k_nPoints, k_dt, m_data.k_maxSpeed, m_data.k_maxAccel,
           m_data.k_maxDecl, m_data.k_maxJerk, k_wheelbase);
     }
