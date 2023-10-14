@@ -28,7 +28,7 @@ public class ReachSubsystem extends SubsystemBase {
   private double k_ticksToInches = 29.5 / 148869;
   private double m_position = 0;
   private static final double k_stallPower = 0.1;
-  private static final double k_stallTime = 0.4;
+  private static final double k_stallTime = 1;
   private static final double k_stallSpeed = 250;
   private static final double k_p = 16 / 30.0;
   private static final double k_f = 0.06;
