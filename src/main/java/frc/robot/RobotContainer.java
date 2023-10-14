@@ -10,6 +10,8 @@ import frc.robot.commands.TurnToTargetCommand;
 import frc.robot.commands.autos.Auto2CubeRight;
 import frc.robot.commands.autos.AutoDriveForwardLeft;
 import frc.robot.commands.autos.AutoDriveForwardRight;
+import frc.robot.commands.autos.AutoNothingCommand;
+import frc.robot.commands.autos.AutoNothingPlaceCube;
 import frc.robot.commands.autos.Auto2CubeLeft;
 import frc.robot.commands.autos.balance.AutoBalanceCommand;
 import frc.robot.commands.autos.balance.BalanceAuto;
@@ -348,6 +350,8 @@ public class RobotContainer {
         new AutoDriveForwardLeft(m_driveSubsystem, m_armSubsystem, m_reachSubsystem, m_wristSubsystem));
     m_chooseAuto.addOption("Drive Forward Right Side",
         new AutoDriveForwardRight(m_driveSubsystem, m_armSubsystem, m_reachSubsystem, m_wristSubsystem));
+    m_chooseAuto.addOption("Do Nothing", new AutoNothingCommand());
+    m_chooseAuto.addOption("Place Cube", new AutoNothingPlaceCube(m_armSubsystem, m_reachSubsystem, m_wristSubsystem));    
     SmartDashboard.putData(m_chooseAuto);
   }
 
