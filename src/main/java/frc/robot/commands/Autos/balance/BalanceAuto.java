@@ -20,7 +20,7 @@ import frc.robot.subsystems.WristSubsystem;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class BalanceAuto extends SequentialCommandGroup {
   /** Creates a new BalanceAuto. */
-  private static double k_pitch = 15;
+  private static double k_pitch = 16;
   private static double k_armAngle = 110;
   public BalanceAuto(DriveSubsystem driveSubsystem, ArmSubsystem armSubsystem, WristSubsystem wristSubsystem, ReachSubsystem reachSubsystem) {
     // Add your commands in the addCommands() call, e.g.

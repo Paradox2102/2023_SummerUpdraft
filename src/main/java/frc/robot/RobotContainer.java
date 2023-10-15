@@ -342,13 +342,13 @@ public class RobotContainer {
     // sends auto choices to shuffleboard
     m_chooseAuto.addOption("Balance", new BalanceAuto(m_driveSubsystem, m_armSubsystem, m_wristSubsystem,
         m_reachSubsystem));
-    m_chooseAuto.addOption("2 Cube Right",
+    m_chooseAuto.addOption("2 Cube Right Red | Left Blue",
         new Auto2CubeRight(m_driveSubsystem, m_armSubsystem, m_reachSubsystem, m_wristSubsystem, m_intakeSubsystem));
-    m_chooseAuto.addOption("2 Cube Left",
+    m_chooseAuto.addOption("2 Cube Left Red | Right Blue",
         new Auto2CubeLeft(m_driveSubsystem, m_armSubsystem, m_reachSubsystem, m_wristSubsystem, m_intakeSubsystem));
-    m_chooseAuto.addOption("Drive Forward Left Side",
+    m_chooseAuto.addOption("Drive Forward Left Side Red | Right Side Blue",
         new AutoDriveForwardLeft(m_driveSubsystem, m_armSubsystem, m_reachSubsystem, m_wristSubsystem));
-    m_chooseAuto.addOption("Drive Forward Right Side",
+    m_chooseAuto.addOption("Drive Forward Right Side Red | Left Side Blue",
         new AutoDriveForwardRight(m_driveSubsystem, m_armSubsystem, m_reachSubsystem, m_wristSubsystem));
     m_chooseAuto.addOption("Do Nothing", new AutoNothingCommand());
     m_chooseAuto.addOption("Place Cube", new AutoNothingPlaceCube(m_armSubsystem, m_reachSubsystem, m_wristSubsystem));    

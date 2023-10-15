@@ -22,7 +22,7 @@ import frc.robot.subsystems.WristSubsystem;
 public class Auto2CubeLeft extends SequentialCommandGroup {
     /*
     -10.011, 5.732, 90
-    -11.6, 12.65,449.486
+    -11, 12.65,449.486
     -10.26, 22.098, 90
     */
     private static final Waypoint[] k_out = {
@@ -32,7 +32,7 @@ public class Auto2CubeLeft extends SequentialCommandGroup {
     };
   private static Waypoint[] k_back = {
       new Waypoint(-10.26, 22.098, Math.toRadians(-90)),
-      new Waypoint(-11.6, 12.65, Math.toRadians(-90)),
+      new Waypoint(-11, 12.65, Math.toRadians(-90)),
       new Waypoint(-10.011, 6.232, Math.toRadians(-90))
   };
 

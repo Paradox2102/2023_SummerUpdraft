@@ -43,18 +43,18 @@ public class IntakeSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Intake Speed", getSpeed());
 
     double power = m_savedPower;
-    if(Math.abs(getSpeed()) < k_stallSpeed && m_savedPower != 0) {
-      if(m_timer.get() > k_expiredTimer) {
-        //Logger.log("IntakeSubsystem", 0, "Stalled");
-        if(m_savedPower < 0) {
-          power = -k_stallPower;
-        }  else {
-          power = k_stallPower;
-        }
-      } 
-    } else {
-      m_timer.reset();
-    }
+    // if(Math.abs(getSpeed()) < k_stallSpeed && m_savedPower != 0) {
+    //   if(m_timer.get() > k_expiredTimer) {
+    //     //Logger.log("IntakeSubsystem", 0, "Stalled");
+    //     if(m_savedPower < 0) {
+    //       power = -k_stallPower;
+    //     }  else {
+    //       power = k_stallPower;
+    //     }
+    //   } 
+    // } else {
+    //   m_timer.reset();
+    // }
     m_intakeMotor.set(ControlMode.PercentOutput, power);
 
     SmartDashboard.putNumber("Intake Power", power);
