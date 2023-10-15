@@ -108,23 +108,23 @@ public class ReachSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Reach Raw Power", power);
 
     // stall check
-    if (Math.abs(power) > k_stallPower) {
-      if (Math.abs(getSpeed()) < k_stallSpeed) {
-        // Logger.log("Reach Subsystem", 1, String.format("SPEEEEED = %f", getSpeed()));
-        if (m_timer.get() > k_stallTime) {
-          // Logger.log("Reach Subsystem", 1, String.format("power = %f", power));
-          if (power > 0) {
-            m_state = State.stalledUp;
-          } else {
-            m_state = State.stalledDown;
-            // Logger.log("Reach Subsystem", 1, String.format("state = %s",
-            // m_state.toString()));
-          }
-        } else {
-          m_timer.reset();
-        }
-      }
-    }
+    // if (Math.abs(power) > k_stallPower) {
+    //   if (Math.abs(getSpeed()) < k_stallSpeed) {
+    //     // Logger.log("Reach Subsystem", 1, String.format("SPEEEEED = %f", getSpeed()));
+    //     if (m_timer.get() > k_stallTime) {
+    //       // Logger.log("Reach Subsystem", 1, String.format("power = %f", power));
+    //       if (power > 0) {
+    //         m_state = State.stalledUp;
+    //       } else {
+    //         m_state = State.stalledDown;
+    //         // Logger.log("Reach Subsystem", 1, String.format("state = %s",
+    //         // m_state.toString()));
+    //       }
+    //     } else {
+    //       m_timer.reset();
+    //     }
+    //   }
+    // }
 
     // state change
     if (m_state == State.stalledUp && power < 0) {
